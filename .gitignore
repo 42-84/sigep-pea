@@ -1,0 +1,31 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# IDE
+.classpath
+.project
+.settings/
+*.iml
+.idea/
+bin/
+
+# Driver Oracle (licence : ne pas versionner)
+lib/*.jar
+
+# Base H2 de dev
+*.h2.db
+*.mv.db
+*.trace.db
+sigep-dev/
+
+# Front
+frontend/sigep-web/node_modules/
+frontend/sigep-web/dist/
+
+# Divers
+*.log
+*.swp
+.DS_Store
+Thumbs.db

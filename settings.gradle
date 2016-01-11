@@ -1,0 +1,7 @@
+rootProject.name = 'sigep'
+
+include 'sigep-commun'
+include 'sigep-referentiel'
+include 'sigep-comptes'
+include 'sigep-portefeuille'
+// include 'sigep-fiscalite'   // abandonné (fusionné dans sigep-comptes, cf. docs/ARCHITECTURE.md §4) - JM 03/2017

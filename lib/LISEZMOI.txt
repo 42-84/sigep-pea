@@ -1,0 +1,9 @@
+Deposer ici le driver JDBC Oracle : ojdbc6.jar (11.2.0.4)
+
+Il n'est pas versionne (licence Oracle) et n'est pas sur Maven Central.
+A recuperer sur le partage \\srv-fichiers\DSI\drivers\oracle\ ou aupres de l'equipe DBA (dba@bas.intra).
+
+Sans ce jar, les services demarrent uniquement avec le profil "dev" (base H2).
+
+Note : la montee en ojdbc8 a ete testee en 2020 (SIGEP-498) puis abandonnee, le serveur
+Oracle de prod est reste en 11g.

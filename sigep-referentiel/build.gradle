@@ -1,0 +1,16 @@
+description = 'SIGEP - Referentiel valeurs et cours'
+
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    compile project(':sigep-commun')
+}
+
+springBoot {
+    mainClass = 'fr.bas.sigep.referentiel.ReferentielApplication'
+    executable = true   // jar lancable en service init.d (deploiement/sigep-referentiel.service)
+}
+
+jar {
+    baseName = 'sigep-referentiel'
+}

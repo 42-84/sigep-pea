@@ -1,0 +1,19 @@
+/*
+ * sigep-commun : entites JPA, repositories, DTO, utilitaires et securite partages
+ * par les trois services. Toute modification impacte les trois deploiements.
+ */
+description = 'SIGEP - Socle commun (domaine, repositories, securite)'
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
+
+    runtime 'com.h2database:h2'
+    runtime rootProject.driverOracle
+}
+
+jar {
+    baseName = 'sigep-commun'
+}

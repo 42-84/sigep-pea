@@ -1,0 +1,16 @@
+description = 'SIGEP - Clients, plans et comptes especes'
+
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    compile project(':sigep-commun')
+}
+
+springBoot {
+    mainClass = 'fr.bas.sigep.comptes.ComptesApplication'
+    executable = true
+}
+
+jar {
+    baseName = 'sigep-comptes'
+}

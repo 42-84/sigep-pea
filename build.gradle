@@ -1,0 +1,61 @@
+/*
+ * SIGEP - Systeme d'Information de Gestion de l'Epargne en actions et des Plans
+ * Banque de l'Aunis et de Saintonge - DSI / Pole Epargne & Titres
+ *
+ * Build multi-projets Gradle. Refonte 2016 (migration Struts/EJB -> Spring Boot).
+ * Voir docs/INSTALL.txt pour le poste de developpement.
+ */
+buildscript {
+    ext {
+        springBootVersion = '1.5.22.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        // Nexus interne : miroir Central + artefacts BAS. Indisponible hors reseau BAS,
+        // d'ou l'ordre (Central d'abord) - F. Dubois 14/05/2019
+        maven { url 'http://nexus.bas.intra/repository/maven-public/' }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+        maven { url 'http://nexus.bas.intra/repository/maven-public/' }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        // -Xlint:deprecation retire : trop de bruit depuis Boot 1.5 (BOM Spring 4.3)
+    }
+}
+
+subprojects {
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencyManagement {
+    dependencies {
+        compile 'org.apache.commons:commons-lang3:3.5'
+        compile 'commons-io:commons-io:2.5'
+
+        testCompile 'org.springframework.boot:spring-boot-starter-test'
+        // Mockito 1.10.19 impose par le BOM Boot 1.5. Ne pas monter en 2.x :
+        // casse les tests de sigep-comptes (any() vs anyObject()) - ticket SIGEP-412
+    }
+
+    test {
+        // Les tests d'integration (*IT) sont exclus du build Jenkins depuis 2018 (base H2 non initialisee)
+        exclude '**/*IT.class'
+        testLogging {
+            events 'failed'
+            exceptionFormat 'full'
+        }
+}
