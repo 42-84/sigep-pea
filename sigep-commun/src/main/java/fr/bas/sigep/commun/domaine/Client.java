@@ -36,6 +36,16 @@ public class Client extends EntiteAuditable {
     private Long id;
 
     @Column(name = "NUM_CLIENT", nullable = false, unique = true, length = 8)
+    private String numeroClient;
+
+    @Column(name = "CIVILITE", length = 3)
+    private String civilite;
+
+    @Column(name = "NOM", nullable = false, length = 60)
+    private String nom;
+
+    @Column(name = "PRENOM", length = 60)
+    private String prenom;
     @Column(name = "ADR_LIGNE1", length = 80)
     private String adresseLigne1;
 
@@ -59,6 +69,16 @@ public class Client extends EntiteAuditable {
     private Boolean residentFiscalFrance = Boolean.TRUE;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+        this.id = id;
+    }
+
+    public String getNumeroClient() {
+        return numeroClient;
+    }
+
+    public void setNumeroClient(String numeroClient) {
+        this.numeroClient = numeroClient;
+    }
 
     public String getCivilite() {
         return civilite;
@@ -72,6 +92,17 @@ public class Client extends EntiteAuditable {
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
+
+    public Date getDateNaissance() {
+        return dateNaissance;
+    }
+
+    public void setDateNaissance(Date dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
+
+    public String getAdresseLigne1() {
+        return adresseLigne1;
     }
 
     public void setAdresseLigne1(String adresseLigne1) {
