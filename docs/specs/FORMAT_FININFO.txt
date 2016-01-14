@@ -1,0 +1,108 @@
+FININFO S.A. - Diffusion de donnees de marche
+Departement Interfaces clients
+
+            INTERFACE "COTATIONS V2"
+            DESCRIPTION D'ENREGISTREMENT - FICHIER QUOTIDIEN DE COURS DE CLOTURE
+
+Reference   : FI-COT-V2-ENR
+Version     : 2.1 du 15/06/2009 (V2.0 : 12/2007 ; V1 abandonnee le 31/12/2011)
+Destinataire: Banque de l'Aunis et de Saintonge (contrat n° 2004-0713)
+Contact     : support-interfaces@fininfo.example (helpdesk 8h-19h)
+
+(copie conservee dans le depot SIGEP : docs/specs/FORMAT_FININFO.txt - JM 01/2016.
+ Annotations BAS entre crochets [ ].)
+
+
+1. OBJET
+
+Le fichier COTATIONS transmet chaque jour de bourse, apres la cloture, les cours de
+l'ensemble des valeurs negociees sur les places couvertes par le contrat (Euronext Paris,
+Amsterdam, Bruxelles, Lisbonne ; XETRA et London SE en option). Il contient une ligne de
+detail par valeur et par place.
+
+Le fichier est complet : il n'est pas filtre sur le portefeuille du client. C'est au client
+de ne retenir que les valeurs qu'il suit.
+
+
+2. TRANSFERT
+
+Mode        : CFT (Cross File Transfer), partenaire FININFO_COT, flux push vers le client.
+Horaire     : mise a disposition entre 18h00 et 18h15 (heure de Paris) les jours de bourse
+              Euronext. Pas de fichier les jours de fermeture de la place. En cas d'incident,
+              le fichier peut etre redepose sous le meme nom (le client doit accepter un
+              ecrasement).
+Nommage     : COT_AAAAMMJJ.txt  (AAAAMMJJ = date de bourse, ex. COT_20090615.txt)
+Encodage    : ISO-8859-1 (Latin-1). Les libelles de l'enregistrement d'entete peuvent contenir
+              des caracteres accentues. Les enregistrements de detail sont en ASCII 7 bits.
+Fin de ligne: CR LF (0x0D 0x0A). [SIGEP : lecture par readLine, LF seul accepte aussi]
+Taille      : environ 6 000 lignes / 650 Ko par jour.
+
+[BAS : depot dans /appli/sigep/fininfo/entree sur srv-sigep-ref-01, archive dans
+ /appli/sigep/fininfo/archive apres integration sans rejet. Import a 18h30, rattrapage 19h30.]
+
+
+
+Trois types d'enregistrement, identifies par le caractere en position 1 :
+
+   E   entete       1 par fichier, premiere ligne
+   D   detail       1 par valeur et par place, 0 a n
+   F   fin          1 par fichier, derniere ligne
+
+ Pos   Long  Type  Champ                          Contenu
+ ----  ----  ----  -----------------------------  -------------------------------------------
+ 1     1     A     Type d'enregistrement          'E'
+ 2     12    A     Identifiant interface          'COTATIONS V2'
+ 14    1     A     Filler                         blanc
+ 15    8     N     Date de bourse                 AAAAMMJJ
+ 23    1     A     Filler                         blanc
+ 26    8     N     Date de cotation               AAAAMMJJ (= date de bourse de l'entete)
+ 34    15    N     Cours de cloture               4 decimales implicites (1234500 = 123,4500)
+                                                  Blancs si la valeur n'a pas cote.
+ 49    15    N     Cours d'ouverture              idem ; blancs si non disponible
+ 64    15    N     Plus haut de la seance         idem
+ 79    15    N     Plus bas de la seance          idem
+ 94    12    N     Volume                         nombre de titres echanges, entier ;
+                                                  blancs si non disponible
+ 106   3     A     Devise de cotation             ISO 4217 (EUR, GBP, USD, CHF...)
+ 109   1     A     Indicateur de suspension       'S' = valeur suspendue de cotation ce jour
+                                                  (les cours sont alors absents) ; blanc sinon.
+                                                  Ajoute en V2.1 (2009), present dans les
+                                                  fichiers depuis le 01/01/2012.
+
+ Total : 109.
+
+ Regle de gestion : un enregistrement D dont la cloture est absente ou dont l'indicateur vaut
+ 'S' ne doit pas mettre a jour le dernier cours connu chez le client.
+
+ [SIGEP - LigneFininfo.java : rapprochement d'abord par le code Fininfo (SGP_VALEUR.CODE_FININFO),
+  puis par l'ISIN ; ligne de moins de 108 caracteres = rejet ; devise differente de celle du
+  referentiel = rejet de la ligne ; cloture absente ou 'S' = cours ignore (compteur coursIgnores).]
+
+
+6. ENREGISTREMENT DE FIN (type F)
+
+ Pos   Long  Type  Champ                          Contenu
+ ----  ----  ----  -----------------------------  -------------------------------------------
+ 1     1     A     Type d'enregistrement          'F'
+ 2     8     N     Nombre d'enregistrements D     cadre a droite, zeros a gauche
+ 10    100   A     Filler                         blancs
+
+ Pos 2-13     FF000120073        code Fininfo (11 caracteres utiles + 1 blanc de cadrage)
+ Pos 14-25    FR0000120073       ISIN Air Liquide
+ Pos 26-33    20240315           15 mars 2024
+ Pos 34-48    000000001841000    cloture 184,1000 EUR
+ Pos 49-63    000000001830000    ouverture 183,0000
+ Pos 64-78    000000001848000    plus haut 184,8000
+ Pos 79-93    000000001822000    plus bas 182,2000
+ Pos 94-105   000000730110       volume 730 110 titres
+ Pos 106-108  EUR                devise
+ Pos 109      (blanc)            non suspendue
+
+Deuxieme ligne D : FR0000120685 (Natixis) suspendue le 15/03/2024, cours et volume a blanc,
+indicateur 'S' en position 109. [BAS : valeur radiee du referentiel SIGEP le 21/07/2021, la
+ligne continue d'arriver dans le fichier, elle est rapprochee puis ignoree - c'est normal.]
+
+
+8. EVOLUTIONS
+
+                                                                       --- fin du document ---
