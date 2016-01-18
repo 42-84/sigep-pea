@@ -1,0 +1,69 @@
+package fr.bas.sigep.commun.domaine;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+/**
+ * Habilitation d'un utilisateur SiteMinder (SM_USER) sur SIGEP.
+ *
+    @Column(name = "ID_HABILITATION")
+    private Long id;
+
+    @Column(name = "UTILISATEUR", nullable = false, unique = true, length = 30)
+    private String utilisateur;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PROFIL", nullable = false, length = 15)
+    private Profil profil;
+
+    /** Renseigne pour le profil CLIENT uniquement. */
+    @Column(name = "NUM_CLIENT", length = 8)
+    private String numeroClient;
+
+    @Column(name = "AGENCE", length = 5)
+    private String codeAgence;
+
+    @Column(name = "ACTIF", nullable = false)
+    private boolean actif = true;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setProfil(Profil profil) {
+        this.profil = profil;
+    }
+
+    public String getNumeroClient() {
+        return numeroClient;
+    }
+
+    public void setNumeroClient(String numeroClient) {
+        this.numeroClient = numeroClient;
+    }
+
+    }
+
+    public boolean isActif() {
+        return actif;
+    }
+
+    public void setActif(boolean actif) {
+        this.actif = actif;
+    }
+}
