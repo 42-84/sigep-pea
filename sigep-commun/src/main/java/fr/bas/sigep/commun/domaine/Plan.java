@@ -100,6 +100,9 @@ public class Plan extends EntiteAuditable {
     public void setDateCloture(Date dateCloture) {
         this.dateCloture = dateCloture;
     }
+
+    public StatutPlan getStatut() {
+        return statut;
     }
 
     public void setStatut(StatutPlan statut) {
@@ -123,4 +126,15 @@ public class Plan extends EntiteAuditable {
         return commentaire;
     }
 
+    public void setCommentaire(String commentaire) {
+        this.commentaire = commentaire;
+    }
+
+    public boolean estOuvert() {
+        return statut == StatutPlan.OUVERT;
+    }
+
+    public BigDecimal getVersementsRestants() {
+        BigDecimal restant = type.getPlafondVersements().subtract(totalVersements);
+        return restant.signum() < 0 ? BigDecimal.ZERO : restant;
 }
