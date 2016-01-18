@@ -57,6 +57,14 @@ public class Plan extends EntiteAuditable {
     @JoinColumn(name = "ID_COMPTE_ESPECES", nullable = false)
     private CompteEspeces compteEspeces;
 
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNumeroPlan() {
         return numeroPlan;
     }
 
