@@ -16,6 +16,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ * Plan d'epargne en actions (PEA ou PEA-PME) d'un client.
+ *
+ * Un plan = un compte titres + un compte especes associe. Le numero de plan est au format
+ * historique SIGEP v1 : "PEA" + 9 chiffres (ex : PEA000012345).
+ */
+@Entity
+@Table(name = "SGP_PLAN")
 public class Plan extends EntiteAuditable {
 
     @Id
@@ -93,6 +105,17 @@ public class Plan extends EntiteAuditable {
     }
 
     public void setDateOuverture(Date dateOuverture) {
+        this.dateOuverture = dateOuverture;
+    }
+
+    public Date getDatePremierVersement() {
+        return datePremierVersement;
+    }
+
+    public void setDatePremierVersement(Date datePremierVersement) {
+        this.datePremierVersement = datePremierVersement;
+    }
+
     public Date getDateCloture() {
         return dateCloture;
     }
