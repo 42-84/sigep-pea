@@ -1,0 +1,28 @@
+package fr.bas.sigep.commun.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import fr.bas.sigep.commun.domaine.Client;
+import fr.bas.sigep.commun.domaine.Plan;
+import fr.bas.sigep.commun.domaine.StatutPlan;
+import fr.bas.sigep.commun.domaine.TypePlan;
+
+public interface PlanRepository extends JpaRepository<Plan, Long> {
+
+    Plan findByNumeroPlan(String numeroPlan);
+
+    List<Plan> findByClient(Client client);
+
+    List<Plan> findByClientNumeroClient(String numeroClient);
+
+    List<Plan> findByStatut(StatutPlan statut);
+
+    Long dernierNumeroSequentiel();
+
+    @Query("select p from Plan p where p.codeAgence = :agence and p.statut = :statut")
+    List<Plan> findParAgence(@Param("agence") String agence, @Param("statut") StatutPlan statut);
+}
