@@ -45,6 +45,10 @@ import javax.persistence.Table;
         return utilisateur;
     }
 
+    public void setUtilisateur(String utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
     public void setProfil(Profil profil) {
         this.profil = profil;
     }
@@ -57,6 +61,12 @@ import javax.persistence.Table;
         this.numeroClient = numeroClient;
     }
 
+    public String getCodeAgence() {
+        return codeAgence;
+    }
+
+    public void setCodeAgence(String codeAgence) {
+        this.codeAgence = codeAgence;
     }
 
     public boolean isActif() {
