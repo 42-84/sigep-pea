@@ -24,6 +24,17 @@ import javax.persistence.TemporalType;
 @Table(name = "SGP_COUPON")
 public class Coupon extends EntiteAuditable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SGP_COUPON")
+    @SequenceGenerator(name = "SEQ_SGP_COUPON", sequenceName = "SEQ_SGP_COUPON", allocationSize = 1)
+    @Column(name = "ID_COUPON")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "ID_VALEUR", nullable = false)
+    private Valeur valeur;
+
+    @Temporal(TemporalType.DATE)
         return id;
     }
 
@@ -35,6 +46,16 @@ public class Coupon extends EntiteAuditable {
         return valeur;
     }
 
+    public void setValeur(Valeur valeur) {
+        this.valeur = valeur;
+    }
+
+    public Date getDateDetachement() {
+        return dateDetachement;
+    }
+
+    public void setDateDetachement(Date dateDetachement) {
+        this.dateDetachement = dateDetachement;
     }
 
     public Date getDatePaiement() {
