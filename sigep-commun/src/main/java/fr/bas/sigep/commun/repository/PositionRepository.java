@@ -15,4 +15,5 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
     List<Position> findByPlan(Plan plan);
 
     List<Position> findByPlanOrderByValeurLibelle(Plan plan);
+    long compterDetenteurs(@Param("valeur") Valeur valeur);
 }

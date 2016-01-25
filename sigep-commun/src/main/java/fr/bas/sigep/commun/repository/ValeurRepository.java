@@ -7,6 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import fr.bas.sigep.commun.domaine.Valeur;
+
+public interface ValeurRepository extends JpaRepository<Valeur, Long> {
+
+    Valeur findByCodeIsin(String codeIsin);
+
+    Valeur findByCodeFininfo(String codeFininfo);
+
+    List<Valeur> findByMnemoniqueIgnoreCase(String mnemonique);
+
     @Query("select v from Valeur v where (upper(v.libelle) like upper(concat('%', :q, '%')) "
             + "or upper(v.codeIsin) like upper(concat(:q, '%')) or upper(v.mnemonique) like upper(concat(:q, '%'))) "
             + "and v.dateRadiation is null order by v.libelle")
