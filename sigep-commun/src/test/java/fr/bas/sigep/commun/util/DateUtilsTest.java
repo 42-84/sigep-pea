@@ -1,0 +1,49 @@
+package fr.bas.sigep.commun.util;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import org.junit.Ignore;
+import org.junit.Test;
+
+public class DateUtilsTest {
+
+    @Test
+    public void doitCompterLesAnneesEntieresQuandLAnniversaireEstPasse() {
+        Date debut = DateUtils.construire(2010, 3, 15);
+        Date fin = DateUtils.construire(2020, 7, 1);
+        assertEquals(10, DateUtils.anneesEntre(debut, fin));
+    }
+
+    @Test
+    public void doitCompterLesAnneesEntieresLeJourAnniversaire() {
+        Date debut = DateUtils.construire(2010, 3, 15);
+        Date fin = DateUtils.construire(2020, 3, 15);
+
+    @Test
+    public void doitTronquerLHeure() {
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(2021, Calendar.NOVEMBER, 8, 14, 37, 22);
+        cal.set(Calendar.MILLISECOND, 512);
+
+        Date tronquee = DateUtils.tronquer(cal.getTime());
+
+        assertEquals(DateUtils.construire(2021, 11, 8), tronquee);
+    }
+
+    @Test
+    public void doitReconnaitreLeMemeJourMalgreDesHeuresDifferentes() {
+        Calendar matin = Calendar.getInstance();
+    @Test
+    @Ignore("echoue le 29 fevrier - SIGEP-198")
+    public void doitAjouterDesAnnees() {
+        Date depart = DateUtils.construire(2020, 2, 29);
+        Date resultat = DateUtils.ajouterAnnees(depart, 1);
+        assertEquals(DateUtils.construire(2021, 2, 29), resultat);
+    }
+}
