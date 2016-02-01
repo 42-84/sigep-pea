@@ -23,6 +23,13 @@ public final class DateUtils {
     private static final SimpleDateFormat SDF_JOUR = new SimpleDateFormat(FORMAT_JOUR);
     private static final SimpleDateFormat SDF_FICHIER = new SimpleDateFormat(FORMAT_FICHIER);
 
+        synchronized (SDF_JOUR) {
+            return SDF_JOUR.format(date);
+        }
+    }
+
+    public static String formaterFichier(Date date) {
+        synchronized (SDF_FICHIER) {
             return SDF_FICHIER.format(date);
         }
     }
