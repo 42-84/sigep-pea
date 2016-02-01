@@ -39,6 +39,17 @@ public class Plan extends EntiteAuditable {
     @Column(name = "NUM_PLAN", nullable = false, unique = true, length = 12)
     private String numeroPlan;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE_PLAN", nullable = false, length = 10)
+    private TypePlan type;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "ID_CLIENT", nullable = false)
+    private Client client;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DT_OUVERTURE", nullable = false)
+    private Date dateOuverture;
 
     /**
      * Date du premier versement : c'est elle qui fait courir l'anciennete fiscale du plan,
@@ -69,6 +80,13 @@ public class Plan extends EntiteAuditable {
     @JoinColumn(name = "ID_COMPTE_ESPECES", nullable = false)
     private CompteEspeces compteEspeces;
 
+    @Column(name = "AGENCE", length = 5)
+    private String codeAgence;
+
+    @Column(name = "COMMENTAIRE", length = 500)
+    private String commentaire;
+
+    public Long getId() {
         return id;
     }
 
