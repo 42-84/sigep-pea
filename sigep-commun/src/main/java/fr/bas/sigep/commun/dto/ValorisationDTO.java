@@ -1,0 +1,74 @@
+package fr.bas.sigep.commun.dto;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Valorisation globale d'un plan. Produite par sigep-portefeuille, consommee par le front
+ * ET par sigep-comptes (synthese, retraits).
+ */
+public class ValorisationDTO {
+
+    private String numeroPlan;
+    private Date dateValorisation;
+    private BigDecimal valorisationTitres = BigDecimal.ZERO;
+    private BigDecimal soldeEspeces = BigDecimal.ZERO;
+    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal totalVersements = BigDecimal.ZERO;
+    private BigDecimal plusValueLatente = BigDecimal.ZERO;
+    private BigDecimal prixRevientTotal = BigDecimal.ZERO;
+    public Date getDateValorisation() {
+        return dateValorisation;
+    }
+
+    public void setDateValorisation(Date dateValorisation) {
+    }
+
+    public BigDecimal getSoldeEspeces() {
+        return soldeEspeces;
+    }
+
+    public void setSoldeEspeces(BigDecimal soldeEspeces) {
+        this.soldeEspeces = soldeEspeces;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+        return plusValueLatente;
+    }
+
+    public void setPlusValueLatente(BigDecimal plusValueLatente) {
+        this.plusValueLatente = plusValueLatente;
+    }
+
+    public BigDecimal getPrixRevientTotal() {
+        return prixRevientTotal;
+    }
+
+    public void setPrixRevientTotal(BigDecimal prixRevientTotal) {
+        this.prixRevientTotal = prixRevientTotal;
+    }
+
+    public int getNombreLignes() {
+        return nombreLignes;
+    }
+
+        return partielle;
+    }
+
+    public void setPartielle(boolean partielle) {
+        this.partielle = partielle;
+    }
+
+    public List<PositionDTO> getPositions() {
+        return positions;
+    }
+}
