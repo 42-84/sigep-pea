@@ -1,0 +1,341 @@
+BANQUE DE L'AUNIS ET DE SAINTONGE
+Direction des Systemes d'Information - Pole Epargne & Titres
+
+
+                    PROJET SIGEP v2 - REFONTE
+
+        SPECIFICATION FONCTIONNELLE DETAILLEE (SFD)
+
+
+Reference        : SIGEP-SFD-001
+Version          : v1.4 - 02/02/2016
+Redacteurs       : C. Lefranc (MOA Epargne & Titres), J. Martin (DSI)
+Validation       : Comite de projet du 09/02/2016
+Diffusion        : equipe projet, MOE, Juridique, Conformite
+
+ 1.  Objet du document
+ 2.  Perimetre et acteurs
+ 3.  Le Plan d'Epargne en Actions - rappel reglementaire
+ 4.  Ouverture d'un plan
+ 5.  Versements
+ 6.  Retraits et cloture
+ 7.  Ordres de bourse et positions
+ 8.  Coupons et dividendes
+ 9.  Referentiel des valeurs et cours
+ 10. Habilitations et profils
+ 11. Reprise des donnees SIGEP v1
+ 12. Annexes
+
+
+
+1. OBJET DU DOCUMENT
+
+Ce document decrit les regles de gestion que doit mettre en oeuvre SIGEP v2
+pour la tenue des Plans d'Epargne en Actions (PEA) et des PEA-PME de la
+clientele de particuliers de la BAS. Il reprend les regles en vigueur dans
+SIGEP v1 (2004), mises a jour de la reglementation applicable au 01/01/2016,
+et sert de base a la recette fonctionnelle.
+
+Il ne decrit pas l'architecture technique (voir dossier d'architecture DSI)
+ni les ecrans (voir maquettes MOA, livrable separe).
+
+Les regles sont numerotees RG-xx-nn pour reference dans les cahiers de recette.
+
+
+
+2. PERIMETRE ET ACTEURS
+
+2.1 Perimetre
+
+ Inclus :
+  - ouverture, tenue et cloture des PEA et PEA-PME des personnes physiques
+  - compte especes associe a chaque plan
+ Client         : titulaire du plan. Consulte, verse, passe des ordres,
+                  demande un retrait (portail BAS en ligne).
+ Conseiller     : agent en agence. Ouvre les plans, saisit pour le compte
+                  du client.
+ Back-office    : service Titres du siege. Referentiel, coupons, cloture
+                  administrative, regularisations, habilitations.
+ Administrateur : DSI. Parametrage.
+ Systeme        : traitements automatiques (batchs).
+
+
+
+3. LE PLAN D'EPARGNE EN ACTIONS - RAPPEL REGLEMENTAIRE
+
+Le PEA est cree par la loi n° 92-666 du 16 juillet 1992. Il est regi par les
+articles L221-30 a L221-32 du Code monetaire et financier (CMF) et, pour la
+fiscalite, par l'article 157 5° bis du Code general des impots (CGI).
+
+   Le compte especes ne porte pas d'interet et ne peut pas etre debiteur.
+
+Caracteristiques au 01/01/2016 :
+
+ Regle                      PEA                       PEA-PME
+ -------------------------  ------------------------  -----------------------
+ Plafond des versements     150 000 EUR               75 000 EUR
+                            (132 000 EUR avant 2014)
+ Nombre par personne        1                         1
+ Cumul PEA + PEA-PME        autorise (225 000 EUR au total)
+ Titulaire                  personne physique majeure, domicile fiscal en
+                            France
+ Titres eligibles           actions de societes ayant leur siege dans l'UE
+                            ou l'EEE, OPCVM investis a 75 % au moins en
+                            titres eligibles ; pour le PEA-PME : PME/ETI
+4.1 Conditions
+
+ RG-OUV-01  Le titulaire est une personne physique majeure (18 ans revolus a
+            la date d'ouverture).
+ RG-OUV-02  Le titulaire a son domicile fiscal en France (attestation dans
+            le RCC ; SIGEP porte un indicateur "resident fiscal France").
+ RG-OUV-03  Un titulaire ne peut detenir qu'un seul PEA et un seul PEA-PME
+            OUVERT. Le controle porte sur les plans connus de SIGEP ; le
+            client atteste sur l'honneur ne pas detenir de plan de meme type
+            dans un autre etablissement (formulaire d'ouverture).
+ RG-OUV-04  Un plan cloture ou transfere ne fait pas obstacle a une nouvelle
+            ouverture.
+ RG-OUV-05  L'ouverture est effectuee par un conseiller ou le back-office.
+            Le client ne peut pas ouvrir seul en ligne (signature du contrat
+            en agence).
+
+4.2 Type de plan
+
+ RG-OUV-06  Le type (PEA ou PEA-PME) est fixe a l'ouverture et ne change
+            jamais.
+ RG-OUV-07  Le plafond de versements est celui du type : 150 000 EUR (PEA)
+            ou 75 000 EUR (PEA-PME).
+
+4.3 Versement initial
+
+ RG-OUV-08  L'ouverture s'accompagne obligatoirement d'un premier versement,
+            d'un minimum de 15 EUR (regle commerciale BAS ; pas de minimum
+            legal).
+ RG-OUV-09  Le versement initial ne peut pas depasser le plafond du plan.
+ RG-OUV-10  La date du premier versement est enregistree : elle fait courir
+            l'anciennete fiscale.
+
+ RG-OUV-14  Statuts possibles : OUVERT, CLOTURE, TRANSFERE. Un plan nait
+            OUVERT. CLOTURE et TRANSFERE sont definitifs.
+            [note MOA : un statut "bloque" (succession, saisie) est demande
+            par le Juridique - a etudier en phase 2]
+
+
+
+5. VERSEMENTS
+
+ RG-VER-01  Seuls les versements en NUMERAIRE sont admis (pas d'apport de
+            titres).
+ RG-VER-02  Versement minimum : 15 EUR.
+ RG-VER-03  Le cumul des versements depuis l'ouverture (hors retraits) ne
+            peut pas depasser le plafond du type de plan. Les gains,
+            dividendes et plus-values ne sont pas des versements et ne
+ RG-VER-07  Le cumul des versements est tenu sur le plan (champ dedie) et
+            non recalcule depuis les operations : les plans repris de v1
+            n'ont pas leur historique detaille (§11).
+
+
+
+6. RETRAITS ET CLOTURE
+
+6.1 Retraits
+
+ RG-RET-01  Un retrait porte sur des ESPECES uniquement. Le client qui veut
+            retirer plus que son solde especes doit d'abord vendre des
+            titres.
+ RG-RET-02  Retrait avant le 8e anniversaire du premier versement : le
+            retrait entraine la CLOTURE du plan. Le client doit alors
+            retirer la totalite des especes et avoir vendu tous ses titres.
+            Le systeme demande une confirmation explicite.
+
+6.2 Gain imposable d'un retrait
+
+ RG-RET-05  Le gain net du plan = valeur liquidative du plan (titres au
+            dernier cours + especes) - cumul des versements.
+ RG-RET-06  Pour un retrait partiel, la part de gain comprise dans le retrait
+            est proportionnelle :
+              gain retrait = montant retire x gain net / valeur liquidative
+            proportionnel, taux et montant des PS, montant net verse,
+            avertissements (solde insuffisant, cloture, cours indisponibles).
+
+6.5 Cloture
+
+ RG-CLO-01  Cloture par retrait total avant 8 ans (RG-RET-02) : automatique.
+ RG-CLO-02  Cloture administrative par le BO (demande client, deces,
+            transfert sortant) : le compte especes doit etre a zero et le
+            plan ne doit plus detenir de titres.
+ RG-CLO-03  La date de cloture est enregistree. Un plan cloture reste
+            consultable (historique) mais n'accepte plus aucune operation.
+ RG-CLO-04  Transfert sortant vers un autre etablissement : statut TRANSFERE
+            apres virement des titres et des especes (traitement manuel BO).
+
+
+            dans un sens ACHAT ou VENTE, pour une quantite.
+ RG-ORD-02  Quantite : entiere pour les actions, ETF et droits ; jusqu'a 3
+            decimales (milliemes de part) pour les OPCVM.
+ RG-ORD-03  Quantite maximale par ordre : 100 000 (parametre).
+ RG-ORD-04  Achat : le solde especes doit couvrir le montant brut + frais.
+            Pas de decouvert.
+ RG-ORD-05  Vente : la quantite vendue ne peut pas depasser la quantite
+            detenue. Option "vendre toute la ligne".
+ RG-ORD-06  Execution : SIGEP ne passe pas d'ordre au marche. En phase 1,
+            l'ordre est repute execute IMMEDIATEMENT au dernier cours de
+            cloture connu de la valeur. L'interface temps reel avec la table
+            de negociation (STRATE) est prevue en phase 2 ; les ordres a
+            cours limite egalement.
+ RG-ORD-07  Date de reglement-livraison : J+2 jours ouvres (T2S, depuis le
+            06/10/2014). Les jours feries de la place ne sont pas pris en
+            compte en phase 1 (calendrier Euronext a integrer).
+ RG-ORD-08  Reference de mouvement : "MVT" + AAAAMMJJ + 6 chiffres, unique.
+ RG-ORD-09  Canal : WEB si l'ordre est saisi par le client, AGENCE sinon.
+ RG-ORD-10  Les especes sont mouvementees a la date de reglement (date de
+            valeur) : ACHAT_TITRES pour le net a debiter, VENTE_TITRES pour
+            le net a crediter.
+ RG-ORD-11  Un ordre du jour peut etre annule par le back-office
+            (contre-passation positions et especes, statut ANNULE, motif).
+
+7.2 Frais de courtage
+
+ RG-FRA-01  Bareme "Bourse Particuliers" BAS (edition 2012) :
+              actions, ETF, droits : 0,50 % du montant brut,
+                                     minimum 8,00 EUR, maximum 60,00 EUR
+              OPCVM BAS (gamme maison) : 0 EUR (droits d'entree non factures
+                                     dans le PEA)
+              autres OPCVM : 1,00 % sans minimum
+ RG-FRA-02  Les frais sont ajoutes au brut a l'achat, retranches a la vente.
+ RG-FRA-03  Les frais sont arrondis au centime.
+
+7.3 Positions et prix de revient unitaire (PRU)
+
+ RG-POS-01  Une position = une ligne par plan et par valeur : quantite
+            detenue et PRU.
+ RG-POS-02  PRU = cout moyen pondere, FRAIS INCLUS :
+              PRU apres achat = (Q avant x PRU avant + Q achetee x cours
+                                 + frais) / (Q avant + Q achetee)
+            arrondi a 4 decimales.
+ RG-POS-03  Le PRU ne change pas a la vente.
+ RG-POS-04  Une ligne entierement vendue est soldee ; un rachat ulterieur
+ RG-VAL-02  Si le cours d'une valeur est indisponible, la ligne est
+            valorisee au PRU et la valorisation est signalee "partielle".
+ RG-VAL-03  Une valorisation quotidienne de tous les plans ouverts est
+            historisee chaque soir apres l'integration des cours, pour le
+            graphique d'evolution et le releve annuel. [phase 1b]
+
+            comite 09/02/2016, a traiter en phase 2]
+ RG-CPN-04  Les dividendes ne sont pas des versements : ils n'entrent pas
+            dans le plafond.
+ RG-CPN-05  Les dividendes de source etrangere sont credites nets de la
+            retenue a la source du pays d'origine (montant unitaire saisi
+            net par le BO). Pas de credit d'impot dans le PEA.
+ RG-CPN-06  Un coupon traite est marque comme tel et n'est pas rejoue.
+
+
+
+9. REFERENTIEL DES VALEURS ET COURS
+            cotation (code MIC), pays du siege social de l'emetteur (ISO
+            3166-1), devise, indicateurs d'eligibilite PEA et PEA-PME, code
+            valeur chez le fournisseur de cours, date de radiation.
+ RG-REF-02  Creation et modification par le BO Titres uniquement.
+ RG-REF-03  Radiation (retrait de la cote, absorption) : date de radiation,
+            eligibilites retirees. Une valeur radiee n'apparait plus dans
+            la recherche mais reste referencee par les positions et
+            mouvements historiques.
+
+9.2 Cours
+
+ RG-REF-04  Cours de cloture quotidien par valeur : cloture (obligatoire),
+            ouverture, plus haut, plus bas, volume, source.
+ RG-REF-05  Source principale : fichier quotidien du fournisseur Fininfo,
+            format "COTATIONS V2" (largeur fixe, annexe 12.2), depose par
+            transfert CFT vers 18h05 les jours de bourse, integre a 18h30.
+ RG-REF-06  Les valeurs du fichier non connues de SIGEP sont ignorees (le
+            fichier contient toute la place, SIGEP ne suit que les valeurs
+            detenues ou eligibles).
+            ACTION dont le siege est dans un pays de l'UE/EEE -> eligible
+            PEA ; OPCVM et ETF -> non eligible (quota de 75 % a verifier
+            manuellement) ; DROIT, AUTRE -> non eligible.
+ RG-ELI-03  Pays UE/EEE : les 28 Etats membres (dont le Royaume-Uni) +
+            Islande, Liechtenstein, Norvege.
+ RG-ELI-04  A l'achat, le systeme verifie l'eligibilite au type du plan et
+            refuse l'ordre avec le motif si la valeur n'est pas eligible
+            (indicateur a faux, valeur radiee, ou incoherence entre
+            l'indicateur et le pays du siege pour une action).
+ RG-ELI-05  Une valeur qui perd son eligibilite (radiation, changement de
+            siege) : les positions existantes doivent etre cedees ou
+            sorties du plan dans un delai de 2 mois. Suivi manuel BO
+            (extraction des detenteurs).
+
+
+
+10. HABILITATIONS ET PROFILS
+
+ RG-HAB-01  L'authentification est assuree par le SSO groupe (SiteMinder) :
+            SIGEP recoit l'identifiant de l'utilisateur connecte et ne gere
+            pas de mot de passe.
+                         clients, recherche par nom.
+            BACK_OFFICE  tout ce que fait le conseiller, pour TOUS les
+                         clients ; referentiel valeurs et cours, coupons,
+                         cloture administrative, annulation de mouvement,
+                         regularisations especes, rejeu des imports.
+            ADMIN        tout ; gestion des habilitations, parametrage.
+
+ RG-HAB-05  Un profil superieur dispose de tous les droits des profils
+            inferieurs.
+ RG-HAB-06  La restriction du CONSEILLER a son agence s'appuie sur le code
+            agence du plan et celui de l'habilitation. [note MOA : un
+            conseiller doit pouvoir depanner un client d'une autre agence ;
+            regle a preciser - phase 1b]
+ RG-HAB-07  Les traitements automatiques s'executent sous un identifiant
+            technique SYSTEME, trace dans l'audit.
+ RG-HAB-08  Chaque enregistrement porte la date de creation, la date et
+            l'utilisateur de derniere modification (audit, repris de v1).
+
+
+
+11. REPRISE DES DONNEES SIGEP V1
+
+ RG-REP-01  Reprise le week-end du 12-13/03/2016 : clients, plans (avec date
+            d'ouverture d'origine et cumul des versements), comptes especes
+            (solde), positions (quantite, PRU), valeurs, habilitations.
+ RG-REP-02  L'historique des operations especes et des mouvements titres
+            d'AVANT la reprise n'est PAS repris ligne a ligne (volume,
+            format v1). Il reste consultable dans les archives v1 (lecture
+            seule) pendant 10 ans.
+ RG-REP-03  Consequence : le cumul des versements est un champ tenu, pas un
+ RETRAIT                debit     sortie du plan
+ ACHAT_TITRES           debit     net d'un achat (brut + frais)
+ VENTE_TITRES           credit    net d'une vente (brut - frais)
+ DIVIDENDE              credit    coupon
+ FRAIS                  debit     frais divers (droits de garde : non
+                                  factures dans le PEA BAS, type reserve)
+ REGULARISATION         signe     ecriture manuelle BO (annulation,
+                                  correction), signe libre
+ PRELEVEMENTS_SOCIAUX   debit     PS retenus a la source lors d'un retrait
+
+12.2 Fichier fournisseur de cours
+
+ Voir "Interface COTATIONS V2 - description d'enregistrement" (Fininfo,
+ 2009), docs/specs/FORMAT_FININFO.txt.
+
+12.3 Textes de reference
+
+ - Loi n° 92-666 du 16 juillet 1992 relative au plan d'epargne en actions
+ - CMF art. L221-30 a L221-32-1 ; D221-109 et suivants
+ - CGI art. 157 5° bis, 150-0 A, 200 A
+ - BOI-RPPM-RCM-40-50 (PEA) - mise a jour du 20/03/2015
+ - Loi de finances pour 2014 (PEA-PME, plafond PEA 150 000 EUR)
+ - Reglement general AMF, livre III (tenue de compte-conservation)
+
+12.4 Glossaire
+
+ BO      Back-office
+ IFU     Imprime fiscal unique
+ MIC     Market Identifier Code (ISO 10383), ex. XPAR = Euronext Paris
+ OPCVM   Organisme de placement collectif en valeurs mobilieres (SICAV, FCP)
+ PRU     Prix de revient unitaire
+ PS      Prelevements sociaux
+ RCC     Referentiel client central (BAS)
+ T2S     TARGET2-Securities (plateforme de reglement-livraison)
+
+
+
+                                                     --- fin du document ---
