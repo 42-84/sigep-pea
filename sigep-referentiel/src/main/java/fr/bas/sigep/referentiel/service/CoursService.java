@@ -1,0 +1,100 @@
+package fr.bas.sigep.referentiel.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import fr.bas.sigep.commun.domaine.Cours;
+import fr.bas.sigep.commun.domaine.Profil;
+import fr.bas.sigep.commun.domaine.Valeur;
+import fr.bas.sigep.commun.dto.CoursDTO;
+    @Autowired
+    private ValeurService valeurService;
+
+    /**
+     * Dernier cours connu d'une valeur.
+     *
+     * Charge tout l'historique puis trie en memoire. La requete native dernierCoursNatif() a ete
+     * ecrite pour remplacer ca mais renvoyait une erreur de mapping sous H2 en dev, donc jamais
+     * activee. Avec 10 ans d'historique (2 500 cours / valeur) ca reste "acceptable".
+     */
+        Collections.sort(historique, new Comparator<Cours>() {
+            @Override
+            public int compare(Cours a, Cours b) {
+                return a.getDateCours().compareTo(b.getDateCours());
+            }
+        });
+        return versDto(historique.get(historique.size() - 1));
+    }
+
+    public List<CoursDTO> historique(String codeIsin, Date du, Date au) {
+        Valeur valeur = valeurService.charger(codeIsin);
+        if (au == null) {
+            au = new Date();
+        }
+        if (du == null) {
+            du = DateUtils.ajouterAnnees(au, -1);
+        }
+        List<Cours> cours = coursRepository.findByValeurAndDateCoursBetweenOrderByDateCoursAsc(valeur, du, au);
+        List<CoursDTO> dtos = new ArrayList<CoursDTO>();
+        for (Cours c : cours) {
+            dtos.add(versDto(c));
+        }
+        return dtos;
+    }
+
+    /**
+     * Saisie manuelle d'un cours (valeur non couverte par Fininfo : OPCVM maison, valeurs radiees).
+     */
+        if (cours == null) {
+            cours = new Cours();
+            cours.setValeur(valeur);
+            cours.setDateCours(date);
+        } else {
+            LOG.info("Ecrasement du cours du {} pour {} (source {})", DateUtils.formaterJour(date), valeur.getCodeIsin(), cours.getSource());
+        }
+        cours.setCloture(MontantUtils.arrondirCours(saisie.getCloture()));
+        cours.setOuverture(MontantUtils.arrondirCours(saisie.getOuverture()));
+        cours.setPlusHaut(MontantUtils.arrondirCours(saisie.getPlusHaut()));
+        cours.setPlusBas(MontantUtils.arrondirCours(saisie.getPlusBas()));
+        cours.setVolume(saisie.getVolume());
+        cours.setSource(Cours.SOURCE_SAISIE);
+        return versDto(coursRepository.save(cours));
+    }
+            existant.setPlusHaut(plusHaut);
+            existant.setPlusBas(plusBas);
+            existant.setVolume(volume);
+            coursRepository.save(existant);
+            return true;
+        }
+        Cours cours = new Cours();
+        cours.setValeur(valeur);
+        cours.setDateCours(date);
+        cours.setCloture(cloture);
+        cours.setOuverture(ouverture);
+        cours.setPlusHaut(plusHaut);
+        cours.setPlusBas(plusBas);
+        cours.setVolume(volume);
+        cours.setSource(Cours.SOURCE_FININFO);
+        coursRepository.save(cours);
+        CoursDTO dto = new CoursDTO();
+        dto.setCodeIsin(c.getValeur().getCodeIsin());
+        dto.setDateCours(c.getDateCours());
+        dto.setCloture(c.getCloture());
+        dto.setOuverture(c.getOuverture());
+        dto.setPlusHaut(c.getPlusHaut());
+        dto.setPlusBas(c.getPlusBas());
+        dto.setVolume(c.getVolume());
+        dto.setSource(c.getSource());
+        return dto;
+    }
+}
