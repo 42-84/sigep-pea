@@ -24,6 +24,17 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "SGP_COURS", uniqueConstraints = @UniqueConstraint(name = "UK_SGP_COURS_VAL_DT", columnNames = { "ID_VALEUR", "DT_COURS" }))
 public class Cours extends EntiteAuditable {
 
+    public static final String SOURCE_FININFO = "FININFO";
+    public static final String SOURCE_SAISIE = "SAISIE";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SGP_COURS")
+    @SequenceGenerator(name = "SEQ_SGP_COURS", sequenceName = "SEQ_SGP_COURS", allocationSize = 1)
+    @Column(name = "ID_COURS")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "ID_VALEUR", nullable = false)
     private Valeur valeur;
 
     @Temporal(TemporalType.DATE)
@@ -32,6 +43,34 @@ public class Cours extends EntiteAuditable {
 
     @Column(name = "OUVERTURE", precision = 15, scale = 4)
     private BigDecimal ouverture;
+
+    @Column(name = "CLOTURE", nullable = false, precision = 15, scale = 4)
+    private BigDecimal cloture;
+
+    @Column(name = "PLUS_HAUT", precision = 15, scale = 4)
+    private BigDecimal plusHaut;
+
+    @Column(name = "PLUS_BAS", precision = 15, scale = 4)
+    private BigDecimal plusBas;
+
+    @Column(name = "VOLUME")
+    private Long volume;
+
+    @Column(name = "SOURCE", nullable = false, length = 10)
+    private String source = SOURCE_FININFO;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Valeur getValeur() {
+        return valeur;
+    }
+
     public void setValeur(Valeur valeur) {
         this.valeur = valeur;
     }
@@ -73,6 +112,14 @@ public class Cours extends EntiteAuditable {
     }
 
     public void setPlusBas(BigDecimal plusBas) {
+        this.plusBas = plusBas;
+    }
+
+    public Long getVolume() {
+        return volume;
+    }
+
+    public void setVolume(Long volume) {
         this.volume = volume;
     }
 

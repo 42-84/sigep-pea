@@ -11,6 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  * le client reessaie et ca passe). Connu depuis 2017, jamais corrige car "rare".
  */
 public final class GenerateurReference {
+
+    private static final AtomicInteger COMPTEUR = new AtomicInteger(0);
+
+    private GenerateurReference() {
+    }
+
+    public static String mouvement() {
+        return "MVT" + DateUtils.formaterFichier(new Date()) + String.format("%06d", COMPTEUR.incrementAndGet());
     }
 
     public static String operation(String prefixe) {

@@ -32,6 +32,13 @@ public class SiteMinderFilter extends OncePerRequestFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(SiteMinderFilter.class);
 
+    public static final String EN_TETE_SITEMINDER = "SM_USER";
+    public static final String EN_TETE_DEV = "X-SM-User";
+    /** Identifiant utilise pour les appels de service a service. */
+    public static final String UTILISATEUR_INTERNE = "SIGEP-INTERNE";
+
+    private final HabilitationRepository habilitationRepository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {

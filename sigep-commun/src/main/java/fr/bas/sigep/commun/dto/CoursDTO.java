@@ -13,6 +13,13 @@ public class CoursDTO {
     private BigDecimal plusBas;
     private Long volume;
     private String source;
+    public Date getDateCours() {
+        return dateCours;
+    }
+
+    public void setDateCours(Date dateCours) {
+        this.dateCours = dateCours;
+    }
 
     public BigDecimal getCloture() {
         return cloture;
