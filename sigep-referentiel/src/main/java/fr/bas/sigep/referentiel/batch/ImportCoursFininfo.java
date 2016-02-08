@@ -1,0 +1,91 @@
+package fr.bas.sigep.referentiel.batch;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.Date;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import fr.bas.sigep.commun.domaine.Valeur;
+import fr.bas.sigep.commun.repository.ValeurRepository;
+
+    @Value("${sigep.fininfo.repertoire:/appli/sigep/fininfo/entree}")
+    private String repertoire;
+
+    @Value("${sigep.fininfo.repertoire-archive:/appli/sigep/fininfo/archive}")
+
+    @Scheduled(cron = "${sigep.fininfo.cron:0 30 18 * * MON-FRI}")
+    public void importerFichierDuJour() {
+        importerPourDate(new Date());
+    }
+
+    @Scheduled(cron = "${sigep.fininfo.cron-rattrapage:0 30 19 * * MON-FRI}")
+    public void rattrapage() {
+        if (dernierResultat != null && DateUtils.memeJour(dernierResultat.getDebut(), new Date())) {
+            return; // deja fait aujourd'hui
+        }
+        importerPourDate(new Date());
+    }
+
+    public void importerPourDate(Date date) {
+        if (!actif) {
+            LOG.info("Import Fininfo desactive (sigep.fininfo.actif=false)");
+            return;
+        }
+        String nom = "COT_" + DateUtils.formaterFichier(date) + ".txt";
+        File fichier = new File(repertoire, nom);
+        if (!fichier.exists()) {
+            LOG.warn("Fichier Fininfo absent : {}", fichier.getAbsolutePath());
+            return;
+        }
+        InputStream flux = null;
+            LOG.error("Erreur de lecture du fichier " + nom, e);
+        } finally {
+            IOUtils.closeQuietly(flux);
+        }
+    }
+
+    /**
+     * Import d'un flux au format Fininfo. Une ligne en erreur n'interrompt pas l'import.
+     * Chaque cours est enregistre dans sa propre transaction (CoursService) : un import
+        ResultatImport resultat = new ResultatImport();
+        resultat.setFichier(nomFichier);
+        LOG.info("Debut import Fininfo {}", nomFichier);
+
+        BufferedReader lecteur = new BufferedReader(new InputStreamReader(flux, ENCODAGE));
+        String ligne;
+        int numero = 0;
+        while ((ligne = lecteur.readLine()) != null) {
+            numero++;
+            }
+        }
+        resultat.setFin(new Date());
+        LOG.info("Fin import {} : {} lues, {} enregistres, {} ignores, {} valeurs inconnues, {} rejets",
+                nomFichier, resultat.getLignesLues(), resultat.getCoursEnregistres(), resultat.getCoursIgnores(),
+                resultat.getValeursInconnues(), resultat.getLignesRejetees());
+        dernierResultat = resultat;
+        return resultat;
+    }
+
+    private void traiterLigne(LigneFininfo ligne, ResultatImport resultat) {
+            resultat.incrementerCoursIgnores();
+            return;
+        }
+        if (!valeur.getDevise().equals(ligne.getDevise())) {
+            throw new IllegalStateException("Devise " + ligne.getDevise() + " inattendue pour " + valeur.getCodeIsin());
+        }
+        boolean enregistre = coursService.enregistrerImport(valeur, DateUtils.tronquer(ligne.getDateCotation()),
+                ligne.getCloture(), ligne.getOuverture(), ligne.getPlusHaut(), ligne.getPlusBas(), ligne.getVolume());
+}
