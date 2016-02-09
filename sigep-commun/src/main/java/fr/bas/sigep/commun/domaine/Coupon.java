@@ -35,6 +35,24 @@ public class Coupon extends EntiteAuditable {
     private Valeur valeur;
 
     @Temporal(TemporalType.DATE)
+    @Column(name = "DT_DETACHEMENT", nullable = false)
+    private Date dateDetachement;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DT_PAIEMENT", nullable = false)
+    private Date datePaiement;
+
+    @Column(name = "MONTANT_UNITAIRE", nullable = false, precision = 15, scale = 4)
+    private BigDecimal montantUnitaire;
+
+    @Column(name = "LIBELLE", length = 100)
+    private String libelle;
+
+    /** Positionne par le batch une fois les especes creditees sur tous les plans. */
+    @Column(name = "TRAITE", nullable = false)
+    private boolean traite;
+
+    public Long getId() {
         return id;
     }
 
