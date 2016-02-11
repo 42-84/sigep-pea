@@ -16,6 +16,13 @@ public final class ContexteUtilisateur {
     private ContexteUtilisateur() {
     }
 
+    public static void definir(Habilitation habilitation) {
+        COURANT.set(habilitation);
+    }
+
+    public static void effacer() {
+        COURANT.remove();
+    }
 
     public static Profil getProfil() {
         Habilitation h = COURANT.get();
