@@ -19,11 +19,27 @@ public class ValorisationDTO {
     private BigDecimal totalVersements = BigDecimal.ZERO;
     private BigDecimal plusValueLatente = BigDecimal.ZERO;
     private BigDecimal prixRevientTotal = BigDecimal.ZERO;
+    private int nombreLignes;
+    private boolean partielle;
+    private List<PositionDTO> positions = new ArrayList<PositionDTO>();
+
+    public String getNumeroPlan() {
+        return numeroPlan;
+    }
+
+    public void setNumeroPlan(String numeroPlan) {
+        this.numeroPlan = numeroPlan;
+    }
+
     public Date getDateValorisation() {
         return dateValorisation;
     }
 
     public void setDateValorisation(Date dateValorisation) {
+        this.dateValorisation = dateValorisation;
+    }
+
+    public BigDecimal getValorisationTitres() {
     }
 
     public BigDecimal getSoldeEspeces() {
@@ -42,6 +58,15 @@ public class ValorisationDTO {
         this.total = total;
     }
 
+    public BigDecimal getTotalVersements() {
+        return totalVersements;
+    }
+
+    public void setTotalVersements(BigDecimal totalVersements) {
+        this.totalVersements = totalVersements;
+    }
+
+    public BigDecimal getPlusValueLatente() {
         return plusValueLatente;
     }
 

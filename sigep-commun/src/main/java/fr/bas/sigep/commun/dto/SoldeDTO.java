@@ -13,6 +13,12 @@ public class SoldeDTO {
     public String getNumeroCompte() {
         return numeroCompte;
     }
+
+    public void setNumeroCompte(String numeroCompte) {
+        this.numeroCompte = numeroCompte;
+    }
+
+    public BigDecimal getSolde() {
         return solde;
     }
 

@@ -13,6 +13,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ * Ecriture sur le compte especes d'un plan.
+ */
+@Entity
+@Table(name = "SGP_OPERATION_ESPECES")
 public class OperationEspeces extends EntiteAuditable {
 
     @Id
@@ -39,6 +49,19 @@ public class OperationEspeces extends EntiteAuditable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "DT_VALEUR", nullable = false)
+    private Date dateValeur;
+
+    @Column(name = "LIBELLE", length = 100)
+    private String libelle;
+
+    /** Reference du mouvement titres ou de l'ordre a l'origine (peut etre null). */
+    @Column(name = "REFERENCE", length = 30)
+    private String reference;
+
+    @Column(name = "SOLDE_APRES", precision = 15, scale = 2)
+    private BigDecimal soldeApres;
+
+    public Long getId() {
         return id;
     }
 
@@ -70,6 +93,22 @@ public class OperationEspeces extends EntiteAuditable {
         this.montant = montant;
     }
 
+    public Date getDateOperation() {
+        return dateOperation;
+    }
+
+    public void setDateOperation(Date dateOperation) {
+        this.dateOperation = dateOperation;
+    }
+
+    public Date getDateValeur() {
+        return dateValeur;
+    }
+
+    public void setDateValeur(Date dateValeur) {
+        this.dateValeur = dateValeur;
+    }
+
     public String getLibelle() {
         return libelle;
     }
@@ -82,4 +121,15 @@ public class OperationEspeces extends EntiteAuditable {
         return reference;
     }
 
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public BigDecimal getSoldeApres() {
+        return soldeApres;
+    }
+
+    public void setSoldeApres(BigDecimal soldeApres) {
+        this.soldeApres = soldeApres;
+    }
 }
