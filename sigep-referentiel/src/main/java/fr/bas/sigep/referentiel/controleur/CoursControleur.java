@@ -29,6 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
     public List<CoursDTO> historique(@PathVariable("isin") String isin,
             @RequestParam(value = "du", required = false) String du,
             @RequestParam(value = "au", required = false) String au) {
+        Date dateDu = du == null ? null : DateUtils.parserJour(du);
+        Date dateAu = au == null ? null : DateUtils.parserJour(au);
+        return coursService.historique(isin, dateDu, dateAu);
+    }
 
     @PostMapping("/saisie")
     public CoursDTO saisir(@RequestBody CoursDTO cours) {

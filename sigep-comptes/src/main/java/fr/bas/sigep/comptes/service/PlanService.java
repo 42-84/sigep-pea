@@ -140,6 +140,21 @@ public class PlanService {
         sim.setAncienneteAnnees(regleAnciennete.anciennete(plan, aujourdhui));
         sim.setEntraineCloture(regleAnciennete.retraitEntraineCloture(plan, aujourdhui));
         sim.setValorisationTotale(valo.getTotal());
+        sim.setTotalVersements(plan.getTotalVersements());
+        sim.setGainProportionnel(fiscaliteService.gainProportionnel(montantArrondi, valo.getTotal(), plan.getTotalVersements()));
+        sim.setTauxPrelevementsSociaux(fiscaliteService.getTauxPrelevementsSociaux(aujourdhui));
+        sim.setPrelevementsSociaux(fiscaliteService.prelevementsSociaux(sim.getGainProportionnel(), aujourdhui));
+        sim.setMontantNetVerse(montantArrondi.subtract(sim.getPrelevementsSociaux()));
+
+        if (montantArrondi.compareTo(plan.getCompteEspeces().getSolde()) > 0) {
+            sim.setAvertissement("Solde especes insuffisant (" + plan.getCompteEspeces().getSolde() + " EUR) : vendre des titres avant le retrait");
+        } else if (sim.isEntraineCloture()) {
+            sim.setAvertissement("Plan de moins de " + RegleAncienneteService.SEUIL_CLOTURE_PACTE + " ans : le retrait entraine la cloture du plan");
+        } else if (valo.isPartielle()) {
+            sim.setAvertissement("Valorisation partielle (cours indisponibles) : le calcul des prelevements est indicatif");
+            throw new RegleMetierException("PLAN_NON_OUVERT", "Le plan " + numeroPlan + " est " + plan.getStatut());
+        }
+        CompteEspeces compte = plan.getCompteEspeces();
         BigDecimal montant = sim.getMontantDemande();
 
         if (montant.compareTo(compte.getSolde()) > 0) {
