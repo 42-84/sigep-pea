@@ -14,6 +14,18 @@ public class OperationEspecesDTO {
     private Date dateValeur;
     private String libelle;
 
+    public BigDecimal getMontant() {
+        return montant;
+    }
+
+    public void setMontant(BigDecimal montant) {
+        this.montant = montant;
+    }
+
+    public Date getDateValeur() {
+        return dateValeur;
+    }
+
     public void setDateValeur(Date dateValeur) {
         this.dateValeur = dateValeur;
     }

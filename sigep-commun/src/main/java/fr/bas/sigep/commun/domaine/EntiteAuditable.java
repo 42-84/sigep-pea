@@ -13,6 +13,11 @@ import fr.bas.sigep.commun.securite.ContexteUtilisateur;
 
 /**
  * Colonnes techniques communes a toutes les tables SGP_*.
+ *
+ * Reprise du modele historique (SIGEP v1, 2004) : DT_CREATION / DT_MAJ / USR_MAJ.
+ */
+@MappedSuperclass
+public abstract class EntiteAuditable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_CREATION", nullable = false, updatable = false)
@@ -47,6 +52,14 @@ import fr.bas.sigep.commun.securite.ContexteUtilisateur;
         }
         // USR_MAJ fait 30 en base (Oracle), les identifiants SiteMinder peuvent depasser
         return utilisateur.length() > 30 ? utilisateur.substring(0, 30) : utilisateur;
+    }
+
+    public Date getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(Date dateCreation) {
+        this.dateCreation = dateCreation;
     public String getUtilisateurMaj() {
         return utilisateurMaj;
     }
