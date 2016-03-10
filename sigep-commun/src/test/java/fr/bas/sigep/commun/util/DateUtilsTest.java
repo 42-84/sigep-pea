@@ -25,6 +25,18 @@ public class DateUtilsTest {
         Date fin = DateUtils.construire(2020, 3, 15);
 
     @Test
+    public void doitSauterLeWeekEndEnAjoutantDesJoursOuvres() {
+        // vendredi 15/03/2024 + 2 jours ouvres = mardi 19/03/2024
+        Date vendredi = DateUtils.construire(2024, 3, 15);
+        Date resultat = DateUtils.ajouterJoursOuvres(vendredi, 2);
+        assertEquals(DateUtils.construire(2024, 3, 19), resultat);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(resultat);
+        assertEquals(Calendar.TUESDAY, cal.get(Calendar.DAY_OF_WEEK));
+    }
+
+    @Test
     public void doitTronquerLHeure() {
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -39,6 +51,12 @@ public class DateUtilsTest {
     @Test
     public void doitReconnaitreLeMemeJourMalgreDesHeuresDifferentes() {
         Calendar matin = Calendar.getInstance();
+    public void doitFormaterEtParserUneDateFichier() {
+        Date date = DateUtils.construire(2024, 3, 15);
+        assertEquals("20240315", DateUtils.formaterFichier(date));
+        assertEquals(date, DateUtils.parserFichier("20240315"));
+    }
+
     @Test
     @Ignore("echoue le 29 fevrier - SIGEP-198")
     public void doitAjouterDesAnnees() {

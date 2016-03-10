@@ -13,6 +13,12 @@ import fr.bas.sigep.commun.exception.RegleMetierException;
 /**
  * Coeur metier du portefeuille : le PRU moyen pondere frais inclus.
  * Les valeurs attendues sont celles des releves clients (verifiees avec le back-office, 2016).
+ */
+public class CalculPruServiceTest {
+
+    private CalculPruService service;
+
+    @Before
     }
 
     @Test
@@ -48,6 +54,18 @@ import fr.bas.sigep.commun.exception.RegleMetierException;
             service.apresAchat(null, null, new BigDecimal("-5"), new BigDecimal("89.86"), BigDecimal.ZERO);
             fail("RegleMetierException attendue");
         } catch (RegleMetierException e) {
+            assertEquals("QUANTITE_INVALIDE", e.getCode());
+        }
+    }
+
+    // ------------------------------------------------------------------ vente
+
+    @Test
+    public void quantiteRestanteApresVente() {
+        assertEquals(0, new BigDecimal("30").compareTo(service.quantiteApresVente(new BigDecimal("50"), new BigDecimal("20"))));
+    }
+
+    @Test
     public void venteDeLaTotaliteLaisseZero() {
         assertEquals(0, service.quantiteApresVente(new BigDecimal("50"), new BigDecimal("50")).signum());
     }
@@ -56,6 +74,12 @@ import fr.bas.sigep.commun.exception.RegleMetierException;
     public void doitRefuserUneVenteSuperieureAuDetenu() {
         try {
             service.quantiteApresVente(new BigDecimal("10"), new BigDecimal("20"));
+            fail("RegleMetierException attendue");
+        } catch (RegleMetierException e) {
+            assertEquals("QUANTITE_INSUFFISANTE", e.getCode());
+        }
+    }
+
     @Test
     public void doitRefuserUneVenteSansPosition() {
         try {
@@ -63,6 +87,13 @@ import fr.bas.sigep.commun.exception.RegleMetierException;
             fail("RegleMetierException attendue");
         } catch (RegleMetierException e) {
             assertEquals("QUANTITE_INSUFFISANTE", e.getCode());
+        }
+    }
+
+    @Test
+    public void doitRefuserUneVenteDeQuantiteNulle() {
+        try {
+            service.quantiteApresVente(new BigDecimal("10"), BigDecimal.ZERO);
             fail("RegleMetierException attendue");
         } catch (RegleMetierException e) {
             assertEquals("QUANTITE_INVALIDE", e.getCode());

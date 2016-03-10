@@ -69,6 +69,14 @@ public class Client extends EntiteAuditable {
     private Boolean residentFiscalFrance = Boolean.TRUE;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Plan> plans = new ArrayList<Plan>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,6 +90,9 @@ public class Client extends EntiteAuditable {
 
     public String getCivilite() {
         return civilite;
+    }
+
+    public void setCivilite(String civilite) {
         this.nom = nom;
     }
 
@@ -141,10 +152,27 @@ public class Client extends EntiteAuditable {
         return residentFiscalFrance;
     }
 
+    public void setResidentFiscalFrance(Boolean residentFiscalFrance) {
+        this.residentFiscalFrance = residentFiscalFrance;
+    }
+
+    public List<Plan> getPlans() {
+        return plans;
+    }
+
     public void setPlans(List<Plan> plans) {
         this.plans = plans;
     }
 
+    public String getNomComplet() {
+        StringBuilder sb = new StringBuilder();
+        if (civilite != null) {
+            sb.append(civilite).append(' ');
+        }
+        if (prenom != null) {
+            sb.append(prenom).append(' ');
+        }
+        sb.append(nom);
         return sb.toString();
     }
 }

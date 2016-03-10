@@ -37,6 +37,13 @@ public class PlanControleur {
         return planService.synthese(numero);
     }
 
+    @GetMapping("/{numero}/operations")
+    public List<OperationEspeces> operations(@PathVariable("numero") String numero,
+            @RequestParam(value = "du", required = false) String du,
+            @RequestParam(value = "au", required = false) String au) {
+        Plan plan = planService.charger(numero);
+        Date dateDu = du == null ? null : DateUtils.parserJour(du);
+        Date dateAu = au == null ? null : DateUtils.parserJour(au);
     public Plan verser(@PathVariable("numero") String numero, @RequestBody DemandeMontantDTO demande) {
         return planService.verser(numero, demande);
     }
