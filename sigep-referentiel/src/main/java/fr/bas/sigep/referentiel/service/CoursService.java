@@ -70,6 +70,14 @@ import fr.bas.sigep.commun.dto.CoursDTO;
         cours.setSource(Cours.SOURCE_SAISIE);
         return versDto(coursRepository.save(cours));
     }
+
+    /**
+     * Enregistrement d'un cours issu du fichier Fininfo. Ne remplace jamais une saisie manuelle.
+     */
+    @Transactional
+    public boolean enregistrerImport(Valeur valeur, Date date, BigDecimal cloture, BigDecimal ouverture,
+            BigDecimal plusHaut, BigDecimal plusBas, Long volume) {
+        Cours existant = coursRepository.findByValeurAndDateCours(valeur, date);
             existant.setPlusHaut(plusHaut);
             existant.setPlusBas(plusBas);
             existant.setVolume(volume);
