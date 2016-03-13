@@ -1,0 +1,9 @@
+HISTORIQUE D'APPLICATION DES SCRIPTS SQL - SIGEP
+=================================================
+(a completer par le DBA apres chaque passage ; recette = SIGEPREC, prod = SIGEPPRD)
+
+Date appl.  Script                                                  Applique par        Env.      Remarque
+----------  ------------------------------------------------------  ------------------  --------  ----------------------------------------------
+29/02/2016  2016-03_V2.0.0_creation_schema.sql                      M. Aubert (DBA)     recette   schema neuf, puis reprise a blanc n°3
+12/03/2016  2016-03_V2.0.0_creation_schema.sql                      M. Aubert (DBA)     prod      creation avant reprise (WE 12-13/03)
+13/03/2016  (reprise de donnees v1 -> v2, scripts hors depot)       M. Aubert / JM      prod      38 412 plans - PV de reprise sur Confluence
