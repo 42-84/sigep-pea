@@ -1,0 +1,113 @@
+=====================================================================
+ SIGEP v2 - INSTALLATION DU POSTE DE DEVELOPPEMENT
+=====================================================================
+ Redige : J. Martin - 22/02/2016
+ Mis a jour : F. Dubois - 09/2018 (ajout du front)
+ Confluence : http://confluence.bas.intra/display/SIGEP/Poste+de+dev
+=====================================================================
+
+
+1. PREREQUIS
+------------
+
+1.1 JDK
+    JDK 8 Oracle, version 8u92 (celle validee par la DSI). Installateur sur
+    \\srv-fichiers\DSI\logiciels\java\jdk-8u92-windows-x64.exe
+    Variable JAVA_HOME positionnee, %JAVA_HOME%\bin dans le PATH.
+    Ne PAS installer de JDK 9 en parallele, Gradle prend le premier trouve.
+
+1.2 Gradle
+    Gradle 3.5 (ZIP "binary only") decompresse dans C:\outils\gradle-3.5,
+    GRADLE_HOME + PATH. Il n'y a pas de wrapper dans le projet pour l'instant
+    (a ajouter, cf. TODO). Verifier : gradle -v
+
+    Proxy BAS : creer %USERPROFILE%\.gradle\gradle.properties avec
+        systemProp.http.proxyHost=proxy.bas.intra
+        systemProp.http.proxyPort=3128
+        systemProp.https.proxyHost=proxy.bas.intra
+        systemProp.https.proxyPort=3128
+        systemProp.http.nonProxyHosts=*.bas.intra|localhost
+    (les memes lignes sont commentees dans gradle.properties du projet :
+    ne pas les decommenter, ca casse le build Jenkins qui n'a pas de proxy)
+
+1.3 Nexus
+    Le depot interne http://nexus.bas.intra/repository/maven-public/ est
+1.4 Eclipse
+    Eclipse Mars.2 (4.5.2) JEE + plugin Buildship 1.0 (Gradle integration).
+    Import : File > Import > Gradle > Gradle Project, pointer la racine sigep/.
+    Cocher "Override workspace settings" et renseigner GRADLE_HOME.
+    Formatter : importer eclipse-formatter-bas.xml (sur Confluence).
+
+- ddl-auto=update : le schema est cree/complete par Hibernate.
+- data.sql : chaque service charge son jeu de donnees (MERGE INTO,
+  relancable). Les habilitations sont dans referentiel ET comptes : si vous
+  en ajoutez une, modifier les deux fichiers.
+- Pour repartir de zero : arreter les trois services, supprimer
+  ~/sigep-dev/*.db, redemarrer dans l'ordre.
+- Console H2 : http://localhost:8081/h2 (ou 8082, 8083 : c'est la meme base)
+  JDBC URL  jdbc:h2:file:~/sigep-dev/sigep
+  User      sigep
+  Password  sigep
+
+MODE=Oracle est indispensable : la requete native dernierCoursNatif (ROWNUM)
+et dernierNumeroSequentiel (substr/to_number) ne passent pas sans.
+
+
+3. DEMARRAGE DES SERVICES
+-------------------------
+
+ORDRE OBLIGATOIRE (cles etrangeres dans les data.sql) :
+
+    1. gradle :sigep-referentiel:bootRun        -> http://localhost:8081
+       attendre "Started ReferentielApplication"
+    2. gradle :sigep-comptes:bootRun            -> http://localhost:8082
+    3. gradle :sigep-portefeuille:bootRun       -> http://localhost:8083
+
+Sous Eclipse : Run As > Java Application sur ReferentielApplication,
+ComptesApplication, PortefeuilleApplication (3 consoles).
+
+Verification : curl http://localhost:8081/health  -> {"status":"UP",...}
+               curl -H "SM_USER: U030001" http://localhost:8081/api/valeurs
+
+Profil : sans -Dspring.profiles.active, c'est le profil par defaut (H2).
+Pour tester sur la base de recette : -Dspring.profiles.active=recette
+(uniquement sigep-referentiel a un application-recette.properties pour
+l'instant ; pour les deux autres, copier celui de prod et adapter).
+reverse proxy : la propriete sigep.securite.utilisateur-dev=U030001 est
+appliquee quand l'en-tete est absent. Pour tester un autre profil, passer
+l'en-tete a la main (curl -H "SM_USER: 00012345" ...) ou X-SM-User.
+
+    Identifiant   Profil        Remarque
+    -----------   -----------   -------------------------------------------
+    00012345      CLIENT        M. GAUTREAU, plan PEA000045127 (repris v1)
+    00012346      CLIENT        Mme GAUTREAU, plan PEA000045131 (cloture)
+    00027811      CLIENT        Mme BERNARD, PEA-PME PEA000412077
+    U045123       CONSEILLER    agence 17001
+    U030001       BACK_OFFICE   utilisateur par defaut en dev
+    U010007       ADMIN
+    U038842       CONSEILLER    INACTIF (test du refus 403)
+
+Un utilisateur inconnu -> 403 "Utilisateur non habilite sur SIGEP".
+Pas d'en-tete et pas d'utilisateur-dev -> 401.
+
+
+5. TESTS
+--------
+
+    gradle test                    tests unitaires (Mockito 1.10, ne pas monter)
+    gradle test -Dtest.single=...  un seul test (Gradle 3)
+
+Les tests d'integration (*IT.java) sont exclus du build : ils ont besoin
+des trois services demarres. Les lancer depuis Eclipse.
+
+=====================================================================
+ AJOUT 09/2018 (FD) - FRONT ANGULAR
+=====================================================================
+
+Le front (prestataire Aubelio, livre en 07/2018) est dans frontend/sigep-web.
+Il n'est pas builde par Gradle.
+
+prod reste en 11g. Rester sur ojdbc6.jar 11.2.0.4. Si quelqu'un a un ojdbc8
+dans lib/, le fileTree du build.gradle prend les deux et ca fait des
+conflits de classes au demarrage.
+---------------------------------------------------------------------
