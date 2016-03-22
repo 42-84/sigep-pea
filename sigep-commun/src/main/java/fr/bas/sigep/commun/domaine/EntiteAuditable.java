@@ -60,6 +60,16 @@ public abstract class EntiteAuditable {
 
     public void setDateCreation(Date dateCreation) {
         this.dateCreation = dateCreation;
+    }
+
+    public Date getDateMaj() {
+        return dateMaj;
+    }
+
+    public void setDateMaj(Date dateMaj) {
+        this.dateMaj = dateMaj;
+    }
+
     public String getUtilisateurMaj() {
         return utilisateurMaj;
     }
