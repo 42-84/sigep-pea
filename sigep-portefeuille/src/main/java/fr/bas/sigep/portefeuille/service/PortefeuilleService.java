@@ -117,6 +117,25 @@ public class PortefeuilleService {
             ecrireEspeces(plan.getCompteEspeces(), TypeOperationEspeces.ACHAT_TITRES, montantNet, mvt.getDateReglement(),
                     "Achat " + quantite.stripTrailingZeros().toPlainString() + " " + valeur.getLibelle(), mvt.getReference());
         } else {
+            if (position == null) {
+                throw new RegleMetierException("LIGNE_INEXISTANTE", "Aucune ligne " + valeur.getCodeIsin() + " sur le plan");
+            }
+            BigDecimal restant = calculPruService.quantiteApresVente(position.getQuantite(), quantite);
+            if (restant.signum() == 0) {
+                positionRepository.delete(position);
+            } else {
+                position.setQuantite(restant);
+                positionRepository.save(position);
+            }
+            ecrireEspeces(plan.getCompteEspeces(), TypeOperationEspeces.VENTE_TITRES, montantNet, mvt.getDateReglement(),
+                    "Vente " + quantite.stripTrailingZeros().toPlainString() + " " + valeur.getLibelle(), mvt.getReference());
+        }
+
+        mvt = mouvementRepository.save(mvt);
+        LOG.info("Ordre {} {} x {} sur {} : {} (net {} EUR)", sens, quantite, valeur.getCodeIsin(), numeroPlan, mvt.getReference(), montantNet);
+        return mvt;
+    }
+
     /**
      * Annulation d'un mouvement du jour (erreur de saisie). Back-office uniquement.
      * On contre-passe : positions et especes sont remis en l'etat, le mouvement passe ANNULE.
@@ -169,6 +188,10 @@ public class PortefeuilleService {
         compteEspecesRepository.save(compte);
 
         OperationEspeces op = new OperationEspeces();
+        op.setCompte(compte);
+        op.setType(type);
+        op.setMontant(montantSigne);
+        op.setDateOperation(new Date());
         op.setDateValeur(dateValeur == null ? DateUtils.aujourdhui() : dateValeur);
         op.setLibelle(libelle);
         op.setReference(reference);

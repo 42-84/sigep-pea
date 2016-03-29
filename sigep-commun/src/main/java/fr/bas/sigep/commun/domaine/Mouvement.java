@@ -13,6 +13,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ * Mouvement titres (achat ou vente) sur un plan.
+ */
+@Entity
+@Table(name = "SGP_MOUVEMENT")
+public class Mouvement extends EntiteAuditable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SGP_MOUVEMENT")
     @SequenceGenerator(name = "SEQ_SGP_MOUVEMENT", sequenceName = "SEQ_SGP_MOUVEMENT", allocationSize = 1)
@@ -23,6 +35,12 @@ import javax.persistence.ManyToOne;
     @Column(name = "REFERENCE", nullable = false, unique = true, length = 20)
     private String reference;
 
+    @JoinColumn(name = "ID_VALEUR", nullable = false)
+    private Valeur valeur;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SENS", nullable = false, length = 5)
+    private SensMouvement sens;
     private BigDecimal frais;
 
     /** Brut + frais a l'achat, brut - frais a la vente. */
@@ -40,6 +58,9 @@ import javax.persistence.ManyToOne;
 
     @Column(name = "MOTIF_ANNULATION", length = 200)
     private String motifAnnulation;
+
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {
@@ -68,6 +89,15 @@ import javax.persistence.ManyToOne;
 
     public BigDecimal getQuantite() {
         return quantite;
+    }
+
+    public void setQuantite(BigDecimal quantite) {
+        this.quantite = quantite;
+    }
+
+    public BigDecimal getCoursExecution() {
+        return coursExecution;
+    }
 
     public void setCoursExecution(BigDecimal coursExecution) {
         this.coursExecution = coursExecution;
@@ -89,6 +119,14 @@ import javax.persistence.ManyToOne;
         this.frais = frais;
     }
 
+
+    public Date getDateMouvement() {
+        return dateMouvement;
+    }
+
+    public void setDateMouvement(Date dateMouvement) {
+        this.dateMouvement = dateMouvement;
+    }
 
     public Date getDateReglement() {
         return dateReglement;
