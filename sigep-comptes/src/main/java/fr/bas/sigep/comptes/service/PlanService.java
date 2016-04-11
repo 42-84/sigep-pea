@@ -51,6 +51,14 @@ public class PlanService {
     }
 
     public List<Plan> plansDuClient(String numeroClient) {
+        ControleAcces.verifierAccesClient(numeroClient);
+        return planRepository.findByClientNumeroClient(numeroClient);
+    }
+
+    // ------------------------------------------------------------------ ouverture
+
+    @Transactional
+    public Plan ouvrir(DemandeOuvertureDTO demande) {
         Date aujourdhui = DateUtils.aujourdhui();
 
         if (!clientService.estMajeur(client, aujourdhui)) {
@@ -59,6 +67,10 @@ public class PlanService {
         if (!Boolean.TRUE.equals(client.getResidentFiscalFrance())) {
             throw new RegleMetierException("NON_RESIDENT", "Le titulaire doit avoir son domicile fiscal en France");
         }
+        verifierUnicite(client, type);
+
+        if (demande.getVersementInitial() == null || demande.getVersementInitial().compareTo(VERSEMENT_MINIMUM_OUVERTURE) < 0) {
+            throw new RegleMetierException("VERSEMENT_INITIAL", "Versement initial minimum : " + VERSEMENT_MINIMUM_OUVERTURE + " EUR");
         }
         if (demande.getVersementInitial().compareTo(type.getPlafondVersements()) > 0) {
             throw new RegleMetierException("PLAFOND_DEPASSE", "Le versement depasse le plafond du " + type.getLibelle());
