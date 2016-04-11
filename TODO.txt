@@ -1,0 +1,22 @@
+TODO SIGEP
+==========
+(liste jamais purgee - on ajoute en bas, on ne supprime pas tant que ce n'est pas fait)
+
+2016
+----
+- Timeouts RestTemplate (ConfigurationRestClient) : aucun timeout, un service qui ne repond pas bloque
+  le thread Tomcat indefiniment. JM 04/2016
+  -> tente 09/2019 (30 s) puis retire, la valorisation des gros portefeuilles depasse 30 s le soir (SIGEP-455)
+- Calendrier des jours feries Euronext dans DateUtils.ajouterJoursOuvres (date de reglement fausse
+  le 1er mai, le 25/12...). JM 05/2016
+- Separer la base : un schema par service (phase 2 de la refonte). Prerequis : supprimer les lectures
+  croisees (ValeurControleur.detenteurs lit SGP_POSITION, ValorisationService lit SGP_COMPTE_ESPECES).
+- Interface temps reel avec la table de negociation (STRATE). Aujourd'hui l'execution est simulee au
+  dernier cours de cloture (StatutMouvement).
+- Ordres a cours limite (OrdreDTO). Phase 2.
+- Coupons : detention a la date de detachement et non a la date de traitement (SIGEP-058).
+- GenerateurReference : compteur en memoire, repart a 1 au redemarrage -> doublon de REFERENCE
+  possible dans la journee. Passer sur une sequence Oracle.
+
+2017
+----
