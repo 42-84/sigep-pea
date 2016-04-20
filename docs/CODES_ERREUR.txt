@@ -1,0 +1,33 @@
+SIGEP - CODES D'ERREUR METIER (RegleMetierException)
+=====================================================
+Mise a jour : 03/06/2019 (FD) - version 2.6.0
+Source : classes *Service des trois services, exception RegleMetierException(code, message).
+Le code est renvoye dans le champ "code" du corps de reponse HTTP 422 (ErreurDTO), le front
+affiche le libelle client ci-dessous (fichier i18n fr.json du front, a garder synchro).
+
+Autres codes techniques (GestionnaireErreurs) : INCONNU (404), ACCES_REFUSE (403),
+CONFLIT (409, operation concurrente), PARTENAIRE (502), INDISPONIBLE (503), TECHNIQUE (500).
+
+Code                       Service        HTTP  Libelle affiche au client
+-------------------------  -------------  ----  ----------------------------------------------------------
+CLIENT_MINEUR              comptes        422   Le titulaire d'un PEA doit etre majeur.
+NON_RESIDENT               comptes        422   Le titulaire doit avoir son domicile fiscal en France.
+PLAN_EXISTANT              comptes        422   Vous detenez deja un plan de ce type. Un seul PEA et un
+LIGNE_INEXISTANTE          portefeuille   422   Vous ne detenez pas cette valeur sur ce plan.
+ORDRE_HORS_SEANCE          portefeuille   422   Les ordres sont acceptes de 9h00 a 17h30 les jours
+                                                de bourse.
+COURS_INVALIDE             referentiel    422   Le cours saisi doit etre strictement positif.
+ISIN_INVALIDE              referentiel    422   Le code ISIN est invalide (12 caracteres, cle de
+                                                controle).
+VALEUR_EXISTANTE           referentiel    422   Cette valeur existe deja dans le referentiel.
+
+Notes
+-----
+- VERSEMENT_INTERDIT : regle des 8 ans. A supprimer si la loi PACTE (mai 2019) est retenue telle
+  quelle : les versements redeviennent possibles apres retrait. -> a confirmer avec la MOA (FD 06/2019)
+- ORDRE_HORS_SEANCE : controle horaire prevu avec l'interface STRATE temps reel. Non actif (les
+  ordres sont executes au cours de cloture de la veille), code reserve.
+- Les libelles sont ceux valides par la MOA le 14/02/2018 (revue des messages du front). Les
+  messages techniques (champ "message" de la reponse) ne sont pas destines au client.
+- Liste a completer avec les codes des annulations de mouvements (2.4.0) et de l'API comptes
+  especes interne. TBD.
