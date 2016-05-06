@@ -13,6 +13,20 @@ Redacteurs       : C. Lefranc (MOA Epargne & Titres), J. Martin (DSI)
 Validation       : Comite de projet du 09/02/2016
 Diffusion        : equipe projet, MOE, Juridique, Conformite
 
+(document exporte depuis Word - SIGEP_SFD_v1.4.docx - la mise en forme
+ des tableaux a ete simplifiee)
+
+
+HISTORIQUE DES VERSIONS
+
+ Version  Date        Auteur   Objet
+ -------  ----------  -------  -------------------------------------------
+ v1.0     16/11/2015  CL       Version initiale (reprise des regles v1)
+ v1.1     07/12/2015  CL/JM    Ajout PEA-PME (§4.2), habilitations (§10)
+ v1.2     11/01/2016  CL       Remarques Conformite sur les retraits (§6)
+ v1.3     25/01/2016  JM       Referentiel et fichier fournisseur (§9)
+ v1.4     02/02/2016  CL       Corrections Juridique, coupons (§8), gel
+
  1.  Objet du document
  2.  Perimetre et acteurs
  3.  Le Plan d'Epargne en Actions - rappel reglementaire
@@ -50,6 +64,13 @@ Les regles sont numerotees RG-xx-nn pour reference dans les cahiers de recette.
  Inclus :
   - ouverture, tenue et cloture des PEA et PEA-PME des personnes physiques
   - compte especes associe a chaque plan
+  - ordres d'achat et de vente de valeurs eligibles, tenue des positions,
+    calcul du prix de revient
+  - valorisation des plans
+  - traitement des coupons et dividendes
+  - referentiel des valeurs eligibles et cours de cloture quotidiens
+  - calcul des prelevements sociaux a la sortie
+
  Client         : titulaire du plan. Consulte, verse, passe des ordres,
                   demande un retrait (portail BAS en ligne).
  Conseiller     : agent en agence. Ouvre les plans, saisit pour le compte
@@ -67,6 +88,13 @@ Le PEA est cree par la loi n° 92-666 du 16 juillet 1992. Il est regi par les
 articles L221-30 a L221-32 du Code monetaire et financier (CMF) et, pour la
 fiscalite, par l'article 157 5° bis du Code general des impots (CGI).
 
+Le PEA-PME/ETI est cree par la loi de finances pour 2014 (article L221-32-1
+du CMF), ouvert depuis le 01/01/2014.
+
+Un plan se compose :
+ - d'un compte titres, qui enregistre les valeurs detenues ;
+ - d'un compte especes, qui enregistre les versements, les retraits, le
+   produit des ventes, le paiement des achats, les dividendes et les frais.
    Le compte especes ne porte pas d'interet et ne peut pas etre debiteur.
 
 Caracteristiques au 01/01/2016 :
@@ -113,6 +141,9 @@ Caracteristiques au 01/01/2016 :
  RG-OUV-09  Le versement initial ne peut pas depasser le plafond du plan.
  RG-OUV-10  La date du premier versement est enregistree : elle fait courir
             l'anciennete fiscale.
+            conseiller a l'ouverture, modifiable par le BO).
+
+4.5 Statuts
 
  RG-OUV-14  Statuts possibles : OUVERT, CLOTURE, TRANSFERE. Un plan nait
             OUVERT. CLOTURE et TRANSFERE sont definitifs.
@@ -146,6 +177,13 @@ Caracteristiques au 01/01/2016 :
             retrait entraine la CLOTURE du plan. Le client doit alors
             retirer la totalite des especes et avoir vendu tous ses titres.
             Le systeme demande une confirmation explicite.
+ RG-RET-03  Retrait apres 8 ans : le plan reste OUVERT, les retraits
+            partiels ulterieurs sont libres, mais aucun versement n'est
+            plus possible.
+ RG-RET-04  Cas de force majeure (deces, invalidite, licenciement, creation
+            d'entreprise) : le retrait anticipe n'entraine pas la cloture.
+            NON GERE dans SIGEP : traitement manuel BO (cloture puis
+            reouverture avec date d'origine).
 
 6.2 Gain imposable d'un retrait
 
@@ -154,6 +192,20 @@ Caracteristiques au 01/01/2016 :
  RG-RET-06  Pour un retrait partiel, la part de gain comprise dans le retrait
             est proportionnelle :
               gain retrait = montant retire x gain net / valeur liquidative
+            Si le gain net est negatif ou nul, aucun prelevement.
+ RG-RET-07  Le gain est arrondi au centime (arrondi commercial).
+
+6.3 Prelevements sociaux
+
+ RG-RET-08  Les prelevements sociaux (CSG, CRDS, prelevement social et
+            contributions additionnelles) sont retenus a la source par la
+            banque sur le gain du retrait. Taux global 2016 : 15,5 %.
+ RG-RET-09  Le taux applique est celui de l'ANNEE DU RETRAIT sur la totalite
+            du gain. [note Conformite : la regle exacte est celle des "taux
+            historiques" par periode d'acquisition du gain pour les plans de
+            plus de 5 ans ; simplification acceptee, regularisations
+            manuelles par le BO sur reclamation - decision comite 09/02/2016]
+ RG-RET-10  Historique des taux a conserver pour les regularisations :
             proportionnel, taux et montant des PS, montant net verse,
             avertissements (solde insuffisant, cloture, cours indisponibles).
 
@@ -220,6 +272,15 @@ Caracteristiques au 01/01/2016 :
             historisee chaque soir apres l'integration des cours, pour le
             graphique d'evolution et le releve annuel. [phase 1b]
 
+            unitaire (4 decimales), libelle.
+ RG-CPN-02  A la date de paiement, chaque plan detenteur de la valeur est
+            credite de Q x montant unitaire, arrondi au centime par plan,
+            type DIVIDENDE, en date de valeur = date de paiement.
+ RG-CPN-03  La detention est appreciee a la date de DETACHEMENT (le client
+            qui detient la valeur la veille du detachement a droit au
+            coupon). [remarque DSI : en phase 1 la detention sera appreciee
+            a la date de traitement, faute d'historique de positions par
+            date ; ecarts regularises manuellement par le BO - accepte
             comite 09/02/2016, a traiter en phase 2]
  RG-CPN-04  Les dividendes ne sont pas des versements : ils n'entrent pas
             dans le plafond.
@@ -231,6 +292,12 @@ Caracteristiques au 01/01/2016 :
 
 
 9. REFERENTIEL DES VALEURS ET COURS
+
+9.1 Valeurs
+
+ RG-REF-01  Une valeur est identifiee par son code ISIN (12 caracteres, cle
+            de controle verifiee a la creation). Attributs : mnemonique,
+            libelle, type (ACTION, OPCVM, ETF, DROIT, AUTRE), place de
             cotation (code MIC), pays du siege social de l'emetteur (ISO
             3166-1), devise, indicateurs d'eligibilite PEA et PEA-PME, code
             valeur chez le fournisseur de cours, date de radiation.
@@ -250,6 +317,12 @@ Caracteristiques au 01/01/2016 :
  RG-REF-06  Les valeurs du fichier non connues de SIGEP sont ignorees (le
             fichier contient toute la place, SIGEP ne suit que les valeurs
             detenues ou eligibles).
+9.3 Eligibilite
+
+ RG-ELI-01  L'eligibilite effective est l'indicateur porte par la valeur,
+            qualifie par le BO Titres (responsabilite BAS vis-a-vis de
+            l'administration fiscale).
+ RG-ELI-02  Le systeme propose une eligibilite par defaut a la creation :
             ACTION dont le siege est dans un pays de l'UE/EEE -> eligible
             PEA ; OPCVM et ETF -> non eligible (quota de 75 % a verifier
             manuellement) ; DROIT, AUTRE -> non eligible.
@@ -301,6 +374,23 @@ Caracteristiques au 01/01/2016 :
             format v1). Il reste consultable dans les archives v1 (lecture
             seule) pendant 10 ans.
  RG-REP-03  Consequence : le cumul des versements est un champ tenu, pas un
+            calcul. Le solde especes repris n'a pas d'operation d'origine
+            (ecart structurel connu pour les controles de coherence).
+ RG-REP-04  La date du premier versement n'est pas connue en v1 : pour les
+            plans repris, l'anciennete est calculee depuis la date
+            d'ouverture.
+ RG-REP-05  Les enregistrements repris portent l'utilisateur d'audit
+            "REPRISE".
+ RG-REP-06  Les identifiants (numero de plan, numero de compte especes,
+            matricules) sont conserves a l'identique.
+
+
+
+12. ANNEXES
+
+12.1 Types d'operations especes
+
+ VERSEMENT              credit    apport du client
  RETRAIT                debit     sortie du plan
  ACHAT_TITRES           debit     net d'un achat (brut + frais)
  VENTE_TITRES           credit    net d'une vente (brut - frais)
