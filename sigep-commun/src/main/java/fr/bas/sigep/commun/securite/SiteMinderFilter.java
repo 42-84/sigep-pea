@@ -39,6 +39,16 @@ public class SiteMinderFilter extends OncePerRequestFilter {
 
     private final HabilitationRepository habilitationRepository;
 
+    @Value("${sigep.securite.utilisateur-dev:}")
+    private String utilisateurDev;
+
+    @Value("${sigep.securite.actif:true}")
+    private boolean actif;
+
+    public SiteMinderFilter(HabilitationRepository habilitationRepository) {
+        this.habilitationRepository = habilitationRepository;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
