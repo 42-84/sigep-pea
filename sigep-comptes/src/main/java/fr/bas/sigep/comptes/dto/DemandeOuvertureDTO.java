@@ -29,4 +29,7 @@ public class DemandeOuvertureDTO {
         return versementInitial;
     }
 
+    public void setVersementInitial(BigDecimal versementInitial) {
+        this.versementInitial = versementInitial;
+    }
 }

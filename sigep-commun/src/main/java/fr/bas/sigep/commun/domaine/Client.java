@@ -46,6 +46,11 @@ public class Client extends EntiteAuditable {
 
     @Column(name = "PRENOM", length = 60)
     private String prenom;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DT_NAISSANCE")
+    private Date dateNaissance;
+
     @Column(name = "ADR_LIGNE1", length = 80)
     private String adresseLigne1;
 
@@ -93,6 +98,14 @@ public class Client extends EntiteAuditable {
     }
 
     public void setCivilite(String civilite) {
+        this.civilite = civilite;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
         this.nom = nom;
     }
 
@@ -129,6 +142,18 @@ public class Client extends EntiteAuditable {
     }
 
     public String getCodePostal() {
+        return codePostal;
+    }
+
+    public void setCodePostal(String codePostal) {
+        this.codePostal = codePostal;
+    }
+
+    public String getVille() {
+        return ville;
+    }
+
+    public void setVille(String ville) {
         this.ville = ville;
     }
 
