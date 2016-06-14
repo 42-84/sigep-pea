@@ -38,6 +38,17 @@ import fr.bas.sigep.portefeuille.service.PortefeuilleService;
     public void traiter() {
         Date aujourdhui = DateUtils.aujourdhui();
         List<Coupon> coupons = couponRepository.findByDatePaiementLessThanEqualAndTraiteFalse(aujourdhui);
+        }
+    }
+
+    @Transactional
+    public void traiterCoupon(Coupon coupon) {
+        List<Position> detenteurs = positionRepository.findDetenteursActifs(coupon.getValeur());
+        String reference = "CPN" + DateUtils.formaterFichier(coupon.getDatePaiement()) + String.format("%06d", coupon.getId());
+        BigDecimal total = BigDecimal.ZERO;
+        for (Position position : detenteurs) {
+            BigDecimal montant = MontantUtils.arrondirMontant(position.getQuantite().multiply(coupon.getMontantUnitaire()));
+            if (montant.signum() <= 0) {
                 continue;
             }
             portefeuilleService.ecrireEspeces(position.getPlan().getCompteEspeces(), TypeOperationEspeces.DIVIDENDE, montant,
