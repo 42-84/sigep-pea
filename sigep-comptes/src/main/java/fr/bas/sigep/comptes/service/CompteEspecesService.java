@@ -13,6 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.bas.sigep.commun.domaine.CompteEspeces;
 import fr.bas.sigep.commun.domaine.OperationEspeces;
 import fr.bas.sigep.commun.domaine.TypeOperationEspeces;
+import fr.bas.sigep.commun.dto.OperationEspecesDTO;
+import fr.bas.sigep.commun.dto.SoldeDTO;
+import fr.bas.sigep.commun.exception.RegleMetierException;
+import fr.bas.sigep.commun.exception.RessourceInconnueException;
+import fr.bas.sigep.commun.repository.CompteEspecesRepository;
 import fr.bas.sigep.commun.repository.OperationEspecesRepository;
 import fr.bas.sigep.commun.util.DateUtils;
 import fr.bas.sigep.commun.util.MontantUtils;
@@ -85,6 +90,10 @@ public class CompteEspecesService {
     @Transactional
     public OperationEspeces enregistrer(String numeroCompte, OperationEspecesDTO demande) {
         CompteEspeces compte = charger(numeroCompte);
+            throw new RegleMetierException("TYPE_OPERATION_INTERDIT", "Versements et retraits passent par /api/plans");
+        }
+        return enregistrer(compte, type, demande.getMontant(), demande.getDateValeur(), demande.getLibelle(), demande.getReference());
+    }
 
     /** Ecart entre le solde tenu et la somme des operations (controle nocturne). */
     public BigDecimal ecart(CompteEspeces compte) {
