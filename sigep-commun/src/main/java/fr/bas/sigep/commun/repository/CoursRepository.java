@@ -26,4 +26,7 @@ public interface CoursRepository extends JpaRepository<Cours, Long> {
 
     @Query("select c from Cours c where c.dateCours = :date")
     List<Cours> findParDate(@Param("date") Date date);
+
+    @Query("select max(c.dateCours) from Cours c")
+    Date derniereDateCotation();
 }
