@@ -27,6 +27,14 @@ public class Valeur extends EntiteAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SGP_VALEUR")
     @SequenceGenerator(name = "SEQ_SGP_VALEUR", sequenceName = "SEQ_SGP_VALEUR", allocationSize = 1)
+
+    @Column(name = "LIBELLE", nullable = false, length = 80)
+    private String libelle;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE_VALEUR", nullable = false, length = 10)
+    private TypeValeur typeValeur;
+
     /** Code MIC de la place de cotation (XPAR = Euronext Paris). */
     @Column(name = "PLACE_COTATION", length = 4)
     private String placeCotation;
@@ -52,6 +60,15 @@ public class Valeur extends EntiteAuditable {
     @Temporal(TemporalType.DATE)
     @Column(name = "DT_RADIATION")
     private Date dateRadiation;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setMnemonique(String mnemonique) {
         this.mnemonique = mnemonique;
     }
@@ -85,6 +102,12 @@ public class Valeur extends EntiteAuditable {
     public String getDevise() {
         return devise;
     }
+
+    public void setDevise(String devise) {
+        this.devise = devise;
+    }
+
+    public boolean isEligiblePea() {
         return eligiblePea;
     }
 
@@ -97,6 +120,14 @@ public class Valeur extends EntiteAuditable {
     }
 
     public void setEligiblePeaPme(boolean eligiblePeaPme) {
+    public String getCodeFininfo() {
+        return codeFininfo;
+    }
+
+    public void setCodeFininfo(String codeFininfo) {
+        this.codeFininfo = codeFininfo;
+    }
+
     public Date getDateRadiation() {
         return dateRadiation;
     }
