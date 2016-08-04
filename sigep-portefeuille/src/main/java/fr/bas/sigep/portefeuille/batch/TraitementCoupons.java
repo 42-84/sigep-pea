@@ -26,6 +26,14 @@ import fr.bas.sigep.portefeuille.service.PortefeuilleService;
  *
  * Detention appreciee a la date de traitement et non a la date de detachement : un client qui
  * achete entre detachement et paiement touche le coupon a tort, celui qui vend le perd. Ecarts
+ * (les plans deja credites le sont une seconde fois -> voir ControleSoldes cote comptes).
+ */
+@Component
+public class TraitementCoupons {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TraitementCoupons.class);
+
+    @Autowired
     private CouponRepository couponRepository;
 
     @Autowired
