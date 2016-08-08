@@ -61,6 +61,16 @@ public class SiteMinderFilter extends OncePerRequestFilter {
 
         String utilisateur = request.getHeader(EN_TETE_SITEMINDER);
         if (StringUtils.isBlank(utilisateur)) {
+            utilisateur = request.getHeader(EN_TETE_DEV);
+        }
+        if (StringUtils.isBlank(utilisateur)) {
+            utilisateur = utilisateurDev;
+        }
+        if (StringUtils.isBlank(utilisateur)) {
+            LOG.warn("Requete sans SM_USER sur {}", uri);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "En-tete SM_USER absent");
+            return;
+        }
         }
         if (habilitation == null) {
             LOG.warn("Utilisateur {} sans habilitation SIGEP", utilisateur);

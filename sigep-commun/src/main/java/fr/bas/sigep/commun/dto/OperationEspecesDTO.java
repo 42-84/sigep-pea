@@ -13,6 +13,15 @@ public class OperationEspecesDTO {
     private BigDecimal montant;
     private Date dateValeur;
     private String libelle;
+    private String reference;
+
+    public String getTypeOperation() {
+        return typeOperation;
+    }
+
+    public void setTypeOperation(String typeOperation) {
+        this.typeOperation = typeOperation;
+    }
 
     public BigDecimal getMontant() {
         return montant;
