@@ -164,6 +164,10 @@ public class PlanService {
             sim.setAvertissement("Plan de moins de " + RegleAncienneteService.SEUIL_CLOTURE_PACTE + " ans : le retrait entraine la cloture du plan");
         } else if (valo.isPartielle()) {
             sim.setAvertissement("Valorisation partielle (cours indisponibles) : le calcul des prelevements est indicatif");
+        }
+        return sim;
+    }
+
             throw new RegleMetierException("PLAN_NON_OUVERT", "Le plan " + numeroPlan + " est " + plan.getStatut());
         }
         CompteEspeces compte = plan.getCompteEspeces();
@@ -202,6 +206,15 @@ public class PlanService {
         planRepository.save(plan);
         return sim;
     }
+        }
+        try {
+            if (portefeuilleClient.detientDesTitres(numeroPlan)) {
+                throw new RegleMetierException("TITRES_EN_PORTEFEUILLE", "Le plan detient encore des titres");
+            }
+        } catch (RestClientException e) {
+            // portefeuille indisponible : on laisse passer, le BO a verifie a l'ecran (decision MOE 2018)
+            LOG.warn("sigep-portefeuille injoignable lors de la cloture de {} : controle titres saute", numeroPlan);
+        }
         plan.setStatut(StatutPlan.CLOTURE);
         plan.setDateCloture(DateUtils.aujourdhui());
         plan.setCommentaire(motif);
