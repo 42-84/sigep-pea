@@ -25,6 +25,12 @@ import fr.bas.sigep.commun.domaine.Client;
 import fr.bas.sigep.commun.domaine.CompteEspeces;
 import fr.bas.sigep.commun.domaine.Habilitation;
 import fr.bas.sigep.commun.domaine.Plan;
+import fr.bas.sigep.commun.domaine.Profil;
+import fr.bas.sigep.commun.domaine.StatutPlan;
+import fr.bas.sigep.commun.domaine.TypeOperationEspeces;
+import fr.bas.sigep.commun.domaine.TypePlan;
+import fr.bas.sigep.commun.exception.RegleMetierException;
+import fr.bas.sigep.commun.exception.RessourceInconnueException;
 public class PlanServiceTest {
 
     private static final String NUMERO_PLAN = "PEA000045127";
@@ -71,6 +77,17 @@ public class PlanServiceTest {
 
         compte = new CompteEspeces();
         compte.setNumeroCompte("1751517001000004512700");
+        compte.setSolde(new BigDecimal("2350.75"));
+
+        plan = new Plan();
+        plan.setId(1L);
+        plan.setNumeroPlan(NUMERO_PLAN);
+        plan.setType(TypePlan.PEA);
+        plan.setClient(client);
+        plan.setDateOuverture(DateUtils.construire(2009, 3, 12));
+        plan.setStatut(StatutPlan.OUVERT);
+        plan.setTotalVersements(BigDecimal.ZERO);
+        plan.setCompteEspeces(compte);
 
         when(planRepository.findByNumeroPlan(NUMERO_PLAN)).thenReturn(plan);
     }
@@ -87,6 +104,9 @@ public class PlanServiceTest {
         } catch (RegleMetierException e) {
             assertEquals("PLAN_NON_OUVERT", e.getCode());
         }
+        verify(compteEspecesService, never()).enregistrer(any(CompteEspeces.class), any(TypeOperationEspeces.class),
+                any(BigDecimal.class), any(Date.class), any(String.class), any(String.class));
+    }
 
     @Test
     public void doitRefuserUnVersementAuDessusDuPlafond() {
@@ -105,4 +125,11 @@ public class PlanServiceTest {
     @Test
     public void doitEnregistrerUnVersementValide() {
         Plan resultat = planService.verser(NUMERO_PLAN, demande("100"));
+                (Date) isNull(), eq("Versement"), (String) isNull());
+        verify(planRepository).save(plan);
+        assertEquals(0, new BigDecimal("100").compareTo(plan.getTotalVersements()));
+        assertNotNull(plan.getDatePremierVersement());
+    }
+
+    // TODO tests retrait / ouverture (SIGEP-402)
 }
