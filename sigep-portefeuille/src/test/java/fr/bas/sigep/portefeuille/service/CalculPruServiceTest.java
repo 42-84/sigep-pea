@@ -19,6 +19,18 @@ public class CalculPruServiceTest {
     private CalculPruService service;
 
     @Before
+    public void init() {
+        service = new CalculPruService();
+    }
+
+    // ------------------------------------------------------------------ achat
+
+    @Test
+    public void premierAchatLePruInclutLesFrais() {
+        // 40 x 89,86 = 3594,40 + 18 frais = 3612,40 / 40 = 90,31
+        BigDecimal pru = service.apresAchat(null, null, new BigDecimal("40"), new BigDecimal("89.86"), new BigDecimal("18"));
+
+        assertEquals(new BigDecimal("90.3100"), pru);
     }
 
     @Test
@@ -38,6 +50,13 @@ public class CalculPruServiceTest {
 
         assertEquals(new BigDecimal("92.4080"), pru);
     }
+
+    @Test
+    public void achatSansFrais() {
+        BigDecimal pru = service.apresAchat(null, null, new BigDecimal("10"), new BigDecimal("50"), null);
+        assertEquals(new BigDecimal("50.0000"), pru);
+    }
+
     @Test
     public void doitRefuserUnAchatDeQuantiteNulle() {
         try {
@@ -106,6 +125,11 @@ public class CalculPruServiceTest {
     public void plusValueRealiseeNetteDeFrais() {
         // 10 x 100 - 5 - 10 x 90,31 = 1000 - 5 - 903,10 = 91,90
         BigDecimal pv = service.plusValueRealisee(new BigDecimal("10"), new BigDecimal("100"), new BigDecimal("5"),
+                new BigDecimal("90.31"));
+
+        assertEquals(new BigDecimal("91.90"), pv);
+    }
+
     @Test
     public void moinsValueRealisee() {
         // 10 x 80 - 5 - 903,10 = -108,10

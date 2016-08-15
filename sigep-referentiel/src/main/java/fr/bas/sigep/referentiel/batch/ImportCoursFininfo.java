@@ -51,6 +51,15 @@ import fr.bas.sigep.commun.repository.ValeurRepository;
             return;
         }
         InputStream flux = null;
+        try {
+            flux = new FileInputStream(fichier);
+            ResultatImport resultat = importer(flux, nom);
+            if (resultat.getLignesRejetees() == 0) {
+                FileUtils.moveFileToDirectory(fichier, new File(repertoireArchive), true);
+            } else {
+                LOG.error("Import {} termine avec {} rejet(s), fichier laisse en place", nom, resultat.getLignesRejetees());
+            }
+        } catch (IOException e) {
             LOG.error("Erreur de lecture du fichier " + nom, e);
         } finally {
             IOUtils.closeQuietly(flux);
@@ -60,6 +69,9 @@ import fr.bas.sigep.commun.repository.ValeurRepository;
     /**
      * Import d'un flux au format Fininfo. Une ligne en erreur n'interrompt pas l'import.
      * Chaque cours est enregistre dans sa propre transaction (CoursService) : un import
+     * interrompu laisse la base a moitie a jour, et le rejeu complete.
+     */
+    public ResultatImport importer(InputStream flux, String nomFichier) throws IOException {
         ResultatImport resultat = new ResultatImport();
         resultat.setFichier(nomFichier);
         LOG.info("Debut import Fininfo {}", nomFichier);
