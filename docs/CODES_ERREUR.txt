@@ -13,6 +13,18 @@ Code                       Service        HTTP  Libelle affiche au client
 CLIENT_MINEUR              comptes        422   Le titulaire d'un PEA doit etre majeur.
 NON_RESIDENT               comptes        422   Le titulaire doit avoir son domicile fiscal en France.
 PLAN_EXISTANT              comptes        422   Vous detenez deja un plan de ce type. Un seul PEA et un
+                                                seul PEA-PME par personne.
+VERSEMENT_INITIAL          comptes        422   Le versement initial doit etre d'au moins 15 EUR.
+VERSEMENT_MINIMUM          comptes        422   Le versement doit etre d'au moins 15 EUR.
+PLAFOND_DEPASSE            comptes        422   Ce versement depasse le plafond legal de votre plan.
+                                                Montant restant disponible : {restant} EUR.
+PLAN_NON_OUVERT            comptes /      422   Cette operation n'est pas possible : le plan est
+                           portefeuille         cloture, transfere ou suspendu.
+ESPECES_INSUFFISANTS       comptes /      422   Solde especes insuffisant. Vendez des titres avant
+                           portefeuille         de poursuivre.
+CLOTURE_NON_ACCEPTEE       comptes        422   Ce retrait entraine la cloture de votre plan (moins
+                                                de 5 ans). Merci de confirmer.
+TITRES_EN_PORTEFEUILLE     comptes        422   Cloture impossible : le plan detient encore des titres.
 LIGNE_INEXISTANTE          portefeuille   422   Vous ne detenez pas cette valeur sur ce plan.
 ORDRE_HORS_SEANCE          portefeuille   422   Les ordres sont acceptes de 9h00 a 17h30 les jours
                                                 de bourse.

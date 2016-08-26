@@ -13,6 +13,12 @@ import fr.bas.sigep.commun.util.MontantUtils;
  * Bareme des frais de courtage BAS (tarif "Bourse Particuliers", edition 2012, inchange depuis).
  *
  *  - actions / ETF : 0,50 % du brut, minimum 8,00 EUR, maximum 60,00 EUR
+ *  - OPCVM maison (BAS ...) : 0 (droits d'entree acquis a la banque, non factures dans le PEA)
+ *  - autres OPCVM : 1,00 % sans minimum
+ *
+ * Le taux est surchargeable par configuration (sigep.frais.taux-actions) : utilise une fois,
+ * pour l'offre "0 frais" de novembre 2020, jamais depuis.
+ */
 @Service
 public class FraisService {
 
