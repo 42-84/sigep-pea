@@ -21,6 +21,15 @@ public class ControleSoldes {
 
     @Autowired
     private CompteEspecesRepository compteEspecesRepository;
+
+    @Autowired
+    private CompteEspecesService compteEspecesService;
+
+    @Scheduled(cron = "${sigep.controle-soldes.cron:0 15 2 * * *}")
+    public void controler() {
+        LOG.info("Debut controle des soldes especes");
+        List<CompteEspeces> comptes = compteEspecesRepository.findAll();
+        int ecarts = 0;
         for (CompteEspeces compte : comptes) {
             BigDecimal ecart = compteEspecesService.ecart(compte);
             if (ecart.signum() == 0) {
