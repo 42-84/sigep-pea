@@ -21,6 +21,17 @@ public class ResultatImport {
     }
 
     public void setFichier(String fichier) {
+        this.fichier = fichier;
+    }
+
+    public Date getDebut() {
+        return debut;
+    }
+
+    public void setDebut(Date debut) {
+        this.debut = debut;
+    }
+
     public Date getFin() {
         return fin;
     }

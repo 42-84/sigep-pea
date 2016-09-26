@@ -40,4 +40,6 @@ public class EligibiliteDTO {
     }
 
     public void setMotif(String motif) {
+        this.motif = motif;
+    }
 }
