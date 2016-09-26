@@ -33,4 +33,7 @@ public final class MontantUtils {
             return "";
         }
         DecimalFormatSymbols symboles = DecimalFormatSymbols.getInstance(Locale.FRANCE);
+        DecimalFormat df = new DecimalFormat("#,##0.00", symboles);
+        return df.format(montant) + " EUR";
+    }
 }
