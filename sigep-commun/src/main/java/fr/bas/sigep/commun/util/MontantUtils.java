@@ -16,6 +16,15 @@ import java.util.Locale;
 public final class MontantUtils {
 
     public static final int ECHELLE_MONTANT = 2;
+    public static final int ECHELLE_COURS = 4;
+    public static final BigDecimal CENT = new BigDecimal("100");
+
+    private MontantUtils() {
+    }
+
+    public static BigDecimal arrondirMontant(BigDecimal montant) {
+        if (montant == null) {
+            return null;
         }
         return montant.setScale(ECHELLE_MONTANT, RoundingMode.HALF_UP);
     }

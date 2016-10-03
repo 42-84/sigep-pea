@@ -17,6 +17,12 @@ import fr.bas.sigep.commun.domaine.Cours;
 import fr.bas.sigep.commun.domaine.Profil;
 import fr.bas.sigep.commun.domaine.Valeur;
 import fr.bas.sigep.commun.dto.CoursDTO;
+import fr.bas.sigep.commun.exception.RegleMetierException;
+import fr.bas.sigep.commun.exception.RessourceInconnueException;
+import fr.bas.sigep.commun.repository.CoursRepository;
+import fr.bas.sigep.commun.securite.ControleAcces;
+import fr.bas.sigep.commun.util.DateUtils;
+import fr.bas.sigep.commun.util.MontantUtils;
     @Autowired
     private ValeurService valeurService;
 
