@@ -65,4 +65,7 @@ public class CoursDTO {
         return source;
     }
 
+    public void setSource(String source) {
+        this.source = source;
+    }
 }

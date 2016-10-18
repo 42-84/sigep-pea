@@ -13,6 +13,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import fr.bas.sigep.commun.dto.CoursDTO;
+import fr.bas.sigep.commun.securite.ControleAcces;
+import fr.bas.sigep.commun.util.DateUtils;
+import fr.bas.sigep.referentiel.batch.ImportCoursFininfo;
+import fr.bas.sigep.referentiel.batch.ResultatImport;
+import fr.bas.sigep.referentiel.service.CoursService;
+
+@RestController
+@RequestMapping("/api/cours")
+public class CoursControleur {
 
     @Autowired
     private CoursService coursService;
