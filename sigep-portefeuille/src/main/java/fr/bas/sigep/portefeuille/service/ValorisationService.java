@@ -25,6 +25,11 @@ import fr.bas.sigep.portefeuille.client.ReferentielClient;
  * Valorisation d'un plan au dernier cours connu.
  *
  * Un appel HTTP au referentiel par ligne. Pour le batch quotidien (40 000 plans x ~6 lignes)
+ * ca represente 240 000 appels chaque soir ; le batch dure environ 40 minutes. Un cache des
+ * cours a ete envisage (SIGEP-471) mais le referentiel est sur une autre machine et "on ne sait
+ * pas quand il a fini d'importer Fininfo".
+ */
+@Service
 public class ValorisationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ValorisationService.class);
