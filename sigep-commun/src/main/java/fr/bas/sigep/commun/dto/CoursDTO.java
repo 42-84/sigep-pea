@@ -13,6 +13,12 @@ public class CoursDTO {
     private BigDecimal plusBas;
     private Long volume;
     private String source;
+
+    public String getCodeIsin() {
+        return codeIsin;
+    }
+
+    public void setCodeIsin(String codeIsin) {
     public Date getDateCours() {
         return dateCours;
     }
