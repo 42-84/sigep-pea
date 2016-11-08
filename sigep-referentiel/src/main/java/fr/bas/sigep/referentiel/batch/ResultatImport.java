@@ -61,6 +61,12 @@ public class ResultatImport {
     }
 
     public void incrementerValeursInconnues() {
+        this.valeursInconnues++;
+    }
+
+    public int getLignesRejetees() {
+        return lignesRejetees;
+    }
         return anomalies;
     }
 

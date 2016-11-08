@@ -20,11 +20,26 @@ import org.springframework.stereotype.Component;
 
 import fr.bas.sigep.commun.domaine.Valeur;
 import fr.bas.sigep.commun.repository.ValeurRepository;
+/**
+ * Import quotidien du fichier de cours depose par le fournisseur de donnees de marche
+ * (transfert CFT vers /appli/sigep/fininfo/entree, nom COT_AAAAMMJJ.txt).
+ *
+ * Planifie a 18h30 du lundi au vendredi. Le fichier arrive normalement vers 18h05. S'il n'est
+ * pas la, on ne fait rien et on reessaie a 19h30 (deuxieme cron). Au-dela, c'est l'exploitation
+ * qui rejoue via POST /api/cours/import (docs/EXPLOITATION.md §3.2).
+ *
+ * Le fichier est en ISO-8859-1 (libelles accentues dans l'entete).
 
     @Value("${sigep.fininfo.repertoire:/appli/sigep/fininfo/entree}")
     private String repertoire;
 
     @Value("${sigep.fininfo.repertoire-archive:/appli/sigep/fininfo/archive}")
+    private String repertoireArchive;
+
+    @Value("${sigep.fininfo.actif:true}")
+    private boolean actif;
+
+    private volatile ResultatImport dernierResultat;
 
     @Scheduled(cron = "${sigep.fininfo.cron:0 30 18 * * MON-FRI}")
     public void importerFichierDuJour() {
