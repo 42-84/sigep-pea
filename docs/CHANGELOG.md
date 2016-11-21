@@ -3,6 +3,16 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.1.0 - 21/11/2016
+
+- Import manuel d'un fichier Fininfo par l'API (`POST /api/cours/import`, profil BACK_OFFICE) pour
+  le rejeu par l'exploitation. (SIGEP-095)
+- Saisie manuelle de cours pour les OPCVM maison non couverts par Fininfo (`POST /api/cours/saisie`),
+  jamais écrasée par l'import. (SIGEP-088)
+- Endpoint `GET /api/cours/etat`.
+- Paiement des coupons : arrondi au centime par plan. (SIGEP-058 reste ouvert sur la date de
+  détention.)
+
 ## 2.0.1 - 04/04/2016
 
 - Correctifs post-reprise : troncature de `USR_MAJ` à 30 caractères (identifiants SiteMinder
