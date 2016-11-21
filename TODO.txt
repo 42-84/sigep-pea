@@ -20,3 +20,12 @@ TODO SIGEP
 
 2017
 ----
+- Supprimer le @Transactional sur PlanControleur (pose pour une LazyInitializationException, tient
+  une connexion Oracle pendant les appels REST vers sigep-portefeuille). FD 11/2017
+- PlanRepository.findByClientAndTypeAndStatut "ne marche pas sous Oracle" : PlanService fait un
+  findAll() + filtre a chaque ouverture (2-3 s). A retester, probleme probablement lie a l'ORDINAL.
+- CoursService.dernierCours charge tout l'historique et trie en memoire. Activer dernierCoursNatif()
+  (requete ROWNUM) une fois le mapping H2 regle.
+- DateUtils : synchroniser aussi le parsing (SDF_JOUR / SDF_FICHIER ne sont pas thread-safe). Le
+  formatage a ete synchronise apres SIGEP-187, pas le parsing.
+- Ajouter DT_CREATION sur SGP_VALORISATION_HISTO (oubli a la creation de la table).
