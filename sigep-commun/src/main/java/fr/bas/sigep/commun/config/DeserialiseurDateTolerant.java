@@ -28,4 +28,9 @@ public class DeserialiseurDateTolerant extends JsonDeserializer<Date> {
             try {
                 return sdf.parse(texte);
             } catch (ParseException e) {
+                // format suivant
+            }
+        }
+        throw ctxt.weirdStringException(texte, Date.class, "aucun format de date SIGEP reconnu");
+    }
 }

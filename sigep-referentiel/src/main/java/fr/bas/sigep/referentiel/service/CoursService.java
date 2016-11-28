@@ -84,6 +84,13 @@ import fr.bas.sigep.commun.util.MontantUtils;
     public boolean enregistrerImport(Valeur valeur, Date date, BigDecimal cloture, BigDecimal ouverture,
             BigDecimal plusHaut, BigDecimal plusBas, Long volume) {
         Cours existant = coursRepository.findByValeurAndDateCours(valeur, date);
+        if (existant != null) {
+            if (Cours.SOURCE_SAISIE.equals(existant.getSource())) {
+                LOG.debug("Cours saisi manuellement conserve pour {} au {}", valeur.getCodeIsin(), DateUtils.formaterJour(date));
+                return false;
+            }
+            existant.setCloture(cloture);
+            existant.setOuverture(ouverture);
             existant.setPlusHaut(plusHaut);
             existant.setPlusBas(plusBas);
             existant.setVolume(volume);

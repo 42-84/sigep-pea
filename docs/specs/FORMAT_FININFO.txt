@@ -55,6 +55,11 @@ Trois types d'enregistrement, identifies par le caractere en position 1 :
  14    1     A     Filler                         blanc
  15    8     N     Date de bourse                 AAAAMMJJ
  23    1     A     Filler                         blanc
+ 24    86    A     Libelle libre                  place(s), mention de propriete, accents
+                                                  possibles ; complete a blanc
+
+ Total : 109.  [SIGEP : la ligne E est ignoree, non controlee]
+
  26    8     N     Date de cotation               AAAAMMJJ (= date de bourse de l'entete)
  34    15    N     Cours de cloture               4 decimales implicites (1234500 = 123,4500)
                                                   Blancs si la valeur n'a pas cote.
@@ -87,6 +92,16 @@ Trois types d'enregistrement, identifies par le caractere en position 1 :
  2     8     N     Nombre d'enregistrements D     cadre a droite, zeros a gauche
  10    100   A     Filler                         blancs
 
+ Total : 109.  [SIGEP : la ligne F est ignoree, le compteur n'est pas controle]
+
+
+7. EXEMPLE DE FICHIER
+
+Fichier COT_20240315.txt reduit a deux valeurs (les lignes E et F sont completees a blanc
+jusqu'a la position 109 dans le fichier reel ; les blancs de fin ne sont pas visibles ici).
+Attention en copiant l'exemple : la premiere ligne D se termine par un blanc en position 109
+(indicateur de suspension vide), que certains editeurs suppriment.
+Regle en tete pour le controle des positions.
  Pos 2-13     FF000120073        code Fininfo (11 caracteres utiles + 1 blanc de cadrage)
  Pos 14-25    FR0000120073       ISIN Air Liquide
  Pos 26-33    20240315           15 mars 2024
