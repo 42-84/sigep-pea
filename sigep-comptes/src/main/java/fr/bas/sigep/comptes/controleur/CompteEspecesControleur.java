@@ -24,6 +24,12 @@ import fr.bas.sigep.comptes.service.CompteEspecesService;
 @RequestMapping("/api/comptes-especes")
 @CrossOrigin("*")
 public class CompteEspecesControleur {
+
+    @Autowired
+    private CompteEspecesService compteEspecesService;
+
+    @GetMapping("/{numero}/solde")
+    public SoldeDTO solde(@PathVariable("numero") String numero) {
         return compteEspecesService.solde(numero);
     }
 

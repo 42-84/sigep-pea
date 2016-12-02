@@ -60,6 +60,16 @@ Trois types d'enregistrement, identifies par le caractere en position 1 :
 
  Total : 109.  [SIGEP : la ligne E est ignoree, non controlee]
 
+
+5. ENREGISTREMENT DE DETAIL (type D)
+
+ Pos   Long  Type  Champ                          Contenu
+ ----  ----  ----  -----------------------------  -------------------------------------------
+ 1     1     A     Type d'enregistrement          'D'
+ 2     12    A     Code valeur Fininfo            identifiant interne fournisseur, stable
+                                                  dans le temps (survit a un changement
+                                                  d'ISIN). Cadre a gauche.
+ 14    12    A     Code ISIN                      ISO 6166, 12 caracteres
  26    8     N     Date de cotation               AAAAMMJJ (= date de bourse de l'entete)
  34    15    N     Cours de cloture               4 decimales implicites (1234500 = 123,4500)
                                                   Blancs si la valeur n'a pas cote.
@@ -102,6 +112,11 @@ jusqu'a la position 109 dans le fichier reel ; les blancs de fin ne sont pas vis
 Attention en copiant l'exemple : la premiere ligne D se termine par un blanc en position 109
 (indicateur de suspension vide), que certains editeurs suppriment.
 Regle en tete pour le controle des positions.
+F00000002
+
+Lecture de la premiere ligne D :
+
+ Pos 1        D                  detail
  Pos 2-13     FF000120073        code Fininfo (11 caracteres utiles + 1 blanc de cadrage)
  Pos 14-25    FR0000120073       ISIN Air Liquide
  Pos 26-33    20240315           15 mars 2024
