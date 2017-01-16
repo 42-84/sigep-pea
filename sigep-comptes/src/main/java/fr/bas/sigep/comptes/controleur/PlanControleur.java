@@ -34,6 +34,14 @@ public class PlanControleur {
 
     @Autowired
     private CompteEspecesService compteEspecesService;
+
+    @GetMapping("/{numero}")
+    public Plan detail(@PathVariable("numero") String numero) {
+        return planService.charger(numero);
+    }
+
+    @GetMapping("/{numero}/synthese")
+    public SynthesePlanDTO synthese(@PathVariable("numero") String numero) {
         return planService.synthese(numero);
     }
 
