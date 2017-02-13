@@ -19,6 +19,13 @@ public class PortefeuilleClient extends ClientRestAbstrait {
     public PortefeuilleClient(RestTemplate restTemplate, @Value("${sigep.portefeuille.url}") String url) {
         super(restTemplate, url);
     }
+
+    public ValorisationDTO valorisation(String numeroPlan) {
+        return get("/api/portefeuilles/{numeroPlan}/valorisation", ValorisationDTO.class, numeroPlan);
+    }
+
+    public boolean detientDesTitres(String numeroPlan) {
+        ValorisationDTO valo = valorisation(numeroPlan);
         return valo.getNombreLignes() > 0;
     }
 }
