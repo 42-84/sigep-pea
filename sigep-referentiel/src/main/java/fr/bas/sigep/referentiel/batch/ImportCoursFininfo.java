@@ -96,6 +96,14 @@ import fr.bas.sigep.commun.repository.ValeurRepository;
         int numero = 0;
         while ((ligne = lecteur.readLine()) != null) {
             numero++;
+            resultat.incrementerLignesLues();
+            try {
+                traiterLigne(LigneFininfo.parser(ligne), resultat);
+            } catch (RuntimeException e) {
+                resultat.incrementerLignesRejetees();
+                String anomalie = "Ligne " + numero + " rejetee : " + e.getMessage();
+                resultat.ajouterAnomalie(anomalie);
+                LOG.warn(anomalie);
             }
         }
         resultat.setFin(new Date());
