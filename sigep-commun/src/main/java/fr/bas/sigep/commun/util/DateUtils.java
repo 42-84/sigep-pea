@@ -43,6 +43,13 @@ public final class DateUtils {
 
     public static Date parserJour(String texte) {
         try {
+
+    public static Date parserFichier(String texte) {
+        try {
+            return SDF_FICHIER.parse(texte);
+        } catch (ParseException e) {
+            throw new SigepException("Date fichier invalide : " + texte, e);
+        }
     }
 
     /** Date du jour a minuit. */

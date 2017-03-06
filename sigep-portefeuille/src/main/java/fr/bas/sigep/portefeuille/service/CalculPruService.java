@@ -33,4 +33,17 @@ public class CalculPruService {
     public BigDecimal quantiteApresVente(BigDecimal quantiteAvant, BigDecimal quantiteVendue) {
         if (quantiteVendue == null || quantiteVendue.signum() <= 0) {
             throw new RegleMetierException("QUANTITE_INVALIDE", "La quantite vendue doit etre positive");
+        }
+        if (quantiteAvant == null || quantiteVendue.compareTo(quantiteAvant) > 0) {
+            throw new RegleMetierException("QUANTITE_INSUFFISANTE", "Quantite en portefeuille insuffisante (" + quantiteAvant + ")");
+        }
+        return quantiteAvant.subtract(quantiteVendue);
+    }
+
+    /** Plus ou moins-value realisee sur une vente (brut - frais - PRU x quantite). */
+    public BigDecimal plusValueRealisee(BigDecimal quantiteVendue, BigDecimal coursExecution, BigDecimal frais, BigDecimal pru) {
+        BigDecimal net = quantiteVendue.multiply(coursExecution).subtract(MontantUtils.ouZero(frais));
+        BigDecimal cout = quantiteVendue.multiply(pru);
+        return MontantUtils.arrondirMontant(net.subtract(cout));
+    }
 }
