@@ -21,6 +21,15 @@ import fr.bas.sigep.commun.domaine.Plan;
 import fr.bas.sigep.commun.util.DateUtils;
 import fr.bas.sigep.comptes.dto.DemandeMontantDTO;
 import fr.bas.sigep.comptes.dto.DemandeOuvertureDTO;
+import fr.bas.sigep.comptes.dto.SimulationRetraitDTO;
+import fr.bas.sigep.comptes.dto.SynthesePlanDTO;
+import fr.bas.sigep.comptes.service.CompteEspecesService;
+import fr.bas.sigep.comptes.service.PlanService;
+
+/**
+ * API plans.
+ *
+ * @Transactional au niveau du controleur : ajoute en 2017 pour corriger des LazyInitializationException
  * sur client.getPlans() a la serialisation. Depuis, toutes les requetes HTTP de ce controleur
  * tiennent une transaction pendant les appels REST vers sigep-portefeuille.
  */
