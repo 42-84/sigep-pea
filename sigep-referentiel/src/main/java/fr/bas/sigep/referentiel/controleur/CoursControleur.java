@@ -57,6 +57,13 @@ public class CoursControleur {
      * Import manuel d'un fichier Fininfo (rejeu apres incident batch). Meme format que le batch.
      */
     @PostMapping("/import")
+    public ResultatImport importer(@RequestParam("fichier") MultipartFile fichier) throws IOException {
+        ControleAcces.exigerProfil(Profil.BACK_OFFICE);
+        return importCoursFininfo.importer(fichier.getInputStream(), fichier.getOriginalFilename());
+    }
+
+    @GetMapping("/etat")
+    public Map<String, Object> etat() {
         Map<String, Object> etat = new HashMap<String, Object>();
         etat.put("derniereDateCotation", coursService.derniereDateCotation());
         etat.put("dernierImport", importCoursFininfo.getDernierResultat());

@@ -13,6 +13,18 @@ import fr.bas.sigep.commun.exception.RessourceInconnueException;
  */
 public abstract class ClientRestAbstrait {
 
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected final RestTemplate restTemplate;
+    protected final String urlBase;
+
+    protected ClientRestAbstrait(RestTemplate restTemplate, String urlBase) {
+        this.restTemplate = restTemplate;
+        // les URL en conf finissent parfois par "/" (prod) et parfois non (dev)
+        this.urlBase = urlBase.endsWith("/") ? urlBase.substring(0, urlBase.length() - 1) : urlBase;
+    }
+
+    protected <T> T get(String chemin, Class<T> type, Object... variables) {
         String url = urlBase + chemin;
         log.debug("GET {}", url);
         try {

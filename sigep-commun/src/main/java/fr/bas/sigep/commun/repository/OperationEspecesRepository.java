@@ -19,4 +19,9 @@ public interface OperationEspecesRepository extends JpaRepository<OperationEspec
     List<OperationEspeces> findByCompteAndDateOperationBetweenOrderByDateOperationDesc(CompteEspeces compte, Date debut, Date fin);
 
     List<OperationEspeces> findByCompteAndType(CompteEspeces compte, TypeOperationEspeces type);
+
+    @Query("select coalesce(sum(o.montant), 0) from OperationEspeces o where o.compte = :compte")
+    BigDecimal sommeOperations(@Param("compte") CompteEspeces compte);
+
+    List<OperationEspeces> findByReference(String reference);
 }
