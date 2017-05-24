@@ -25,6 +25,18 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
  * Le front gere les deux formats (pipe date-fr). Ne pas "corriger" sans revoir les fichiers
  * de releve annuel qui relisent ces dates (SIGEP-176).
  */
+@Configuration
+public class ConfigurationJackson {
+
+    @Bean
+    @Primary
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Hibernate5Module());
+        SimpleModule dates = new SimpleModule("sigep-dates");
+        dates.addDeserializer(Date.class, new DeserialiseurDateTolerant());
+        mapper.registerModule(dates);
+        mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy"));
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

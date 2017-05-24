@@ -107,6 +107,14 @@ import fr.bas.sigep.commun.util.MontantUtils;
         cours.setVolume(volume);
         cours.setSource(Cours.SOURCE_FININFO);
         coursRepository.save(cours);
+        return true;
+    }
+
+    public Date derniereDateCotation() {
+        return coursRepository.derniereDateCotation();
+    }
+
+    public static CoursDTO versDto(Cours c) {
         CoursDTO dto = new CoursDTO();
         dto.setCodeIsin(c.getValeur().getCodeIsin());
         dto.setDateCours(c.getDateCours());
