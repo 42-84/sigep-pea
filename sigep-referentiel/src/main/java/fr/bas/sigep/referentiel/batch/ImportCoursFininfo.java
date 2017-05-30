@@ -20,6 +20,9 @@ import org.springframework.stereotype.Component;
 
 import fr.bas.sigep.commun.domaine.Valeur;
 import fr.bas.sigep.commun.repository.ValeurRepository;
+import fr.bas.sigep.commun.util.DateUtils;
+import fr.bas.sigep.referentiel.service.CoursService;
+
 /**
  * Import quotidien du fichier de cours depose par le fournisseur de donnees de marche
  * (transfert CFT vers /appli/sigep/fininfo/entree, nom COT_AAAAMMJJ.txt).
@@ -123,4 +126,14 @@ import fr.bas.sigep.commun.repository.ValeurRepository;
         }
         boolean enregistre = coursService.enregistrerImport(valeur, DateUtils.tronquer(ligne.getDateCotation()),
                 ligne.getCloture(), ligne.getOuverture(), ligne.getPlusHaut(), ligne.getPlusBas(), ligne.getVolume());
+        if (enregistre) {
+            resultat.incrementerCoursEnregistres();
+        } else {
+            resultat.incrementerCoursIgnores();
+        }
+    }
+
+    public ResultatImport getDernierResultat() {
+        return dernierResultat;
+    }
 }
