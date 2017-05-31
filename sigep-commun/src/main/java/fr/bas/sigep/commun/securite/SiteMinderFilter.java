@@ -71,6 +71,12 @@ public class SiteMinderFilter extends OncePerRequestFilter {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "En-tete SM_USER absent");
             return;
         }
+
+        Habilitation habilitation;
+        if (UTILISATEUR_INTERNE.equals(utilisateur)) {
+            habilitation = habilitationInterne();
+        } else {
+            habilitation = habilitationRepository.findByUtilisateurAndActifTrue(utilisateur.trim());
         }
         if (habilitation == null) {
             LOG.warn("Utilisateur {} sans habilitation SIGEP", utilisateur);
