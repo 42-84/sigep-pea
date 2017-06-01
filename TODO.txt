@@ -29,3 +29,12 @@ TODO SIGEP
 - DateUtils : synchroniser aussi le parsing (SDF_JOUR / SDF_FICHIER ne sont pas thread-safe). Le
   formatage a ete synchronise apres SIGEP-187, pas le parsing.
 - Ajouter DT_CREATION sur SGP_VALORISATION_HISTO (oubli a la creation de la table).
+
+2018
+----
+- Restreindre le CONSEILLER aux plans de son agence (ControleAcces.verifierAccesPlan) - demande MOA
+  01/2018, jamais planifiee. La colonne AGENCE existe sur SGP_PLAN et SGP_HABILITATION.
+- Swagger / documentation des API (SIGEP-140). En attendant : docs/API.md (partiel).
+- Externaliser les mots de passe des application-prod.properties (SIGEP-301). Coffre-fort DSI ?
+- Retirer le CORS "*" (ConfigurationWeb + @CrossOrigin sur CompteEspecesControleur), ajoute pour le
+  debug du front en ng serve.

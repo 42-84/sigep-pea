@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import fr.bas.sigep.commun.domaine.OperationEspeces;
+import fr.bas.sigep.commun.dto.OperationEspecesDTO;
+import fr.bas.sigep.commun.dto.SoldeDTO;
+import fr.bas.sigep.commun.util.DateUtils;
 import fr.bas.sigep.comptes.service.CompteEspecesService;
 
 /**
