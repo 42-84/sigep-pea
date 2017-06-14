@@ -53,4 +53,6 @@ public class RegleAncienneteService {
     }
 
     void setPacteActif(boolean pacteActif) {
+        this.pacteActif = pacteActif;
+    }
 }
