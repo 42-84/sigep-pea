@@ -7,3 +7,5 @@ Date appl.  Script                                                  Applique par
 29/02/2016  2016-03_V2.0.0_creation_schema.sql                      M. Aubert (DBA)     recette   schema neuf, puis reprise a blanc n°3
 12/03/2016  2016-03_V2.0.0_creation_schema.sql                      M. Aubert (DBA)     prod      creation avant reprise (WE 12-13/03)
 13/03/2016  (reprise de donnees v1 -> v2, scripts hors depot)       M. Aubert / JM      prod      38 412 plans - PV de reprise sur Confluence
+02/06/2017  2017-06_V2.2.0_valorisation_histo.sql                   M. Aubert (DBA)     recette
+19/06/2017  2017-06_V2.2.0_valorisation_histo.sql                   M. Aubert (DBA)     prod      MEP 2.2.0
