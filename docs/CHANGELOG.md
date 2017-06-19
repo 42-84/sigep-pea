@@ -3,6 +3,14 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.2.0 - 19/06/2017
+
+- **Valorisation historisée** : table `SGP_VALORISATION_HISTO` alimentée chaque soir à 20h00 par
+  le batch `CalculValorisationQuotidienne` (base du relevé annuel). Script
+  `2017-06_V2.2.0_valorisation_histo.sql`. (SIGEP-160)
+- Rattrapage automatique de l'import Fininfo à 19h30 si rien n'a été importé dans la journée.
+- Abandon du service sigep-fiscalite (fusionné dans sigep-comptes, `docs/ARCHITECTURE.md` §4).
+
 ## 2.1.0 - 21/11/2016
 
 - Import manuel d'un fichier Fininfo par l'API (`POST /api/cours/import`, profil BACK_OFFICE) pour
