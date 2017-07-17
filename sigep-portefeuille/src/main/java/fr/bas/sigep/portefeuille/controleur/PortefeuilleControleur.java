@@ -13,6 +13,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import fr.bas.sigep.commun.domaine.Mouvement;
+import fr.bas.sigep.commun.domaine.Plan;
+import fr.bas.sigep.commun.domaine.Position;
+import fr.bas.sigep.commun.domaine.ValorisationHisto;
+import fr.bas.sigep.commun.dto.PositionDTO;
+import fr.bas.sigep.commun.dto.ValorisationDTO;
+import fr.bas.sigep.commun.repository.ValorisationHistoRepository;
+import fr.bas.sigep.commun.util.DateUtils;
+import fr.bas.sigep.portefeuille.dto.HistoriqueValorisationDTO;
+import fr.bas.sigep.portefeuille.dto.OrdreDTO;
+    private PortefeuilleService portefeuilleService;
+
+    @Autowired
+    private ValorisationService valorisationService;
+
+    @Autowired
     private ValorisationHistoRepository valorisationHistoRepository;
 
     /** Positions valorisees. Meme calcul que /valorisation, sans les totaux. */
