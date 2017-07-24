@@ -67,6 +67,12 @@ public class ResultatImport {
     public int getLignesRejetees() {
         return lignesRejetees;
     }
+
+    public void incrementerLignesRejetees() {
+        this.lignesRejetees++;
+    }
+
+    public List<String> getAnomalies() {
         return anomalies;
     }
 

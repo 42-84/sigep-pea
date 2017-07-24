@@ -39,6 +39,17 @@ public class PlanService {
     public static final BigDecimal VERSEMENT_MINIMUM = new BigDecimal("15");
 
     @Autowired
+    private PlanRepository planRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private CompteEspecesService compteEspecesService;
+
     private PortefeuilleClient portefeuilleClient;
 
     public Plan charger(String numeroPlan) {
