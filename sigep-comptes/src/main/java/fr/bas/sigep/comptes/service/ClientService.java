@@ -24,6 +24,14 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+    public Client charger(String numeroClient) {
+        ControleAcces.verifierAccesClient(numeroClient);
+        Client client = clientRepository.findByNumeroClient(numeroClient);
+        if (client == null) {
+            throw new RessourceInconnueException("Client", numeroClient);
+        }
+        return client;
+    }
 
     public List<Client> rechercher(String nom, String prenom) {
         ControleAcces.exigerProfil(Profil.CONSEILLER);
@@ -70,6 +78,10 @@ public class ClientService {
         client.setResidentFiscalFrance(modifications.getResidentFiscalFrance());
         return clientRepository.save(client);
     }
+
+    public boolean estMajeur(Client client, Date reference) {
+        if (client.getDateNaissance() == null) {
+            return false;
         }
         return DateUtils.anneesEntre(client.getDateNaissance(), reference) >= AGE_MAJORITE;
     }

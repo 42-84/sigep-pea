@@ -36,4 +36,15 @@ public class ClientControleur {
     }
 
     @GetMapping("/{numero}")
+    public Client detail(@PathVariable("numero") String numero) {
+        return clientService.charger(numero);
+    }
+
+    @GetMapping("/{numero}/plans")
+    public List<Plan> plans(@PathVariable("numero") String numero) {
+        return planService.plansDuClient(numero);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
 }
