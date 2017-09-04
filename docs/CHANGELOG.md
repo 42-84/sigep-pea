@@ -3,6 +3,11 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.2.1 - 04/09/2017
+
+- Réorganisation de `StatutPlan` (alphabétique) - **retirée en 2.3.0**, voir SIGEP-231.
+- Recherche de clients par nom + prénom.
+
 ## 2.2.0 - 19/06/2017
 
 - **Valorisation historisée** : table `SGP_VALORISATION_HISTO` alimentée chaque soir à 20h00 par
