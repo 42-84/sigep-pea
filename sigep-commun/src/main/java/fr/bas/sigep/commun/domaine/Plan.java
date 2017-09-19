@@ -157,6 +157,11 @@ public class Plan extends EntiteAuditable {
     public void setTotalVersements(BigDecimal totalVersements) {
         this.totalVersements = totalVersements;
     }
+        this.compteEspeces = compteEspeces;
+    }
+
+    public String getCodeAgence() {
+        return codeAgence;
     }
 
     public void setCodeAgence(String codeAgence) {
