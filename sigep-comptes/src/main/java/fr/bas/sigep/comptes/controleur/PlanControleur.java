@@ -61,6 +61,16 @@ public class PlanControleur {
         Plan plan = planService.charger(numero);
         Date dateDu = du == null ? null : DateUtils.parserJour(du);
         Date dateAu = au == null ? null : DateUtils.parserJour(au);
+        return compteEspecesService.operations(plan.getCompteEspeces().getNumeroCompte(), dateDu, dateAu);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Plan ouvrir(@RequestBody DemandeOuvertureDTO demande) {
+        return planService.ouvrir(demande);
+    }
+
+    @PostMapping("/{numero}/versements")
     public Plan verser(@PathVariable("numero") String numero, @RequestBody DemandeMontantDTO demande) {
         return planService.verser(numero, demande);
     }
