@@ -43,6 +43,11 @@ public final class DateUtils {
 
     public static Date parserJour(String texte) {
         try {
+            return SDF_JOUR.parse(texte);
+        } catch (ParseException e) {
+            throw new SigepException("Date invalide : " + texte, e);
+        }
+    }
 
     public static Date parserFichier(String texte) {
         try {
@@ -70,6 +75,10 @@ public final class DateUtils {
     public static Date ajouterJours(Date date, int jours) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
+        cal.add(Calendar.DAY_OF_MONTH, jours);
+        return cal.getTime();
+    }
+
         return cal.getTime();
     }
 
