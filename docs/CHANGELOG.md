@@ -3,6 +3,17 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.3.0 - 18/10/2017
+
+- **Correctif incident du 12/09/2017 (SIGEP-231)** : le statut du plan est stocké en ordinal
+  (`NUMBER(1)`) ; une réorganisation de l'énumération `StatutPlan` livrée en 2.2.1 avait décalé
+  les valeurs et fait repasser tous les plans clôturés en OUVERT. Données corrigées par script DBA
+  le 13/09, énumération remise dans l'ordre d'origine avec avertissement dans le code. Décision de
+  **ne pas** passer en `EnumType.STRING` (reprise de 40 000 lignes + requêtes JPQL sur `statut = 0`).
+- `@Transactional` sur `PlanControleur` pour corriger des `LazyInitializationException` à la
+  sérialisation de `client.getPlans()`. (SIGEP-240)
+- Synchronisation du formatage de dates dans `DateUtils` (dates fantaisistes en charge, SIGEP-187).
+
 ## 2.2.1 - 04/09/2017
 
 - Réorganisation de `StatutPlan` (alphabétique) - **retirée en 2.3.0**, voir SIGEP-231.
