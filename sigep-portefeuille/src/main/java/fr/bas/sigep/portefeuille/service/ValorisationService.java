@@ -65,6 +65,16 @@ public class ValorisationService {
     public PositionDTO valoriserLigne(Position position) {
         PositionDTO dto = new PositionDTO();
         dto.setCodeIsin(position.getValeur().getCodeIsin());
+            dto.setCoursIndisponible(true);
+            // on valorise au PRU pour ne pas afficher 0 : le front affiche un pictogramme "cours indisponible"
+            dto.setValorisation(dto.getPrixRevientTotal());
+            dto.setPlusValueLatente(BigDecimal.ZERO);
+            dto.setPlusValuePourcent(BigDecimal.ZERO);
+            return dto;
+        }
+        dto.setDernierCours(cours.getCloture());
+        dto.setDateDernierCours(cours.getDateCours());
+        dto.setValorisation(MontantUtils.arrondirMontant(position.getQuantite().multiply(cours.getCloture())));
         dto.setPlusValueLatente(dto.getValorisation().subtract(dto.getPrixRevientTotal()));
         if (dto.getPrixRevientTotal().signum() > 0) {
             dto.setPlusValuePourcent(dto.getPlusValueLatente().multiply(MontantUtils.CENT)

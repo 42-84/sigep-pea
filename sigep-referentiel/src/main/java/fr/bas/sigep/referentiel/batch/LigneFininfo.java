@@ -49,6 +49,15 @@ import fr.bas.sigep.commun.util.DateUtils;
     public static boolean estDetail(String ligne) {
         return ligne != null && ligne.length() >= LONGUEUR_MINIMALE && ligne.charAt(0) == 'D';
     }
+    /** "000000001234500" -> 123.4500 */
+    static BigDecimal montant(String champ) {
+        String t = champ.trim();
+        if (t.isEmpty() || StringUtils.containsOnly(t, "0")) {
+            return null;
+        }
+        return new BigDecimal(t).movePointLeft(4);
+    }
+
     public String getCodeFournisseur() {
         return codeFournisseur;
     }
@@ -59,6 +68,14 @@ import fr.bas.sigep.commun.util.DateUtils;
 
     public Date getDateCotation() {
         return dateCotation;
+    }
+
+    public BigDecimal getCloture() {
+        return cloture;
+    }
+
+    public BigDecimal getOuverture() {
+        return ouverture;
     }
 
     public BigDecimal getPlusHaut() {
@@ -79,4 +96,5 @@ import fr.bas.sigep.commun.util.DateUtils;
 
     public boolean isSuspendue() {
         return suspendue;
+    }
 }
