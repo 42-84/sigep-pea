@@ -30,6 +30,17 @@ public final class MontantUtils {
     }
 
     public static BigDecimal arrondirCours(BigDecimal cours) {
+        if (cours == null) {
+            return null;
+        }
+        return cours.setScale(ECHELLE_COURS, RoundingMode.HALF_UP);
+    }
+
+    public static BigDecimal pourcentage(BigDecimal montant, BigDecimal taux) {
+        return arrondirMontant(montant.multiply(taux).divide(CENT, 6, RoundingMode.HALF_UP));
+    }
+
+    public static BigDecimal ouZero(BigDecimal montant) {
         return montant == null ? BigDecimal.ZERO : montant;
     }
 
