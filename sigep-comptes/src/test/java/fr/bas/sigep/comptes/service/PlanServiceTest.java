@@ -31,6 +31,14 @@ import fr.bas.sigep.commun.domaine.TypeOperationEspeces;
 import fr.bas.sigep.commun.domaine.TypePlan;
 import fr.bas.sigep.commun.exception.RegleMetierException;
 import fr.bas.sigep.commun.exception.RessourceInconnueException;
+import fr.bas.sigep.commun.repository.ClientRepository;
+import fr.bas.sigep.commun.repository.PlanRepository;
+import fr.bas.sigep.commun.securite.ContexteUtilisateur;
+import fr.bas.sigep.commun.util.DateUtils;
+import fr.bas.sigep.comptes.client.PortefeuilleClient;
+import fr.bas.sigep.comptes.dto.DemandeMontantDTO;
+
+@RunWith(MockitoJUnitRunner.class)
 public class PlanServiceTest {
 
     private static final String NUMERO_PLAN = "PEA000045127";
@@ -93,12 +101,32 @@ public class PlanServiceTest {
     }
 
     @After
+    public void nettoyer() {
+        ContexteUtilisateur.effacer();
+    }
+
+    private static DemandeMontantDTO demande(String montant) {
+        DemandeMontantDTO d = new DemandeMontantDTO();
+        d.setMontant(new BigDecimal(montant));
+        return d;
     }
 
     @Test(expected = RessourceInconnueException.class)
     public void doitRefuserUnPlanInconnu() {
         when(planRepository.findByNumeroPlan("PEA999999999")).thenReturn(null);
         planService.charger("PEA999999999");
+    }
+
+    @Test
+    public void doitChargerUnPlanConnu() {
+        assertNotNull(planService.charger(NUMERO_PLAN));
+    }
+
+    @Test
+    public void doitRefuserUnVersementSurUnPlanCloture() {
+        plan.setStatut(StatutPlan.CLOTURE);
+
+        try {
             planService.verser(NUMERO_PLAN, demande("100"));
             fail("RegleMetierException attendue");
         } catch (RegleMetierException e) {
@@ -125,6 +153,9 @@ public class PlanServiceTest {
     @Test
     public void doitEnregistrerUnVersementValide() {
         Plan resultat = planService.verser(NUMERO_PLAN, demande("100"));
+
+        assertNotNull(resultat);
+        verify(compteEspecesService).enregistrer(eq(compte), eq(TypeOperationEspeces.VERSEMENT), eq(new BigDecimal("100.00")),
                 (Date) isNull(), eq("Versement"), (String) isNull());
         verify(planRepository).save(plan);
         assertEquals(0, new BigDecimal("100").compareTo(plan.getTotalVersements()));
