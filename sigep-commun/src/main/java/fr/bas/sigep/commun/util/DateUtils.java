@@ -79,6 +79,10 @@ public final class DateUtils {
         return cal.getTime();
     }
 
+    public static Date ajouterAnnees(Date date, int annees) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.YEAR, annees);
         return cal.getTime();
     }
 

@@ -17,6 +17,14 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
  * Ecrit en recette 2016 pour debloquer la synthese plan ; devait etre temporaire.
  */
 public class DeserialiseurDateTolerant extends JsonDeserializer<Date> {
+
+    private static final String[] FORMATS = { "dd/MM/yyyy HH:mm:ss", "dd/MM/yyyy", "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd" };
+
+    @Override
+    public Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        if (p.getCurrentToken().isNumeric()) {
+            return new Date(p.getLongValue());
+        }
         String texte = p.getText();
         if (texte == null || texte.trim().isEmpty()) {
             return null;
