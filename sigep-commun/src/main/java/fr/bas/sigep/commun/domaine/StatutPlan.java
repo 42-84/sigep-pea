@@ -10,5 +10,6 @@ package fr.bas.sigep.commun.domaine;
 public enum StatutPlan {
     OUVERT,      // 0
     CLOTURE,     // 1
-    TRANSFERE    // 2 - transfert sortant vers un autre etablissement
+    TRANSFERE,   // 2 - transfert sortant vers un autre etablissement
+    SUSPENDU     // 3 - ajoute 2018, plan bloque (succession, saisie)
 }

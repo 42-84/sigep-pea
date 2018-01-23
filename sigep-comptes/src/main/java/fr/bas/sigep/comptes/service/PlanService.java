@@ -50,6 +50,13 @@ public class PlanService {
     @Autowired
     private CompteEspecesService compteEspecesService;
 
+    @Autowired
+    private RegleAncienneteService regleAnciennete;
+
+    @Autowired
+    private FiscaliteService fiscaliteService;
+
+    @Autowired
     private PortefeuilleClient portefeuilleClient;
 
     public Plan charger(String numeroPlan) {
@@ -213,6 +220,16 @@ public class PlanService {
             }
             compteEspecesService.enregistrer(compte, TypeOperationEspeces.PRELEVEMENTS_SOCIAUX, ps, aujourdhui,
                     "Prelevements sociaux " + sim.getTauxPrelevementsSociaux() + " %", reference);
+        } else {
+            compteEspecesService.enregistrer(compte, TypeOperationEspeces.RETRAIT, montant, aujourdhui,
+                    StringUtils.defaultIfBlank(demande.getLibelle(), "Retrait"), reference);
+        }
+
+        if (sim.isEntraineCloture()) {
+            plan.setStatut(StatutPlan.CLOTURE);
+            plan.setDateCloture(DateUtils.aujourdhui());
+            plan.setCommentaire("Cloture par retrait avant " + RegleAncienneteService.SEUIL_CLOTURE_PACTE + " ans (" + reference + ")");
+            LOG.info("Cloture du plan {} suite a retrait", numeroPlan);
         }
         planRepository.save(plan);
         return sim;
