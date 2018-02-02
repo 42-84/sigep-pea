@@ -112,6 +112,12 @@ jusqu'a la position 109 dans le fichier reel ; les blancs de fin ne sont pas vis
 Attention en copiant l'exemple : la premiere ligne D se termine par un blanc en position 109
 (indicateur de suspension vide), que certains editeurs suppriment.
 Regle en tete pour le controle des positions.
+
+         1         2         3         4         5         6         7         8         9         0         
+1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+ECOTATIONS V2 20240315 EURONEXT PARIS - COURS DE CLÔTURE - Fininfo S.A. - Propriété du destinataire
+DFF000120073 FR000012007320240315000000001841000000000001830000000000001848000000000001822000000000730110EUR 
+DFF000120685 FR000012068520240315                                                                        EURS
 F00000002
 
 Lecture de la premiere ligne D :
@@ -134,5 +140,14 @@ ligne continue d'arriver dans le fichier, elle est rapprochee puis ignoree - c'e
 
 
 8. EVOLUTIONS
+
+ V2.1  06/2009  ajout de l'indicateur de suspension (pos. 109). Longueur 108 -> 109.
+ V2.0  12/2007  passage aux 4 decimales implicites (V1 : 2 decimales), volume sur 12.
+ V1    2004     format initial, abandonne le 31/12/2011.
+
+Une version V3 (format CSV, en-tete de colonnes, UTF-8) est a l'etude ; les clients seront
+informes 12 mois avant l'arret de la V2. [BAS 2016 : aucune annonce recue a ce jour.
+ 2021 : toujours rien, le fichier V2 arrive tous les soirs.]
+
 
                                                                        --- fin du document ---
