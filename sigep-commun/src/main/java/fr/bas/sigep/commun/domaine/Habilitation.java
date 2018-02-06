@@ -13,6 +13,16 @@ import javax.persistence.Table;
 /**
  * Habilitation d'un utilisateur SiteMinder (SM_USER) sur SIGEP.
  *
+ * Pour un client, l'identifiant SiteMinder est son numero client (portail BAS en ligne).
+ * Pour un agent, c'est son matricule (ex : U045123).
+ */
+@Entity
+@Table(name = "SGP_HABILITATION")
+public class Habilitation extends EntiteAuditable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SGP_HABILITATION")
+    @SequenceGenerator(name = "SEQ_SGP_HABILITATION", sequenceName = "SEQ_SGP_HABILITATION", allocationSize = 1)
     @Column(name = "ID_HABILITATION")
     private Long id;
 
@@ -47,6 +57,10 @@ import javax.persistence.Table;
 
     public void setUtilisateur(String utilisateur) {
         this.utilisateur = utilisateur;
+    }
+
+    public Profil getProfil() {
+        return profil;
     }
 
     public void setProfil(Profil profil) {

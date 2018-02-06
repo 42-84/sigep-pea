@@ -19,6 +19,17 @@ public final class ControleAcces {
         if (h == null) {
             return; // batch
         }
+        if (h.getProfil() == Profil.CLIENT && !h.getNumeroClient().equals(plan.getClient().getNumeroClient())) {
+            throw new AccesRefuseException("Le plan " + plan.getNumeroPlan() + " n'appartient pas au client connecte");
+        }
+        // TODO : restreindre le CONSEILLER a son agence (plan.getCodeAgence()) - demande metier 2018 jamais planifiee
+    }
+
+    public static void verifierAccesClient(String numeroClient) {
+        Habilitation h = ContexteUtilisateur.getHabilitation();
+        if (h == null) {
+            return;
+        }
         if (h.getProfil() == Profil.CLIENT && !h.getNumeroClient().equals(numeroClient)) {
             throw new AccesRefuseException("Acces au client " + numeroClient + " refuse");
         }

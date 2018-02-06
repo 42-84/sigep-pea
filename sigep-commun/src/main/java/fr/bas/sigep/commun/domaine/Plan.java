@@ -157,6 +157,12 @@ public class Plan extends EntiteAuditable {
     public void setTotalVersements(BigDecimal totalVersements) {
         this.totalVersements = totalVersements;
     }
+
+    public CompteEspeces getCompteEspeces() {
+        return compteEspeces;
+    }
+
+    public void setCompteEspeces(CompteEspeces compteEspeces) {
         this.compteEspeces = compteEspeces;
     }
 
@@ -183,4 +189,5 @@ public class Plan extends EntiteAuditable {
     public BigDecimal getVersementsRestants() {
         BigDecimal restant = type.getPlafondVersements().subtract(totalVersements);
         return restant.signum() < 0 ? BigDecimal.ZERO : restant;
+    }
 }
