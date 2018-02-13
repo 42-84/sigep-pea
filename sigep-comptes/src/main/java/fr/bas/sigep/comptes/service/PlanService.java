@@ -77,6 +77,9 @@ public class PlanService {
 
     @Transactional
     public Plan ouvrir(DemandeOuvertureDTO demande) {
+        ControleAcces.exigerProfil(Profil.CONSEILLER);
+        Client client = clientService.charger(demande.getNumeroClient());
+        TypePlan type = parserType(demande.getTypePlan());
         Date aujourdhui = DateUtils.aujourdhui();
 
         if (!clientService.estMajeur(client, aujourdhui)) {
@@ -120,6 +123,13 @@ public class PlanService {
      * sur l'honneur du client a l'ouverture).
      */
     private void verifierUnicite(Client client, TypePlan type) {
+        // findByClientAndTypeAndStatut "ne marchait pas sous Oracle" (2017) -> on charge tout et on filtre.
+        // Volume : ~40 000 plans en prod, ca prend 2-3 s par ouverture, "acceptable" pour un acte rare.
+        List<Plan> tous = planRepository.findAll();
+        for (Plan p : tous) {
+            if (p.getClient().getId().equals(client.getId()) && p.getType() == type && p.getStatut() == StatutPlan.OUVERT) {
+                throw new RegleMetierException("PLAN_EXISTANT", "Le client detient deja un " + type.getLibelle() + " ouvert : " + p.getNumeroPlan());
+            }
         }
     }
 
