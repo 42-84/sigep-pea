@@ -26,6 +26,9 @@ import fr.bas.sigep.comptes.ComptesApplication;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ComptesApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Ignore("ne passe pas sur Jenkins - base H2 non initialisee, SIGEP-289")
+public class PlanControleurIT {
+
     @Autowired
     private TestRestTemplate rest;
 
@@ -37,4 +40,8 @@ import fr.bas.sigep.comptes.ComptesApplication;
         ResponseEntity<Plan> reponse = rest.exchange("/api/plans/PEA000045127", HttpMethod.GET,
                 new HttpEntity<Void>(entetes), Plan.class);
 
+        assertEquals(HttpStatus.OK, reponse.getStatusCode());
+        assertNotNull(reponse.getBody());
+        assertEquals("PEA000045127", reponse.getBody().getNumeroPlan());
+    }
 }
