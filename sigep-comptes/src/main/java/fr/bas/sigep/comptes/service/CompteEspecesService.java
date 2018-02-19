@@ -54,6 +54,12 @@ public class CompteEspecesService {
         dto.setDevise(compte.getDevise());
         dto.setDateMaj(compte.getDateMaj());
         return dto;
+    }
+
+    public List<OperationEspeces> operations(String numeroCompte, Date debut, Date fin) {
+        CompteEspeces compte = charger(numeroCompte);
+        if (debut == null && fin == null) {
+            return operationEspecesRepository.findByCompteOrderByDateOperationDesc(compte);
     public OperationEspeces enregistrer(CompteEspeces compte, TypeOperationEspeces type, BigDecimal montantAbsolu,
             Date dateValeur, String libelle, String reference) {
         if (montantAbsolu == null || montantAbsolu.signum() == 0) {
@@ -90,6 +96,13 @@ public class CompteEspecesService {
     @Transactional
     public OperationEspeces enregistrer(String numeroCompte, OperationEspecesDTO demande) {
         CompteEspeces compte = charger(numeroCompte);
+        TypeOperationEspeces type;
+        try {
+            type = TypeOperationEspeces.valueOf(demande.getTypeOperation());
+        } catch (IllegalArgumentException e) {
+            throw new RegleMetierException("TYPE_OPERATION_INVALIDE", "Type d'operation inconnu : " + demande.getTypeOperation());
+        }
+        if (type == TypeOperationEspeces.VERSEMENT || type == TypeOperationEspeces.RETRAIT) {
             throw new RegleMetierException("TYPE_OPERATION_INTERDIT", "Versements et retraits passent par /api/plans");
         }
         return enregistrer(compte, type, demande.getMontant(), demande.getDateValeur(), demande.getLibelle(), demande.getReference());

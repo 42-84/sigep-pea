@@ -99,6 +99,13 @@ public final class DateUtils {
             int jour = cal.get(Calendar.DAY_OF_WEEK);
             if (jour != Calendar.SATURDAY && jour != Calendar.SUNDAY) {
                 ajoutes++;
+            }
+        }
+        return cal.getTime();
+    }
+
+    /**
+     * Nombre d'annees entieres entre deux dates (anciennete d'un plan, age d'un client).
      */
     public static int anneesEntre(Date debut, Date fin) {
         Calendar d = Calendar.getInstance();
