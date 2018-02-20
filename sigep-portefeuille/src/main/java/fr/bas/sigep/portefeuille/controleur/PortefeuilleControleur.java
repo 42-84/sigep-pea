@@ -25,6 +25,14 @@ import fr.bas.sigep.commun.repository.ValorisationHistoRepository;
 import fr.bas.sigep.commun.util.DateUtils;
 import fr.bas.sigep.portefeuille.dto.HistoriqueValorisationDTO;
 import fr.bas.sigep.portefeuille.dto.OrdreDTO;
+import fr.bas.sigep.portefeuille.service.PortefeuilleService;
+import fr.bas.sigep.portefeuille.service.ValorisationService;
+
+@RestController
+@RequestMapping("/api/portefeuilles")
+public class PortefeuilleControleur {
+
+    @Autowired
     private PortefeuilleService portefeuilleService;
 
     @Autowired

@@ -30,6 +30,11 @@ import fr.bas.sigep.commun.util.GenerateurReference;
 import fr.bas.sigep.commun.util.MontantUtils;
 import fr.bas.sigep.portefeuille.client.ComptesClient;
 import fr.bas.sigep.portefeuille.client.ReferentielClient;
+import fr.bas.sigep.portefeuille.dto.OrdreDTO;
+
+/**
+ * Passage d'ordres et tenue des positions.
+ */
 @Service
 public class PortefeuilleService {
 
@@ -98,6 +103,15 @@ public class PortefeuilleService {
             }
         }
 
+        CoursDTO cours = referentielClient.dernierCours(valeur.getCodeIsin());
+        BigDecimal coursExecution = cours.getCloture();
+        BigDecimal montantBrut = MontantUtils.arrondirMontant(quantite.multiply(coursExecution));
+        BigDecimal frais = fraisService.calculer(valeur, montantBrut);
+        BigDecimal montantNet = sens == SensMouvement.ACHAT ? montantBrut.add(frais) : montantBrut.subtract(frais);
+
+        Date maintenant = new Date();
+        Mouvement mvt = new Mouvement();
+        mvt.setReference(GenerateurReference.mouvement());
 
         if (sens == SensMouvement.ACHAT) {
             SoldeDTO solde = comptesClient.solde(plan.getCompteEspeces().getNumeroCompte());
