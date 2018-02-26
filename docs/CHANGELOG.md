@@ -3,6 +3,18 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.4.0 - 26/02/2018
+
+- **Statut `SUSPENDU`** sur les plans (succession, saisie) : valeur ordinale 3, ajoutée en fin
+  d'énumération. Clôture possible depuis SUSPENDU. (SIGEP-355)
+- Colonne `AGENCE` sur `SGP_PLAN` et `SGP_HABILITATION` en préparation de la restriction du
+  conseiller à son agence (contrôle non livré, cf. TODO). Script
+  `2018-02_V2.4.0_plan_suspendu_habilitation_agence.sql`. (SIGEP-350)
+- Clôture : si sigep-portefeuille est injoignable, le contrôle « plus de titres » est sauté avec
+  une trace WARN (décision MOE). (SIGEP-361)
+- Annulation d'un mouvement du jour par le BO (`POST .../mouvements/{ref}/annulation`), sans
+  recalcul du PRU à l'annulation d'un achat. (SIGEP-333)
+
 ## 2.3.0 - 18/10/2017
 
 - **Correctif incident du 12/09/2017 (SIGEP-231)** : le statut du plan est stocké en ordinal
