@@ -1,0 +1,47 @@
+deploiement/ - SIGEP
+====================
+
+Contenu
+-------
+  deploy.sh                    copie des jars + redemarrage ordonne + verification /health
+                               (recette : appele par Jenkins sur la branche develop ; prod : a la main)
+  sigep-referentiel.service    unite systemd, srv-sigep-ref-01, port 8081
+  sigep-comptes.service        unite systemd, srv-sigep-cpt-01, port 8082
+  sigep-portefeuille.service   unite systemd, srv-sigep-ptf-01, port 8083
+  apache/sigep.conf            reverse proxy Apache + SiteMinder sur srv-sigep-web-01 (copie de
+                               reference ; le fichier qui fait foi est celui du serveur)
+
+Arborescence sur les serveurs applicatifs
+-----------------------------------------
+  /appli/sigep/sigep-<service>.jar          jar deploye (sans version dans le nom)
+  /appli/sigep/sigep-<service>.jar.prec     version precedente (retour arriere manuel)
+  /appli/sigep/application-prod.properties  surcharge locale eventuelle (cron de relance, etc.) -
+                                            NE PAS y laisser de modification temporaire
+  /appli/sigep/fininfo/entree               depot CFT (srv-sigep-ref-01 uniquement)
+  /appli/sigep/fininfo/archive              fichiers integres
+  /var/log/sigep/sigep-<service>.log        logs applicatifs (logrotate quotidien, 15 j)
+
+Compte systeme : sigep (uid 1050), sans shell. Compte de deploiement : sigep-deploy (sudo limite a
+systemctl restart sigep-* et cp dans /appli/sigep).
+
+Retour arriere
+--------------
+  ssh sigep-deploy@srv-sigep-xxx-01
+  sudo cp /appli/sigep/sigep-<service>.jar.prec /appli/sigep/sigep-<service>.jar
+  sudo systemctl restart sigep-<service>
+Dans l'ordre referentiel -> comptes -> portefeuille si les trois sont concernes. Les scripts SQL ne
+sont pas reversibles automatiquement (voir db/).
+
+Ce qui n'est PAS couvert
+------------------------
+- le front Angular : "ng build --prod --base-href /sigep/" puis copie de dist/ dans /var/www/sigep
+  sur srv-sigep-web-01, a la main (le prestataire livrait un zip)
+- la configuration Apache : modifiee sur le serveur par l'exploitation, cette copie date de 10/2018
+- les scripts SQL : DBA, voir db/LISEZMOI.txt
+- la recette : les trois unites sont installees sur srv-sigep-rec-01 avec -Dspring.profiles.active=recette
+  (seul sigep-referentiel a un application-recette.properties dans le jar ; les deux autres ont un
+  fichier externe /appli/sigep/application-recette.properties sur la machine, non versionne)
+
+Java sur les serveurs : OpenJDK 1.8.0_262 (RHEL 7), /usr/bin/java. Pas de JDK 11 installe.
+
+FD - 03/2018, complete 06/2020

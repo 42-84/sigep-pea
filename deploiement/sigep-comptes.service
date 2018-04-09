@@ -1,0 +1,28 @@
+# SIGEP - service comptes (clients, plans, comptes especes, fiscalite)
+# Machine : srv-sigep-cpt-01.bas.intra - port 8082
+# Installation : sudo cp sigep-comptes.service /etc/systemd/system/ && sudo systemctl daemon-reload
+#                sudo systemctl enable sigep-comptes
+# Exploitation N2 / TMA SIGEP - 02/2018
+
+[Unit]
+Description=SIGEP - Clients, plans et comptes especes
+After=network.target
+# Demarrer apres sigep-referentiel (autre machine) : ordre assure par deploy.sh, pas par systemd.
+
+[Service]
+Type=simple
+User=sigep
+Group=sigep
+WorkingDirectory=/appli/sigep
+ExecStart=/usr/bin/java -Xmx1024m -Dspring.profiles.active=prod -Dfile.encoding=UTF-8 -Duser.timezone=Europe/Paris -jar /appli/sigep/sigep-comptes.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=20
+StartLimitInterval=600
+StartLimitBurst=5
+LimitNOFILE=8192
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

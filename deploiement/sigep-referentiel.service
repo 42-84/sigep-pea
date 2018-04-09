@@ -1,0 +1,32 @@
+# SIGEP - service referentiel (valeurs, cours, eligibilite, import Fininfo)
+# Machine : srv-sigep-ref-01.bas.intra - port 8081
+# Installation : sudo cp sigep-referentiel.service /etc/systemd/system/ && sudo systemctl daemon-reload
+#                sudo systemctl enable sigep-referentiel
+# Exploitation N2 / TMA SIGEP - 02/2018
+
+[Unit]
+Description=SIGEP - Referentiel valeurs et cours
+After=network.target
+# La base Oracle est sur une autre machine : pas de dependance systemd possible, Restart=on-failure
+# relance si elle n'est pas joignable au demarrage.
+
+[Service]
+Type=simple
+User=sigep
+Group=sigep
+WorkingDirectory=/appli/sigep
+ExecStart=/usr/bin/java -Xmx1024m -Dspring.profiles.active=prod -Dfile.encoding=UTF-8 -Duser.timezone=Europe/Paris -jar /appli/sigep/sigep-referentiel.jar
+# application-prod.properties externe (surcharge celui du jar) : /appli/sigep/application-prod.properties si present
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=20
+StartLimitInterval=600
+StartLimitBurst=5
+LimitNOFILE=8192
+StandardOutput=journal
+StandardError=journal
+# Le fichier de log applicatif est /var/log/sigep/sigep-referentiel.log (Logback), le journal ne recoit
+# que les premieres lignes avant l'initialisation de Logback.
+
+[Install]
+WantedBy=multi-user.target

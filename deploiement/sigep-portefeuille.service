@@ -1,0 +1,31 @@
+# SIGEP - service portefeuille (positions, ordres, valorisation, coupons)
+# Machine : srv-sigep-ptf-01.bas.intra - port 8083
+# Installation : sudo cp sigep-portefeuille.service /etc/systemd/system/ && sudo systemctl daemon-reload
+#                sudo systemctl enable sigep-portefeuille
+# Exploitation N2 / TMA SIGEP - 02/2018
+# 09/2019 : -Xmx passe de 1024m a 1536m pendant l'analyse SIGEP-455, remis a 1024m (pas d'effet).
+
+[Unit]
+Description=SIGEP - Portefeuille titres
+After=network.target
+# Depend de sigep-referentiel (8081) et sigep-comptes (8082) sur d'autres machines : a demarrer en dernier.
+# ATTENTION : un redemarrage en journee remet a zero le compteur de references de mouvements
+# (doublons possibles, docs/EXPLOITATION.md §4.1).
+
+[Service]
+Type=simple
+User=sigep
+Group=sigep
+WorkingDirectory=/appli/sigep
+ExecStart=/usr/bin/java -Xmx1024m -Dspring.profiles.active=prod -Dfile.encoding=UTF-8 -Duser.timezone=Europe/Paris -jar /appli/sigep/sigep-portefeuille.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=20
+StartLimitInterval=600
+StartLimitBurst=5
+LimitNOFILE=8192
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
