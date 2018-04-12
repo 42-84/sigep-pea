@@ -33,4 +33,12 @@ public class SoldeDTO {
     public void setDevise(String devise) {
         this.devise = devise;
     }
+
+    public Date getDateMaj() {
+        return dateMaj;
+    }
+
+    public void setDateMaj(Date dateMaj) {
+        this.dateMaj = dateMaj;
+    }
 }
