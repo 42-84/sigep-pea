@@ -40,6 +40,11 @@ public class ValorisationDTO {
     }
 
     public BigDecimal getValorisationTitres() {
+        return valorisationTitres;
+    }
+
+    public void setValorisationTitres(BigDecimal valorisationTitres) {
+        this.valorisationTitres = valorisationTitres;
     }
 
     public BigDecimal getSoldeEspeces() {
@@ -86,6 +91,11 @@ public class ValorisationDTO {
         return nombreLignes;
     }
 
+    public void setNombreLignes(int nombreLignes) {
+        this.nombreLignes = nombreLignes;
+    }
+
+    public boolean isPartielle() {
         return partielle;
     }
 
@@ -95,5 +105,9 @@ public class ValorisationDTO {
 
     public List<PositionDTO> getPositions() {
         return positions;
+    }
+
+    public void setPositions(List<PositionDTO> positions) {
+        this.positions = positions;
     }
 }
