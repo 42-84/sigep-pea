@@ -1,0 +1,75 @@
+/* Styles globaux SIGEP - charte BAS (bleu marine) */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+body {
+  padding-top: 70px;
+  padding-bottom: 60px;
+  background-color: #f4f6f9;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.navbar-bas {
+  background-color: #0b2a5b;
+  border-color: #081f44;
+}
+.navbar-bas .navbar-brand,
+.navbar-bas .navbar-nav > li > a {
+  color: #ffffff;
+}
+.navbar-bas .navbar-nav > li > a:hover,
+.navbar-bas .navbar-nav > .active > a,
+.navbar-bas .navbar-nav > .active > a:hover {
+  color: #ffffff;
+  background-color: #14407f;
+}
+.navbar-bas .navbar-text {
+  color: #c9d3e6;
+}
+
+.panel-bas > .panel-heading {
+  background-color: #0b2a5b;
+  color: #ffffff;
+  border-color: #0b2a5b;
+}
+
+.footer-bas {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  background-color: #0b2a5b;
+  color: #c9d3e6;
+  font-size: 12px;
+  text-align: center;
+}
+
+.montant {
+  text-align: right;
+  white-space: nowrap;
+  font-family: "Courier New", Courier, monospace;
+}
+.montant-positif {
+  color: #3c763d;
+}
+.montant-negatif {
+  color: #a94442;
+}
+
+.chiffre-cle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #0b2a5b;
+}
+
+th.triable {
+  cursor: pointer;
+}
+th.triable:hover {
+  text-decoration: underline;
+}
+
+/* contournement IE11 : les selects Bootstrap 3 debordent dans la navbar */
+.navbar-form .form-control {
+  max-width: 320px;
+}

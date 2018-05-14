@@ -1,0 +1,32 @@
+{
+  "/api/valeurs": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/cours": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/clients": {
+    "target": "http://localhost:8082",
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/plans": {
+    "target": "http://localhost:8082",
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/comptes-especes": {
+    "target": "http://localhost:8082",
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/portefeuilles": {
+    "target": "http://localhost:8083",
+    "secure": false,
+    "logLevel": "debug"
+  }
+}
