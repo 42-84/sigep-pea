@@ -1,0 +1,53 @@
+<nav class="navbar navbar-default navbar-fixed-top navbar-bas">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-sigep">
+        <span class="sr-only">Menu</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" routerLink="/">
+        <span class="glyphicon glyphicon-stats"></span> {{ titre }}
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="menu-sigep">
+      <ul class="nav navbar-nav">
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a routerLink="/">Synthèse</a></li>
+        <li routerLinkActive="active"><a routerLink="/positions">Positions</a></li>
+        <li routerLinkActive="active"><a routerLink="/mouvements">Mouvements</a></li>
+        <li routerLinkActive="active"><a routerLink="/especes">Compte espèces</a></li>
+        <li routerLinkActive="active"><a routerLink="/ordre">Passer un ordre</a></li>
+        <li routerLinkActive="active"><a routerLink="/versement-retrait">Versement / Retrait</a></li>
+        <li routerLinkActive="active"><a routerLink="/valeurs">Valeurs</a></li>
+      </ul>
+
+      <sigep-selecteur-utilisateur></sigep-selecteur-utilisateur>
+
+      <form class="navbar-form navbar-right" *ngIf="plans.length > 1">
+        <div class="form-group">
+          <select class="form-control input-sm" name="numeroPlan" [(ngModel)]="numeroPlanCourant" (change)="changerPlan()" title="Plan">
+            <option *ngFor="let p of plans" [value]="p.numeroPlan">{{ libelleType(p.type) }} {{ p.numeroPlan }}</option>
+          </select>
+        </div>
+      </form>
+      <p class="navbar-text navbar-right" *ngIf="plans.length === 1 && planCourant">
+        {{ libelleType(planCourant.type) }} <strong>{{ planCourant.numeroPlan }}</strong>
+      </p>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div *ngIf="erreur" class="alert alert-danger">
+    <span class="glyphicon glyphicon-exclamation-sign"></span> {{ erreur }}
+  </div>
+  <p *ngIf="chargement" class="text-muted"><span class="glyphicon glyphicon-refresh"></span> Chargement des plans...</p>
+
+  <router-outlet *ngIf="!chargement"></router-outlet>
+</div>
+
+<footer class="footer-bas">
+  © 2018 Banque de l'Aunis et de Saintonge - SIGEP {{ version }}
+</footer>
