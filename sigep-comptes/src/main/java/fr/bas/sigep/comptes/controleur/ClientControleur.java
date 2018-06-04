@@ -47,4 +47,12 @@ public class ClientControleur {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    public Client creer(@RequestBody Client client) {
+        return clientService.creer(client);
+    }
+
+    @PutMapping("/{numero}")
+    public Client modifier(@PathVariable("numero") String numero, @RequestBody Client client) {
+        return clientService.modifier(numero, client);
+    }
 }

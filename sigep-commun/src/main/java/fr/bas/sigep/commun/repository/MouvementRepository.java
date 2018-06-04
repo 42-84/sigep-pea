@@ -7,6 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import fr.bas.sigep.commun.domaine.Mouvement;
+import fr.bas.sigep.commun.domaine.Plan;
+import fr.bas.sigep.commun.domaine.StatutMouvement;
+
+public interface MouvementRepository extends JpaRepository<Mouvement, Long> {
+
+    Mouvement findByReference(String reference);
+
+    List<Mouvement> findByPlanOrderByDateMouvementDesc(Plan plan);
 
     List<Mouvement> findByPlanAndDateMouvementBetweenOrderByDateMouvementDesc(Plan plan, Date debut, Date fin);
 
