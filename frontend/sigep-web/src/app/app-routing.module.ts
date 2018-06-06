@@ -12,6 +12,16 @@ import { RechercheValeurComponent } from './composants/recherche-valeur/recherch
 const routes: Routes = [
   { path: '', component: AccueilComponent },
   { path: 'positions', component: PositionsComponent },
+  { path: 'mouvements', component: MouvementsComponent },
+  { path: 'especes', component: OperationsEspecesComponent },
+  { path: 'ordre', component: SaisieOrdreComponent },
+  { path: 'versement-retrait', component: VersementRetraitComponent },
+  { path: 'valeurs', component: RechercheValeurComponent },
+  { path: '**', redirectTo: '' }
+];
+
+@NgModule({
+  // useHash : le reverse proxy ne sait pas rediriger les URL profondes vers index.html
   imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
