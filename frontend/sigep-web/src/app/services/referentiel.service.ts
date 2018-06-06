@@ -17,6 +17,14 @@ export class ReferentielService {
     if (q) {
       params = params.set('q', q);
     }
+    if (eligibles) {
+      params = params.set('eligibles', 'true');
+    }
+    return this.http.get<Valeur[]>(ApiConfig.REFERENTIEL + '/valeurs', { params: params });
+  }
+
+  detail(isin: string): Observable<Valeur> {
+    return this.http.get<Valeur>(ApiConfig.REFERENTIEL + '/valeurs/' + isin);
   }
 
   /** typePlan : 'PEA' ou 'PEA_PME' (defaut PEA cote back). */
@@ -30,6 +38,12 @@ export class ReferentielService {
   }
 
   historiqueCours(isin: string, du?: string, au?: string): Observable<Cours[]> {
+    let params = new HttpParams();
+    if (du) {
+      params = params.set('du', du);
+    }
+    if (au) {
+      params = params.set('au', au);
     }
     return this.http.get<Cours[]>(ApiConfig.REFERENTIEL + '/cours/' + isin, { params: params });
   }
