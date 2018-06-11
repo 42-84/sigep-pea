@@ -25,6 +25,22 @@ import { PortefeuilleService } from './services/portefeuille.service';
 import { ReferentielService } from './services/referentiel.service';
 import { ErreurService } from './services/erreur.service';
 import { UtilisateurService } from './services/utilisateur.service';
+import { SmUserInterceptor } from './services/sm-user.interceptor';
+
+// locale fr pour les pipes Angular (number, percent) ; les montants passent par montantEuro
+registerLocaleData(localeFr);
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    AccueilComponent,
+    PositionsComponent,
+    MouvementsComponent,
+    OperationsEspecesComponent,
+    SaisieOrdreComponent,
+    VersementRetraitComponent,
+    RechercheValeurComponent,
+    SelecteurUtilisateurComponent,
     MontantEuroPipe,
     DateFrPipe
   ],
@@ -33,6 +49,16 @@ import { UtilisateurService } from './services/utilisateur.service';
     FormsModule,
     HttpClientModule,
     AppRoutingModule
+  ],
+  providers: [
+    PlanService,
+    PortefeuilleService,
+    ReferentielService,
+    ErreurService,
+    UtilisateurService,
+    { provide: LOCALE_ID, useValue: 'fr-FR' },
+    { provide: HTTP_INTERCEPTORS, useClass: SmUserInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
