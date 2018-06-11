@@ -26,6 +26,11 @@ export class PlanService {
     this.planChange.next(plan);
   }
 
+  getPlanCourant(): Plan {
+    return this.planCourant;
+  }
+  }
+
   synthese(numeroPlan: string): Observable<SynthesePlan> {
     return this.http.get<SynthesePlan>(ApiConfig.COMPTES + '/plans/' + numeroPlan + '/synthese');
   }
@@ -44,6 +49,9 @@ export class PlanService {
     let params = new HttpParams();
     if (du) {
       params = params.set('du', du);
+    }
+    if (au) {
+      params = params.set('au', au);
     }
     // TODO (prestataire 2018) : gerer la pagination, l'API renvoie tout l'historique
     return this.http.get<OperationEspeces[]>(ApiConfig.COMPTES + '/plans/' + numeroPlan + '/operations', { params: params });

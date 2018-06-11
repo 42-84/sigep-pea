@@ -13,6 +13,11 @@ export interface Client {
   codePostal: string;
   ville: string;
   codePays: string;
+  email: string;
+  residentFiscalFrance: boolean;
+}
+
+export interface CompteEspeces {
   id?: number;
   numeroCompte: string;
   solde: number;
@@ -46,6 +51,9 @@ export interface SynthesePlan {
   statut: string;
   numeroClient: string;
   nomClient: string;
+  dateOuverture: Date | string; // string dd/MM/yyyy cote API
+  datePremierVersement: Date | string;
+  ancienneteAnnees: number;
   dateCinqAns: Date | string;
   plafondVersements: number;
   totalVersements: number;
@@ -57,4 +65,22 @@ export interface SynthesePlan {
 }
 
 export interface SimulationRetrait {
+  numeroPlan: string;
+  montantDemande: number;
+  ancienneteAnnees: number;
+  entraineCloture: boolean;
+  valorisationTotale: number;
+  totalVersements: number;
+  gainProportionnel: number;
+  tauxPrelevementsSociaux: number;
+  prelevementsSociaux: number;
+  montantNetVerse: number;
+  avertissement: string;
+}
+
+// DemandeMontantDTO (versement et retrait)
+export interface DemandeMontant {
+  montant: number;
+  libelle?: string;
+  accepterCloture?: boolean;
 }
