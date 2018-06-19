@@ -1,0 +1,8 @@
+<form class="navbar-form navbar-right selecteur-utilisateur">
+  <div class="form-group">
+    <span class="glyphicon glyphicon-user" title="Utilisateur (SM_USER)"></span>
+    <select class="form-control input-sm" name="identifiant" [(ngModel)]="identifiant" (change)="changer()" title="Utilisateur de test">
+      <option *ngFor="let u of utilisateurs" [value]="u.identifiant">{{ u.libelle }}</option>
+    </select>
+  </div>
+</form>

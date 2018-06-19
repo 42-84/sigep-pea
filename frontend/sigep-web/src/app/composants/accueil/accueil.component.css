@@ -1,0 +1,8 @@
+h2 small {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+}
+.panel-body .chiffre-cle {
+  margin-bottom: 6px;
+}

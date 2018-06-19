@@ -1,0 +1,62 @@
+<div *ngIf="!plan" class="alert alert-warning">
+  <span class="glyphicon glyphicon-info-sign"></span>
+  Aucun plan ouvert n'est rattaché à votre identifiant.
+</div>
+
+<div *ngIf="erreur" class="alert alert-danger">
+  <span class="glyphicon glyphicon-exclamation-sign"></span> {{ erreur }}
+</div>
+
+<p *ngIf="chargement" class="text-muted"><span class="glyphicon glyphicon-refresh"></span> Chargement de la synthèse...</p>
+
+<div *ngIf="synthese">
+  <h2>{{ synthese.libelleType }} n° {{ synthese.numeroPlan }}
+    <small>{{ synthese.nomClient }} — statut {{ synthese.statut }}</small>
+  </h2>
+
+  <div *ngIf="synthese.valorisationIndisponible" class="alert alert-warning">
+    <span class="glyphicon glyphicon-warning-sign"></span>
+    <strong>Valorisation indisponible.</strong> Le service portefeuille ne répond pas : les montants titres ne sont pas affichés.
+    Le solde espèces reste à jour.
+  </div>
+  <div *ngIf="synthese.valorisation && synthese.valorisation.partielle" class="alert alert-info">
+    <span class="glyphicon glyphicon-info-sign"></span>
+    Valorisation partielle : le cours de certaines lignes est indisponible (voir l'onglet Positions).
+  </div>
+
+  <div class="row">
+          <div class="chiffre-cle" *ngIf="synthese.valorisation">{{ synthese.valorisation.total | montantEuro }}</div>
+          <div class="chiffre-cle text-muted" *ngIf="!synthese.valorisation">n.d.</div>
+          <small class="text-muted" *ngIf="synthese.valorisation">
+            dont titres {{ synthese.valorisation.valorisationTitres | montantEuro }}
+            et espèces {{ synthese.soldeEspeces | montantEuro }}<br>
+            au {{ synthese.valorisation.dateValorisation | dateFr }}
+          </small>
+        </div>
+      </div>
+    </div>
+        <div class="panel-heading">Versements</div>
+        <div class="panel-body text-center">
+          <div class="chiffre-cle">{{ synthese.totalVersements | montantEuro }}</div>
+          <small class="text-muted">
+            plafond {{ synthese.plafondVersements | montantEuro:0 }} —
+            reste à verser <strong>{{ synthese.versementsRestants | montantEuro }}</strong>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Informations du plan</div>
+    <table class="table table-condensed">
+            </span>
+            <span *ngIf="synthese.ancienneteAnnees >= 5" class="text-success">— retraits partiels possibles sans clôture</span>
+          </td>
+        </tr>
+        <tr><th>Compte espèces</th><td>{{ synthese.numeroCompteEspeces }} — solde {{ synthese.soldeEspeces | montantEuro }}</td></tr>
+        <tr *ngIf="synthese.valorisation"><th>Lignes en portefeuille</th><td>{{ synthese.valorisation.nombreLignes }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
