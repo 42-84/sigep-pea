@@ -39,9 +39,21 @@ export class ErreurService {
       return 'Erreur inconnue';
     }
     if (err instanceof HttpErrorResponse || err.status !== undefined) {
+      if (err.status === 0) {
+        return 'Le serveur est injoignable.';
+      }
+      if (err.status === 401) {
+        return 'Utilisateur non authentifié (en-tête SM_USER absent).';
+      }
       const corps: ErreurApi = err.error;
       if (corps && corps.code) {
         return this.traduire(corps.code, corps.message);
       }
       return 'Erreur technique (HTTP ' + err.status + ').';
+    }
+    if (err.code) {
+      return this.traduire(err.code, err.message);
+    }
+    return 'Erreur technique.';
+  }
 }
