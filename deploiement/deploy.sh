@@ -23,6 +23,25 @@ if [ "$ENV" = "recette" ]; then
     PROFIL=recette
 elif [ "$ENV" = "prod" ]; then
     HOTE_REF=srv-sigep-ref-01.bas.intra
+    HOTE_CPT=srv-sigep-cpt-01.bas.intra
+    HOTE_PTF=srv-sigep-ptf-01.bas.intra
+    PROFIL=prod
+    echo "*** DEPLOIEMENT EN PRODUCTION de la version $VERSION ***"
+    echo "Les scripts SQL de la version ont-ils ete passes par les DBA ? (db/scripts) [o/N]"
+    read REPONSE
+    if [ "$REPONSE" != "o" ]; then
+        echo "Abandon."
+        exit 1
+    fi
+else
+    echo "Usage : $0 <recette|prod>"
+    exit 1
+fi
+
+UTILISATEUR=sigep-deploy
+CIBLE=/appli/sigep
+ATTENTE=30
+
 echo "Deploiement SIGEP $VERSION sur $ENV"
 echo "  referentiel  -> $HOTE_REF"
 echo "  comptes      -> $HOTE_CPT"
@@ -40,6 +59,11 @@ scp sigep-portefeuille/build/libs/sigep-portefeuille-$VERSION.jar $UTILISATEUR@$
 
 # ---------------------------------------------------------------- redemarrage dans l'ordre
 
+redemarrer() {
+    HOTE=$1
+    SERVICE=$2
+    PORT=$3
+    echo "[2/3] $SERVICE sur $HOTE"
     ssh $UTILISATEUR@$HOTE "sudo cp $CIBLE/$SERVICE.jar $CIBLE/$SERVICE.jar.prec 2>/dev/null; \
                             sudo cp /tmp/$SERVICE.jar $CIBLE/$SERVICE.jar && \
                             sudo chown sigep:sigep $CIBLE/$SERVICE.jar && \
