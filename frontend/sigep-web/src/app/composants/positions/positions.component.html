@@ -1,0 +1,54 @@
+<h2>Positions <small *ngIf="plan">{{ plan.numeroPlan }}</small></h2>
+
+<div *ngIf="!plan" class="alert alert-warning">Aucun plan sélectionné.</div>
+<div *ngIf="erreur" class="alert alert-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> {{ erreur }}</div>
+<p *ngIf="chargement" class="text-muted"><span class="glyphicon glyphicon-refresh"></span> Chargement des positions...</p>
+
+<div *ngIf="nbCoursIndisponibles() > 0" class="alert alert-warning">
+  <span class="glyphicon glyphicon-warning-sign"></span>
+  {{ nbCoursIndisponibles() }} ligne(s) sans cours récent : leur valorisation n'est pas comptée dans le total.
+</div>
+
+<div *ngIf="plan && !chargement && positions.length === 0 && !erreur" class="alert alert-info">
+  Aucune ligne en portefeuille.
+</div>
+
+<div class="panel panel-default" *ngIf="positions.length > 0">
+  <table class="table table-striped table-condensed table-hover">
+    <thead>
+      <tr>
+        <th class="triable" (click)="trier('libelle')">Valeur
+          <span class="glyphicon" *ngIf="colonneTri === 'libelle'" [class.glyphicon-triangle-top]="triCroissant" [class.glyphicon-triangle-bottom]="!triCroissant"></span>
+        </th>
+        <th class="triable" (click)="trier('codeIsin')">ISIN</th>
+        <th class="triable montant" (click)="trier('quantite')">Quantité</th>
+        <th class="triable montant" (click)="trier('prixRevientUnitaire')">PRU</th>
+        <th class="triable montant" (click)="trier('dernierCours')">Dernier cours</th>
+        <th>Date cours</th>
+        <th class="triable montant" (click)="trier('valorisation')">Valorisation
+          <span class="glyphicon" *ngIf="colonneTri === 'valorisation'" [class.glyphicon-triangle-top]="triCroissant" [class.glyphicon-triangle-bottom]="!triCroissant"></span>
+        </th>
+        <th class="triable montant" (click)="trier('plusValueLatente')">+/- value</th>
+        <th class="triable montant" (click)="trier('plusValuePourcent')">%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of positions" [class.warning]="p.coursIndisponible">
+        <td>
+        <td class="montant">{{ p.prixRevientUnitaire | montantEuro:4 }}</td>
+        <td class="montant">
+          <span *ngIf="p.coursIndisponible" class="glyphicon glyphicon-warning-sign text-warning"
+                title="Cours indisponible : dernier cours connu trop ancien ou absent"></span>
+          {{ p.coursIndisponible ? 'n.d.' : (p.dernierCours | montantEuro:4) }}
+        </td>
+        <td>{{ p.dateDernierCours | dateFr }}</td>
+        <td class="montant">{{ p.coursIndisponible ? 'n.d.' : (p.valorisation | montantEuro) }}</td>
+        <td class="montant" [class.montant-positif]="p.plusValueLatente >= 0" [class.montant-negatif]="p.plusValueLatente < 0">
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr class="active">
+        <th colspan="6">Total ({{ positions.length }} lignes)</th>
+        <th class="montant">{{ totalValorisation() | montantEuro }}</th>
+</div>

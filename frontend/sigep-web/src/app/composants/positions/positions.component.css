@@ -1,0 +1,10 @@
+td code {
+  font-size: 11px;
+}
+.label {
+  margin-left: 4px;
+  font-weight: normal;
+}
+tfoot th.montant {
+  font-family: "Courier New", Courier, monospace;
+}

@@ -1,0 +1,64 @@
+<h2>Mouvements titres <small *ngIf="plan">{{ plan.numeroPlan }}</small></h2>
+
+<div *ngIf="!plan" class="alert alert-warning">Aucun plan sélectionné.</div>
+
+<form class="form-inline" (ngSubmit)="charger()" #f="ngForm" *ngIf="plan">
+  <div class="form-group">
+    <label for="du">Du</label>
+    <input type="text" class="form-control input-sm" id="du" name="du" [(ngModel)]="du" placeholder="jj/mm/aaaa" maxlength="10">
+  </div>
+  <div class="form-group">
+    <label for="au">au</label>
+    <input type="text" class="form-control input-sm" id="au" name="au" [(ngModel)]="au" placeholder="jj/mm/aaaa" maxlength="10">
+  </div>
+  <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span> Filtrer</button>
+  <button type="button" class="btn btn-default btn-sm" (click)="toutAfficher()">Tout l'historique</button>
+</form>
+
+<div *ngIf="erreurSaisie" class="alert alert-warning" style="margin-top: 10px">{{ erreurSaisie }}</div>
+<div *ngIf="erreur" class="alert alert-danger" style="margin-top: 10px"><span class="glyphicon glyphicon-exclamation-sign"></span> {{ erreur }}</div>
+<p *ngIf="chargement" class="text-muted"><span class="glyphicon glyphicon-refresh"></span> Chargement...</p>
+
+<div *ngIf="plan && !chargement && mouvements.length === 0 && !erreur && !erreurSaisie" class="alert alert-info" style="margin-top: 10px">
+  Aucun mouvement sur la période.
+</div>
+
+<div class="panel panel-default" *ngIf="mouvements.length > 0" style="margin-top: 10px">
+  <table class="table table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Référence</th>
+        <th>Sens</th>
+        <th>Valeur</th>
+        <th class="montant">Quantité</th>
+        <th class="montant">Cours</th>
+        <th class="montant">Brut</th>
+        <th class="montant">Frais</th>
+        <th class="montant">Net</th>
+        <th>Règlement</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of mouvements" [class.text-muted]="m.statut === 'ANNULE'">
+        <td>{{ m.dateMouvement | dateFr }}</td>
+        <td><code>{{ m.reference }}</code></td>
+        <td>
+          <span class="label" [class.label-success]="m.sens === 'ACHAT'" [class.label-warning]="m.sens === 'VENTE'">{{ m.sens }}</span>
+        </td>
+        <td>{{ m.valeur?.libelle }} <small class="text-muted">{{ m.valeur?.codeIsin }}</small></td>
+        <td class="montant">{{ m.quantite | number:'1.0-3' }}</td>
+        <td class="montant">{{ m.coursExecution | montantEuro:4 }}</td>
+        <td class="montant">{{ m.montantBrut | montantEuro }}</td>
+        <td class="montant">{{ m.frais | montantEuro }}</td>
+        <td class="montant">{{ m.montantNet | montantEuro }}</td>
+        <td>{{ m.dateReglement | dateFr }}</td>
+        <td>
+          <span class="label" [ngClass]="classeStatut(m.statut)">{{ m.statut }}</span>
+          <span *ngIf="m.motifAnnulation" class="glyphicon glyphicon-comment" [title]="m.motifAnnulation"></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
