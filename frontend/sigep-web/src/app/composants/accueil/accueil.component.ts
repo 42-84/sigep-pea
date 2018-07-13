@@ -13,6 +13,20 @@ import { Plan, SynthesePlan } from '../../modeles/plan';
 export class AccueilComponent implements OnInit, OnDestroy {
 
   plan: Plan;
+  synthese: SynthesePlan;
+  chargement = false;
+  erreur: string;
+
+  private abonnement: Subscription;
+
+  constructor(private planService: PlanService, private erreurService: ErreurService) { }
+
+  ngOnInit() {
+    this.plan = this.planService.getPlanCourant();
+    this.charger();
+    this.abonnement = this.planService.planChange.subscribe(plan => {
+      this.plan = plan;
+      this.charger();
     });
   }
 
@@ -27,6 +41,12 @@ export class AccueilComponent implements OnInit, OnDestroy {
     this.erreur = null;
     if (!this.plan) {
       return;
+    }
+    this.chargement = true;
+    this.planService.synthese(this.plan.numeroPlan).subscribe(
+      synthese => {
+        this.synthese = synthese;
+        this.chargement = false;
       },
       err => {
         this.erreur = this.erreurService.libelle(err);
