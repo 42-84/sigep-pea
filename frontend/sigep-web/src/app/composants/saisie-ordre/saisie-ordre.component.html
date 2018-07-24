@@ -1,0 +1,102 @@
+<h2>Passer un ordre <small *ngIf="plan">{{ plan.numeroPlan }} ({{ plan.type }})</small></h2>
+
+<div *ngIf="!plan" class="alert alert-warning">Aucun plan sélectionné : impossible de passer un ordre.</div>
+<div *ngIf="erreur" class="alert alert-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> {{ erreur }}</div>
+
+<!-- ============ ETAPE 1 : SAISIE ============ -->
+<div *ngIf="plan && etape === 'saisie'" class="panel panel-default">
+  <div class="panel-heading">Saisie de l'ordre</div>
+  <div class="panel-body">
+    <form class="form-horizontal" #formOrdre="ngForm" (ngSubmit)="confirmer()" novalidate>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Sens</label>
+        <div class="col-sm-10">
+          <label class="radio-inline">
+            <input type="radio" name="sens" value="ACHAT" [(ngModel)]="ordre.sens" (change)="changerSens()"> Achat
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="sens" value="VENTE" [(ngModel)]="ordre.sens" (change)="changerSens()"> Vente
+          </label>
+        </div>
+                <span class="glyphicon glyphicon-search"></span> Rechercher
+              </button>
+            </span>
+          </div>
+          <span class="help-block" *ngIf="ordre.sens === 'ACHAT'">Seules les valeurs éligibles au PEA sont proposées à l'achat.</span>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="resultats.length > 0">
+        <div class="col-sm-offset-2 col-sm-8">
+          <table class="table table-condensed table-hover">
+            <tbody>
+              <tr *ngFor="let v of resultats" (click)="choisirValeur(v)" style="cursor: pointer">
+                <td><strong>{{ v.libelle }}</strong> <small class="text-muted">{{ v.mnemonique }}</small></td>
+                <td><code>{{ v.codeIsin }}</code></td>
+                <td>{{ v.typeValeur }} / {{ v.placeCotation }}</td>
+                <td>
+                  <span class="label label-success" *ngIf="v.eligiblePea">PEA</span>
+                  <span class="label label-info" *ngIf="v.eligiblePeaPme">PEA-PME</span>
+                  <span class="label label-danger" *ngIf="v.dateRadiation">radiée</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="!rechercheEnCours && resultats.length === 0 && recherche && !valeur">
+        <div class="col-sm-offset-2 col-sm-8"><p class="text-muted">Aucun résultat.</p></div>
+      </div>
+
+      <div *ngIf="valeur">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Valeur retenue</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Dernier cours</label>
+          <div class="col-sm-10">
+            <p class="form-control-static" *ngIf="cours">
+          <label class="col-sm-2 control-label">Éligibilité {{ plan.type }}</label>
+          <div class="col-sm-10">
+            <p class="form-control-static" *ngIf="eligibilite && eligibilite.eligible">
+              <span class="glyphicon glyphicon-ok text-success"></span> Éligible
+            </p>
+            <p class="form-control-static text-danger" *ngIf="eligibilite && !eligibilite.eligible">
+              <span class="glyphicon glyphicon-remove"></span> Non éligible : {{ eligibilite.motif }}
+            </p>
+            <p class="form-control-static text-muted" *ngIf="!eligibilite">Vérification en cours...</p>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="ordre.sens === 'VENTE'">
+          <label class="col-sm-2 control-label">Détenu</label>
+          <div class="col-sm-10">
+            <p class="form-control-static" *ngIf="positionDetenue">
+          <div class="col-sm-5" *ngIf="ordre.sens === 'VENTE' && positionDetenue">
+            <div class="checkbox">
+              <label><input type="checkbox" name="totalite" [(ngModel)]="ordre.totalite"> Vendre la totalité de la ligne</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="montantEstime() !== null">
+          <label class="col-sm-2 control-label">Montant estimé</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">{{ montantEstime() | montantEuro }} <small class="text-muted">hors frais, au dernier cours connu</small></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary" [disabled]="!peutValider()">Valider</button>
+          <button type="button" class="btn btn-default" (click)="reinitialiser()">Annuler</button>
+        </div>
+      </div>
+    <button type="button" class="btn btn-default" (click)="retourSaisie()" [disabled]="envoiEnCours">Retour</button>
+  </div>
+</div>
+
+</div>
