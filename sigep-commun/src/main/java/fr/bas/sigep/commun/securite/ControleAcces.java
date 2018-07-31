@@ -39,4 +39,5 @@ public final class ControleAcces {
         if (!ContexteUtilisateur.aAuMoins(minimum)) {
             throw new AccesRefuseException("Profil " + minimum + " requis");
         }
+    }
 }
