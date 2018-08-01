@@ -19,6 +19,10 @@ export class UtilisateurService {
   identifiantCourant(): string {
     let identifiant: string = null;
     try {
+      identifiant = localStorage.getItem(CLE_STOCKAGE);
+    } catch (e) {
+      // IE11 en mode protege : localStorage indisponible, on retombe sur la valeur par defaut
+    }
     return identifiant ? identifiant : environment.smUserDefaut;
   }
 
@@ -32,4 +36,11 @@ export class UtilisateurService {
   }
 
   utilisateursDisponibles(): { identifiant: string, libelle: string }[] {
+    return environment.utilisateursDev;
+  }
+
+  /** Un identifiant client fait 8 chiffres ; les conseillers commencent par U. */
+  estClient(): boolean {
+    return /^[0-9]{8}$/.test(this.identifiantCourant());
+  }
 }

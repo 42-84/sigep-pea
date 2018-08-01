@@ -20,6 +20,19 @@ export class PortefeuilleService {
       );
   }
 
+  valorisation(numeroPlan: string): Observable<Valorisation> {
+    return this.http.get<Valorisation>(ApiConfig.PORTEFEUILLE + '/portefeuilles/' + numeroPlan + '/valorisation');
+  }
+
+  /** du / au : string dd/MM/yyyy, facultatifs. */
+  mouvements(numeroPlan: string, du?: string, au?: string): Observable<Mouvement[]> {
+    let params = new HttpParams();
+    if (du) {
+      params = params.set('du', du);
+    }
+    if (au) {
+      params = params.set('au', au);
+    }
     return this.http.get<Mouvement[]>(ApiConfig.PORTEFEUILLE + '/portefeuilles/' + numeroPlan + '/mouvements', { params: params });
   }
 
@@ -39,4 +52,10 @@ export class PortefeuilleService {
   /** Photos quotidiennes de valorisation (batch). depuis : string dd/MM/yyyy, defaut = 1 an cote back. */
   historique(numeroPlan: string, depuis?: string): Observable<HistoriqueValorisation[]> {
     let params = new HttpParams();
+    if (depuis) {
+      params = params.set('depuis', depuis);
+    }
+    // TODO (prestataire 2018) : le graphique n'a jamais ete fait, personne n'appelle cette methode
+    return this.http.get<HistoriqueValorisation[]>(ApiConfig.PORTEFEUILLE + '/portefeuilles/' + numeroPlan + '/historique', { params: params });
+  }
 }
