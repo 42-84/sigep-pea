@@ -11,6 +11,12 @@ import * as moment from 'moment';
 })
 export class DateFrPipe implements PipeTransform {
 
+  transform(valeur: Date | string, format: string = 'DD/MM/YYYY'): string {
+    if (!valeur) {
+      return '';
+    }
+    let m: moment.Moment;
+    if (typeof valeur === 'string') {
       // on essaie d'abord le format API, puis ISO (au cas ou)
       m = moment(valeur, 'DD/MM/YYYY', true);
       if (!m.isValid()) {
