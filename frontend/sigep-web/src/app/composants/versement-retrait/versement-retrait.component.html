@@ -1,0 +1,117 @@
+<h2>Versement / Retrait <small *ngIf="plan">{{ plan.numeroPlan }}</small></h2>
+
+<div *ngIf="!plan" class="alert alert-warning">Aucun plan sélectionné.</div>
+
+<div *ngIf="plan">
+  <ul class="nav nav-tabs">
+    <li [class.active]="onglet === 'versement'"><a href="javascript:void(0)" (click)="changerOnglet('versement')">Versement</a></li>
+    <li [class.active]="onglet === 'retrait'"><a href="javascript:void(0)" (click)="changerOnglet('retrait')">Retrait</a></li>
+  </ul>
+
+  <div *ngIf="erreur" class="alert alert-danger" style="margin-top: 15px">
+    <span class="glyphicon glyphicon-exclamation-sign"></span> {{ erreur }}
+  </div>
+
+  <!-- ============ VERSEMENT ============ -->
+  <div *ngIf="onglet === 'versement'" class="panel panel-default" style="margin-top: 15px; border-top: 0">
+    <div class="panel-body">
+      <div *ngIf="versementOk" class="alert alert-success">
+        <span class="glyphicon glyphicon-ok-circle"></span> Versement enregistré. Total des versements :
+        <strong>{{ versementOk.totalVersements | montantEuro }}</strong>, solde espèces
+        <strong>{{ versementOk.compteEspeces?.solde | montantEuro }}</strong>.
+      </div>
+
+      <p class="text-muted">
+        Versements effectués : {{ plan.totalVersements | montantEuro }} — reste à verser : <strong>{{ versementsRestants() | montantEuro }}</strong>.
+      </p>
+
+      <form class="form-horizontal" (ngSubmit)="verser()" #formVersement="ngForm" novalidate>
+        <div class="form-group">
+          <label for="montantVersement" class="col-sm-2 control-label">Montant</label>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <input type="number" class="form-control" id="montantVersement" name="montantVersement"
+                     [(ngModel)]="versement.montant" min="1" step="0.01" required>
+              <span class="input-group-addon">€</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="libelleVersement" class="col-sm-2 control-label">Libellé</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="libelleVersement" name="libelleVersement" [(ngModel)]="versement.libelle" maxlength="100">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" [disabled]="!formVersement.form.valid || versementEnCours">
+              <span class="glyphicon glyphicon-plus"></span> Verser
+            </button>
+          </div>
+        </div>
+      </form>
+      <p class="text-muted small">Le versement est débité de votre compte courant BAS sous 48 h et crédité sur le compte espèces du plan.</p>
+    </div>
+  </div>
+
+  <!-- ============ RETRAIT ============ -->
+  <div *ngIf="onglet === 'retrait'" class="panel panel-default" style="margin-top: 15px; border-top: 0">
+    <div class="panel-body">
+      <div *ngIf="retraitOk" class="alert alert-success">
+        <span class="glyphicon glyphicon-ok-circle"></span> Retrait enregistré.
+        Montant net versé : <strong>{{ retraitOk.montantNetVerse | montantEuro }}</strong>
+        (prélèvements sociaux {{ retraitOk.prelevementsSociaux | montantEuro }}).
+        <span *ngIf="retraitOk.entraineCloture"><br><strong>Le plan est désormais clôturé.</strong></span>
+      </div>
+
+      <form class="form-horizontal" (ngSubmit)="simuler()" #formRetrait="ngForm" novalidate>
+        <div class="form-group">
+          <label for="montantRetrait" class="col-sm-2 control-label">Montant souhaité</label>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <input type="number" class="form-control" id="montantRetrait" name="montantRetrait"
+                     [(ngModel)]="montantRetrait" min="1" step="0.01" required>
+              <span class="input-group-addon">€</span>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <button type="submit" class="btn btn-default" [disabled]="!formRetrait.form.valid || simulationEnCours">
+              <span class="glyphicon glyphicon-calculator"></span> Simuler
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div *ngIf="simulation" class="panel" [class.panel-danger]="simulation.entraineCloture" [class.panel-info]="!simulation.entraineCloture">
+        <div class="panel-heading">Simulation du retrait</div>
+        <div class="panel-body">
+          <div *ngIf="simulation.avertissement" class="alert alert-warning">
+            <span class="glyphicon glyphicon-warning-sign"></span> {{ simulation.avertissement }}
+          </div>
+          <dl class="dl-horizontal">
+            <dt>Montant demandé</dt><dd>{{ simulation.montantDemande | montantEuro }}</dd>
+            <dt>Ancienneté du plan</dt><dd>{{ simulation.ancienneteAnnees }} an(s)</dd>
+            <dt>Valorisation totale</dt><dd>{{ simulation.valorisationTotale | montantEuro }}</dd>
+            <dt>Total des versements</dt><dd>{{ simulation.totalVersements | montantEuro }}</dd>
+            <dt>Gain imposable</dt><dd>{{ simulation.gainProportionnel | montantEuro }}</dd>
+            <dt>Prélèvements sociaux</dt>
+            <dd>{{ simulation.prelevementsSociaux | montantEuro }} <small class="text-muted">(taux {{ simulation.tauxPrelevementsSociaux | number:'1.1-2' }} %)</small></dd>
+            <dt><strong>Net versé</strong></dt><dd><strong>{{ simulation.montantNetVerse | montantEuro }}</strong></dd>
+          </dl>
+
+          <div *ngIf="simulation.entraineCloture" class="checkbox" style="margin-bottom: 15px">
+            <label>
+              <input type="checkbox" name="accepterCloture" [(ngModel)]="accepterCloture">
+              <strong>J'accepte la clôture définitive de mon plan</strong> (retrait avant 5 ans ou retrait total).
+            </label>
+          </div>
+
+          <button type="button" class="btn btn-danger" (click)="retirer()" [disabled]="!peutRetirer() || retraitEnCours">
+            <span class="glyphicon glyphicon-minus"></span> Confirmer le retrait
+          </button>
+          <button type="button" class="btn btn-default" (click)="simulation = null">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
