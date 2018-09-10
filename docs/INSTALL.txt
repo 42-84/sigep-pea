@@ -32,11 +32,25 @@
 
 1.3 Nexus
     Le depot interne http://nexus.bas.intra/repository/maven-public/ est
+    declare dans build.gradle. Il faut etre sur le reseau BAS (ou VPN).
+    Le driver Oracle ojdbc6.jar N'EST PAS dans Nexus : voir lib/LISEZMOI.txt,
+    a copier dans lib/ a la main.
+
 1.4 Eclipse
     Eclipse Mars.2 (4.5.2) JEE + plugin Buildship 1.0 (Gradle integration).
     Import : File > Import > Gradle > Gradle Project, pointer la racine sigep/.
     Cocher "Override workspace settings" et renseigner GRADLE_HOME.
     Formatter : importer eclipse-formatter-bas.xml (sur Confluence).
+    Encodage workspace : UTF-8 (Window > Preferences > General > Workspace).
+
+1.5 Git
+    Depot : ssh://git@git.bas.intra/epargne/sigep.git
+    Branches : master (prod), develop (integration), feature/SIGEP-nnn.
+
+
+2. BASE DE DONNEES DE DEVELOPPEMENT (H2)
+-----------------------------------------
+
 
 - ddl-auto=update : le schema est cree/complete par Hibernate.
 - data.sql : chaque service charge son jeu de donnees (MERGE INTO,
@@ -100,6 +114,13 @@ Pas d'en-tete et pas d'utilisateur-dev -> 401.
 Les tests d'integration (*IT.java) sont exclus du build : ils ont besoin
 des trois services demarres. Les lancer depuis Eclipse.
 
+
+6. FICHIER FININFO EN DEV
+-------------------------
+
+Le batch d'import lit ~/sigep-dev/fininfo/entree/COT_AAAAMMJJ.txt a 18h30.
+Pour tester sans attendre, poster le fichier :
+
 =====================================================================
  AJOUT 09/2018 (FD) - FRONT ANGULAR
 =====================================================================
@@ -107,6 +128,12 @@ des trois services demarres. Les lancer depuis Eclipse.
 Le front (prestataire Aubelio, livre en 07/2018) est dans frontend/sigep-web.
 Il n'est pas builde par Gradle.
 
+Angular CLI 1.7 / Angular 5.2. Ne pas faire "ng update" : le prestataire n'a
+pas livre les tests e2e et la montee en Angular 6 casse le module de graphique.
+
+
+---------------------------------------------------------------------
+Note 03/2020 (FD, a la main) : ojdbc8 teste puis abandonne (SIGEP-498), la
 prod reste en 11g. Rester sur ojdbc6.jar 11.2.0.4. Si quelqu'un a un ojdbc8
 dans lib/, le fileTree du build.gradle prend les deux et ca fait des
 conflits de classes au demarrage.

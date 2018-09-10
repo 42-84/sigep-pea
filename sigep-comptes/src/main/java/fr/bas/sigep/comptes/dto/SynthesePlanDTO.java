@@ -13,12 +13,31 @@ public class SynthesePlanDTO {
 
     private String numeroPlan;
     private String typePlan;
+    private String libelleType;
+    private String statut;
+    private String numeroClient;
+    private String nomClient;
+    private Date dateOuverture;
+    private Date datePremierVersement;
+    private int ancienneteAnnees;
+    private Date dateCinqAns;
+    private BigDecimal plafondVersements;
     private BigDecimal totalVersements;
     private BigDecimal versementsRestants;
     private String numeroCompteEspeces;
     private BigDecimal soldeEspeces;
     private ValorisationDTO valorisation;
     private boolean valorisationIndisponible;
+
+    public String getNumeroPlan() {
+        return numeroPlan;
+    }
+
+    public void setNumeroPlan(String numeroPlan) {
+        this.numeroPlan = numeroPlan;
+    }
+
+    public String getTypePlan() {
         return typePlan;
     }
 
@@ -27,6 +46,11 @@ public class SynthesePlanDTO {
     }
 
     public String getLibelleType() {
+        return libelleType;
+    }
+
+    public void setLibelleType(String libelleType) {
+        this.libelleType = libelleType;
     }
 
     public String getStatut() {
@@ -41,6 +65,13 @@ public class SynthesePlanDTO {
         return numeroClient;
     }
 
+    public void setNumeroClient(String numeroClient) {
+        this.numeroClient = numeroClient;
+    }
+
+    public String getNomClient() {
+        return nomClient;
+    }
 
     public void setNomClient(String nomClient) {
         this.nomClient = nomClient;
@@ -48,6 +79,14 @@ public class SynthesePlanDTO {
 
     public Date getDateOuverture() {
         return dateOuverture;
+    }
+
+    public void setDateOuverture(Date dateOuverture) {
+        this.dateOuverture = dateOuverture;
+    }
+
+    public Date getDatePremierVersement() {
+        return datePremierVersement;
     }
 
     public void setDatePremierVersement(Date datePremierVersement) {
@@ -63,6 +102,32 @@ public class SynthesePlanDTO {
     }
 
     public Date getDateCinqAns() {
+        return dateCinqAns;
+    }
+
+    public void setDateCinqAns(Date dateCinqAns) {
+        this.dateCinqAns = dateCinqAns;
+    }
+
+    public BigDecimal getPlafondVersements() {
+        return plafondVersements;
+    }
+
+    public void setPlafondVersements(BigDecimal plafondVersements) {
+        this.plafondVersements = plafondVersements;
+    }
+
+    public BigDecimal getTotalVersements() {
+        return totalVersements;
+    }
+
+    public void setTotalVersements(BigDecimal totalVersements) {
+        this.totalVersements = totalVersements;
+    }
+
+    public BigDecimal getVersementsRestants() {
+        return versementsRestants;
+    }
 
     public void setVersementsRestants(BigDecimal versementsRestants) {
         this.versementsRestants = versementsRestants;
