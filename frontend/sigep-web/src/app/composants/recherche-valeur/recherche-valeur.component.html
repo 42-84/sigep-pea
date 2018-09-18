@@ -1,0 +1,77 @@
+<h2>Référentiel des valeurs</h2>
+
+<form class="form-inline" (ngSubmit)="rechercher()">
+  <div class="form-group">
+    <input type="text" class="form-control" name="critere" [(ngModel)]="critere" placeholder="Libellé, mnémonique ou ISIN" size="40">
+  </div>
+  <div class="checkbox" style="margin-left: 10px; margin-right: 10px">
+    <label><input type="checkbox" name="eligibles" [(ngModel)]="eligiblesSeulement"> Éligibles PEA uniquement</label>
+  </div>
+  <button type="submit" class="btn btn-primary" [disabled]="chargement"><span class="glyphicon glyphicon-search"></span> Rechercher</button>
+</form>
+
+<div *ngIf="erreur" class="alert alert-danger" style="margin-top: 10px"><span class="glyphicon glyphicon-exclamation-sign"></span> {{ erreur }}</div>
+
+<div class="row" style="margin-top: 15px">
+  <div [class.col-md-7]="valeur" [class.col-md-12]="!valeur">
+    <div *ngIf="rechercheFaite && resultats.length === 0 && !erreur" class="alert alert-info">Aucune valeur ne correspond.</div>
+
+    <div class="panel panel-default" *ngIf="resultats.length > 0">
+      <div class="panel-heading">{{ resultats.length }} valeur(s)</div>
+      <table class="table table-striped table-condensed table-hover">
+        <thead>
+          <tr><th>Libellé</th><th>ISIN</th><th>Type</th><th>Place</th><th>Éligibilité</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let v of resultats" (click)="afficherDetail(v)" style="cursor: pointer" [class.info]="valeur && valeur.codeIsin === v.codeIsin">
+            <td><strong>{{ v.libelle }}</strong> <small class="text-muted">{{ v.mnemonique }}</small></td>
+            <td><code>{{ v.codeIsin }}</code></td>
+            <td>{{ v.typeValeur }}</td>
+            <td>{{ v.placeCotation }}</td>
+            <td>
+              <span class="label label-success" *ngIf="v.eligiblePea">PEA</span>
+              <span class="label label-info" *ngIf="v.eligiblePeaPme">PEA-PME</span>
+              <span class="label label-danger" *ngIf="v.dateRadiation" title="Radiée le {{ v.dateRadiation | dateFr }}">radiée</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-md-5" *ngIf="valeur">
+    <div class="panel panel-bas">
+      <div class="panel-heading">
+        {{ valeur.libelle }}
+        <button type="button" class="close" style="color: #fff; opacity: 0.8" (click)="fermerDetail()">&times;</button>
+      </div>
+      <table class="table table-condensed">
+        <tbody>
+          <tr><th>Code ISIN</th><td><code>{{ valeur.codeIsin }}</code></td></tr>
+          <tr><th>Mnémonique</th><td>{{ valeur.mnemonique }}</td></tr>
+          <tr><th>Type</th><td>{{ valeur.typeValeur }}</td></tr>
+          <tr><th>Place de cotation</th><td>{{ valeur.placeCotation }}</td></tr>
+          <tr><th>Pays du siège</th><td>{{ valeur.codePaysSiege }}</td></tr>
+          <tr><th>Devise</th><td>{{ valeur.devise }}</td></tr>
+          <tr><th>Éligible PEA</th><td>{{ valeur.eligiblePea ? 'oui' : 'non' }}</td></tr>
+          <tr><th>Éligible PEA-PME</th><td>{{ valeur.eligiblePeaPme ? 'oui' : 'non' }}</td></tr>
+          <tr *ngIf="valeur.dateRadiation"><th>Radiée le</th><td class="text-danger">{{ valeur.dateRadiation | dateFr }}</td></tr>
+          <tr>
+            <th>Dernier cours</th>
+            <td>
+              <span *ngIf="cours">{{ cours.cloture | montantEuro:4 }} <small class="text-muted">au {{ cours.dateCours | dateFr }}</small></span>
+              <span *ngIf="!cours" class="text-muted">n.d.</span>
+            </td>
+          </tr>
+          <tr *ngIf="eligibilite">
+            <th>Pour mon plan ({{ eligibilite.typePlan }})</th>
+            <td>
+              <span *ngIf="eligibilite.eligible" class="text-success"><span class="glyphicon glyphicon-ok"></span> éligible</span>
+              <span *ngIf="!eligibilite.eligible" class="text-danger"><span class="glyphicon glyphicon-remove"></span> {{ eligibilite.motif }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
