@@ -26,4 +26,7 @@ describe('PlanService', () => {
         { numeroPlan: 'PEA000045127', type: 'PEA', statut: 'OUVERT', totalVersements: 87500, dateOuverture: '12/03/2009' }
       ];
       let resultat: Plan[];
+      expect(resultat[0].numeroPlan).toBe('PEA000045127');
+      expect(resultat[0].dateOuverture).toBe('12/03/2009'); // string : pas de conversion cote service
+    }));
 });
