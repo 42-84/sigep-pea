@@ -29,6 +29,13 @@ export class PlanService {
   getPlanCourant(): Plan {
     return this.planCourant;
   }
+
+  plansDuClient(numeroClient: string): Observable<Plan[]> {
+    return this.http.get<Plan[]>(ApiConfig.COMPTES + '/clients/' + numeroClient + '/plans');
+  }
+
+  detail(numeroPlan: string): Observable<Plan> {
+    return this.http.get<Plan>(ApiConfig.COMPTES + '/plans/' + numeroPlan);
   }
 
   synthese(numeroPlan: string): Observable<SynthesePlan> {
@@ -45,6 +52,10 @@ export class PlanService {
   }
 
   retirer(numeroPlan: string, demande: DemandeMontant): Observable<SimulationRetrait> {
+    return this.http.post<SimulationRetrait>(ApiConfig.COMPTES + '/plans/' + numeroPlan + '/retraits', demande);
+  }
+
+  /** Operations du compte especes du plan. du / au : string dd/MM/yyyy, facultatifs. */
   operations(numeroPlan: string, du?: string, au?: string): Observable<OperationEspeces[]> {
     let params = new HttpParams();
     if (du) {
