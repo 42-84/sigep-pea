@@ -55,6 +55,18 @@ public class ValorisationService {
         for (Position position : positions) {
             if (position.getQuantite().signum() == 0) {
                 continue; // lignes soldees non purgees (avant 2018 on ne supprimait pas la position)
+            }
+            lignes++;
+            PositionDTO dto = valoriserLigne(position);
+            valo.getPositions().add(dto);
+            totalRevient = totalRevient.add(dto.getPrixRevientTotal());
+            if (dto.isCoursIndisponible()) {
+                valo.setPartielle(true);
+            } else {
+                totalTitres = totalTitres.add(dto.getValorisation());
+            }
+        }
+        valo.setNombreLignes(lignes);
         valo.setValorisationTitres(MontantUtils.arrondirMontant(totalTitres));
         valo.setPrixRevientTotal(MontantUtils.arrondirMontant(totalRevient));
         valo.setTotal(valo.getValorisationTitres().add(valo.getSoldeEspeces()));
@@ -65,6 +77,18 @@ public class ValorisationService {
     public PositionDTO valoriserLigne(Position position) {
         PositionDTO dto = new PositionDTO();
         dto.setCodeIsin(position.getValeur().getCodeIsin());
+        dto.setLibelle(position.getValeur().getLibelle());
+        dto.setMnemonique(position.getValeur().getMnemonique());
+        dto.setTypeValeur(position.getValeur().getTypeValeur().name());
+        dto.setQuantite(position.getQuantite());
+        dto.setPrixRevientUnitaire(position.getPrixRevientUnitaire());
+        dto.setPrixRevientTotal(position.getPrixRevientTotal());
+
+        CoursDTO cours = null;
+        try {
+            cours = referentielClient.dernierCours(position.getValeur().getCodeIsin());
+        } catch (RessourceInconnueException e) {
+            LOG.debug("Pas de cours pour {}", position.getValeur().getCodeIsin());
             dto.setCoursIndisponible(true);
             // on valorise au PRU pour ne pas afficher 0 : le front affiche un pictogramme "cours indisponible"
             dto.setValorisation(dto.getPrixRevientTotal());

@@ -13,6 +13,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.bas.sigep.commun.domaine.CompteEspeces;
+import fr.bas.sigep.commun.domaine.Mouvement;
+import fr.bas.sigep.commun.domaine.OperationEspeces;
+import fr.bas.sigep.commun.domaine.Plan;
+import fr.bas.sigep.commun.domaine.Position;
+import fr.bas.sigep.commun.domaine.Profil;
+import fr.bas.sigep.commun.domaine.SensMouvement;
+import fr.bas.sigep.commun.domaine.StatutMouvement;
+import fr.bas.sigep.commun.domaine.TypeOperationEspeces;
+import fr.bas.sigep.commun.domaine.TypeValeur;
+import fr.bas.sigep.commun.domaine.Valeur;
+import fr.bas.sigep.commun.dto.CoursDTO;
 import fr.bas.sigep.commun.dto.EligibiliteDTO;
 import fr.bas.sigep.commun.dto.SoldeDTO;
 import fr.bas.sigep.commun.exception.RegleMetierException;
@@ -50,6 +61,11 @@ public class PortefeuilleService {
     private OperationEspecesRepository operationEspecesRepository;
 
     @Autowired
+    private BigDecimal quantiteMax;
+
+    public Plan chargerPlan(String numeroPlan) {
+        Plan plan = planRepository.findByNumeroPlan(numeroPlan);
+        if (plan == null) {
             throw new RessourceInconnueException("Plan", numeroPlan);
         }
         ControleAcces.verifierAccesPlan(plan);
@@ -112,6 +128,18 @@ public class PortefeuilleService {
         Date maintenant = new Date();
         Mouvement mvt = new Mouvement();
         mvt.setReference(GenerateurReference.mouvement());
+        mvt.setPlan(plan);
+        mvt.setValeur(valeur);
+        mvt.setSens(sens);
+        mvt.setQuantite(quantite);
+        mvt.setCoursExecution(coursExecution);
+        mvt.setMontantBrut(montantBrut);
+        mvt.setFrais(frais);
+        mvt.setMontantNet(montantNet);
+        mvt.setDateMouvement(maintenant);
+        mvt.setDateReglement(DateUtils.tronquer(DateUtils.ajouterJoursOuvres(maintenant, DELAI_REGLEMENT)));
+        mvt.setStatut(StatutMouvement.EXECUTE);
+        mvt.setCanal(ContexteUtilisateur.estClient() ? "WEB" : "AGENCE");
 
         if (sens == SensMouvement.ACHAT) {
             SoldeDTO solde = comptesClient.solde(plan.getCompteEspeces().getNumeroCompte());
