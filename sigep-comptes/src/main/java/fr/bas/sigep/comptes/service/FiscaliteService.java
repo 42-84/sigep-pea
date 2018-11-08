@@ -39,20 +39,14 @@ public class FiscaliteService {
         TAUX_PS.put(2011, new BigDecimal("12.3"));
         TAUX_PS.put(2012, new BigDecimal("13.5"));   // 01/01 -> 30/06 : 13,5 ; 01/07 -> : 15,5 (on prend 15,5 pour toute l'annee, cf. SIGEP-102)
         TAUX_PS.put(2013, new BigDecimal("15.5"));
+        TAUX_PS.put(2018, new BigDecimal("17.2"));
+        // 2019+ : toujours 17,2 au 01/2024 - la table s'arrete la, voir getTaux()
     }
 
     public BigDecimal getTauxPrelevementsSociaux(Date dateRetrait) {
         int annee = DateUtils.annee(dateRetrait);
         Integer cle = TAUX_PS.floorKey(annee);
         if (cle == null) {
-            throw new IllegalArgumentException("Aucun taux de prelevements sociaux connu pour " + annee);
-        }
-        if (annee > TAUX_PS.lastKey() + 1) {
-            LOG.warn("Taux PS de {} applique pour {} : verifier la table TAUX_PS (FiscaliteService)", cle, annee);
-        }
-        return TAUX_PS.get(cle);
-    }
-
     /**
      * Part de gain comprise dans un retrait partiel : montant x (valorisation - versements) / valorisation.
      */
@@ -81,9 +75,6 @@ public class FiscaliteService {
      */
     @Deprecated
     public BigDecimal tauxImpositionAvantPacte(int ancienneteAnnees) {
-        if (ancienneteAnnees < 2) {
-            return new BigDecimal("22.5");
-        }
         if (ancienneteAnnees < 5) {
             return new BigDecimal("19.0");
         }
