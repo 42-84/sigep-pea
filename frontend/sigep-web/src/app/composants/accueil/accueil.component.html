@@ -25,6 +25,10 @@
   </div>
 
   <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-bas">
+        <div class="panel-heading">Valorisation totale</div>
+        <div class="panel-body text-center">
           <div class="chiffre-cle" *ngIf="synthese.valorisation">{{ synthese.valorisation.total | montantEuro }}</div>
           <div class="chiffre-cle text-muted" *ngIf="!synthese.valorisation">n.d.</div>
           <small class="text-muted" *ngIf="synthese.valorisation">
@@ -35,6 +39,24 @@
         </div>
       </div>
     </div>
+    <div class="col-md-4">
+      <div class="panel panel-bas">
+        <div class="panel-heading">Plus-value latente</div>
+        <div class="panel-body text-center">
+          <div class="chiffre-cle" *ngIf="synthese.valorisation"
+               [class.montant-positif]="synthese.valorisation.plusValueLatente >= 0"
+               [class.montant-negatif]="synthese.valorisation.plusValueLatente < 0">
+            {{ synthese.valorisation.plusValueLatente | montantEuro }}
+          </div>
+          <div class="chiffre-cle text-muted" *ngIf="!synthese.valorisation">n.d.</div>
+          <small class="text-muted" *ngIf="plusValuePourcent() !== null">
+            soit {{ plusValuePourcent() | number:'1.2-2' }} % des versements
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-bas">
         <div class="panel-heading">Versements</div>
         <div class="panel-body text-center">
           <div class="chiffre-cle">{{ synthese.totalVersements | montantEuro }}</div>
@@ -50,6 +72,14 @@
   <div class="panel panel-default">
     <div class="panel-heading">Informations du plan</div>
     <table class="table table-condensed">
+      <tbody>
+        <tr><th class="col-md-3">Date d'ouverture</th><td>{{ synthese.dateOuverture | dateFr }}</td></tr>
+        <tr><th>Premier versement</th><td>{{ synthese.datePremierVersement ? (synthese.datePremierVersement | dateFr) : 'aucun versement' }}</td></tr>
+        <tr>
+          <th>Ancienneté</th>
+          <td>{{ synthese.ancienneteAnnees }} an(s)
+            <span *ngIf="synthese.ancienneteAnnees < 5" class="text-warning">
+              — le plan aura 5 ans le {{ synthese.dateCinqAns | dateFr }} : tout retrait avant cette date entraîne la clôture
             </span>
             <span *ngIf="synthese.ancienneteAnnees >= 5" class="text-success">— retraits partiels possibles sans clôture</span>
           </td>

@@ -8,6 +8,15 @@ describe('SelecteurUtilisateurComponent', () => {
   let component: SelecteurUtilisateurComponent;
   let fixture: ComponentFixture<SelecteurUtilisateurComponent>;
 
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule ],
+      declarations: [ SelecteurUtilisateurComponent ],
+      providers: [ UtilisateurService ]
+    })
+    .compileComponents();
+  }));
+
     fixture.detectChanges();
   });
 
