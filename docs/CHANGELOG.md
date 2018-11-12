@@ -3,6 +3,14 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.5.0 - 12/11/2018
+
+- Endpoint `GET /api/portefeuilles/{n}/historique` (photos quotidiennes de valorisation) pour le
+  graphique du front Angular. (SIGEP-402)
+- CORS ouvert sur `/api/**` pour le développement du front (`ng serve`). (SIGEP-402)
+- Prélèvements sociaux 2018 : 17,2 %. (SIGEP-398)
+- Suppression physique de la position quand la ligne est soldée (avant : quantité 0 conservée).
+
 ## 2.4.0 - 26/02/2018
 
 - **Statut `SUSPENDU`** sur les plans (succession, saisie) : valeur ordinale 3, ajoutée en fin
