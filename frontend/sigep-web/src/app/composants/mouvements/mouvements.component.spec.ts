@@ -10,6 +10,10 @@ describe('MouvementsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MouvementsComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  // TODO KO depuis la montee Angular 5 : "The pipe 'dateFr' could not be found" + No provider for PlanService
   xit('should create', () => {
     expect(component).toBeTruthy();
   });

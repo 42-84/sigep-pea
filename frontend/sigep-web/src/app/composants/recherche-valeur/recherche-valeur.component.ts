@@ -41,6 +41,14 @@ export class RechercheValeurComponent {
         this.rechercheFaite = true;
         this.chargement = false;
       },
+      err => {
+        this.erreur = this.erreurService.libelle(err);
+        this.chargement = false;
+      });
+  }
+
+  afficherDetail(valeur: Valeur): void {
+    this.valeur = valeur;
     this.cours = null;
     this.eligibilite = null;
     const plan = this.planService.getPlanCourant();
@@ -50,4 +58,9 @@ export class RechercheValeurComponent {
     this.referentielService.eligibilite(valeur.codeIsin, plan ? plan.type : 'PEA').subscribe(
       e => this.eligibilite = e,
       err => this.eligibilite = null);
+  }
+
+  fermerDetail(): void {
+    this.valeur = null;
+  }
 }
