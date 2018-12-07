@@ -21,5 +21,14 @@ export interface Cours {
   cloture: number;
   ouverture: number;
   plusHaut: number;
+  plusBas: number;
+  volume: number;
+  source: string;
+}
+
+export interface Eligibilite {
+  codeIsin: string;
+  typePlan: string;
+  eligible: boolean;
   motif: string;
 }
