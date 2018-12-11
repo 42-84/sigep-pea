@@ -28,6 +28,24 @@ export class PositionsComponent implements OnInit, OnDestroy {
               private portefeuilleService: PortefeuilleService,
               private erreurService: ErreurService) { }
 
+  ngOnInit() {
+    this.plan = this.planService.getPlanCourant();
+    this.charger();
+    this.abonnement = this.planService.planChange.subscribe(plan => {
+      this.plan = plan;
+      this.charger();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.abonnement) {
+      this.abonnement.unsubscribe();
+    }
+  }
+
+  charger(): void {
+    this.positions = [];
+    this.erreur = null;
     if (!this.plan) {
       return;
     }
@@ -37,6 +55,16 @@ export class PositionsComponent implements OnInit, OnDestroy {
         this.positions = positions;
         this.trier(this.colonneTri, true);
         this.chargement = false;
+      },
+      err => {
+        this.erreur = this.erreurService.libelle(err);
+        this.chargement = false;
+      });
+  }
+
+  /** Tri cote client : un clic sur la meme colonne inverse le sens. */
+  trier(colonne: string, conserverSens: boolean = false): void {
+    if (!conserverSens) {
       if (this.colonneTri === colonne) {
         this.triCroissant = !this.triCroissant;
       } else {
@@ -49,6 +77,17 @@ export class PositionsComponent implements OnInit, OnDestroy {
       const va = a[colonne];
       const vb = b[colonne];
       if (va === vb) {
+        return 0;
+      }
+      if (va === null || va === undefined) {
+        return 1;
+      }
+      if (vb === null || vb === undefined) {
+        return -1;
+      }
+      if (typeof va === 'string') {
+        return va.localeCompare(vb) * sens;
+      }
       return (va < vb ? -1 : 1) * sens;
     });
   }
@@ -71,5 +110,9 @@ export class PositionsComponent implements OnInit, OnDestroy {
       }
     }
     return total;
+  }
+
+  nbCoursIndisponibles(): number {
+    return this.positions.filter(p => p.coursIndisponible).length;
   }
 }

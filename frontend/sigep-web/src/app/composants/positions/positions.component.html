@@ -35,6 +35,12 @@
     <tbody>
       <tr *ngFor="let p of positions" [class.warning]="p.coursIndisponible">
         <td>
+          <strong>{{ p.libelle }}</strong>
+          <small class="text-muted" *ngIf="p.mnemonique"> ({{ p.mnemonique }})</small>
+          <span class="label label-default">{{ p.typeValeur }}</span>
+        </td>
+        <td><code>{{ p.codeIsin }}</code></td>
+        <td class="montant">{{ p.quantite | number:'1.0-3' }}</td>
         <td class="montant">{{ p.prixRevientUnitaire | montantEuro:4 }}</td>
         <td class="montant">
           <span *ngIf="p.coursIndisponible" class="glyphicon glyphicon-warning-sign text-warning"
@@ -44,6 +50,10 @@
         <td>{{ p.dateDernierCours | dateFr }}</td>
         <td class="montant">{{ p.coursIndisponible ? 'n.d.' : (p.valorisation | montantEuro) }}</td>
         <td class="montant" [class.montant-positif]="p.plusValueLatente >= 0" [class.montant-negatif]="p.plusValueLatente < 0">
+          {{ p.coursIndisponible ? '' : (p.plusValueLatente | montantEuro) }}
+        </td>
+        <td class="montant" [class.montant-positif]="p.plusValuePourcent >= 0" [class.montant-negatif]="p.plusValuePourcent < 0">
+          {{ p.coursIndisponible ? '' : ((p.plusValuePourcent | number:'1.2-2') + ' %') }}
         </td>
       </tr>
     </tbody>
@@ -51,4 +61,11 @@
       <tr class="active">
         <th colspan="6">Total ({{ positions.length }} lignes)</th>
         <th class="montant">{{ totalValorisation() | montantEuro }}</th>
+        <th class="montant" [class.montant-positif]="totalPlusValue() >= 0" [class.montant-negatif]="totalPlusValue() < 0">
+          {{ totalPlusValue() | montantEuro }}
+        </th>
+        <th></th>
+      </tr>
+    </tfoot>
+  </table>
 </div>

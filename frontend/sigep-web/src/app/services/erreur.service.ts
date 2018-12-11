@@ -27,6 +27,10 @@ const LIBELLES: { [code: string]: string } = {
 export class ErreurService {
 
   /** Libelle FR a partir d'un code d'erreur metier. */
+  traduire(code: string, messageBrut?: string): string {
+    if (code && LIBELLES[code]) {
+      return LIBELLES[code];
+    }
     if (messageBrut) {
       return messageBrut;
     }

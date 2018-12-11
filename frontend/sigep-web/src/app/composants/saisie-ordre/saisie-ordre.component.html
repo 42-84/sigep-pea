@@ -19,6 +19,16 @@
             <input type="radio" name="sens" value="VENTE" [(ngModel)]="ordre.sens" (change)="changerSens()"> Vente
           </label>
         </div>
+      </div>
+
+      <div class="form-group">
+        <label for="recherche" class="col-sm-2 control-label">Valeur</label>
+        <div class="col-sm-6">
+          <div class="input-group">
+            <input type="text" class="form-control" id="recherche" name="recherche" [(ngModel)]="recherche"
+                   placeholder="Libellé, mnémonique ou code ISIN" (keyup.enter)="rechercherValeur(); $event.preventDefault()">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" (click)="rechercherValeur()" [disabled]="rechercheEnCours">
                 <span class="glyphicon glyphicon-search"></span> Rechercher
               </button>
             </span>
@@ -54,10 +64,24 @@
           <label class="col-sm-2 control-label">Valeur retenue</label>
           <div class="col-sm-10">
             <p class="form-control-static">
+              <strong>{{ valeur.libelle }}</strong> — <code>{{ valeur.codeIsin }}</code> — {{ valeur.typeValeur }}, {{ valeur.devise }}
+            </p>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="col-sm-2 control-label">Dernier cours</label>
           <div class="col-sm-10">
             <p class="form-control-static" *ngIf="cours">
+              {{ cours.cloture | montantEuro:4 }} <small class="text-muted">au {{ cours.dateCours | dateFr }} (source {{ cours.source }})</small>
+            </p>
+            <p class="form-control-static text-warning" *ngIf="!cours">
+              <span class="glyphicon glyphicon-warning-sign"></span> Cours indisponible
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="col-sm-2 control-label">Éligibilité {{ plan.type }}</label>
           <div class="col-sm-10">
             <p class="form-control-static" *ngIf="eligibilite && eligibilite.eligible">
@@ -74,6 +98,18 @@
           <label class="col-sm-2 control-label">Détenu</label>
           <div class="col-sm-10">
             <p class="form-control-static" *ngIf="positionDetenue">
+              {{ positionDetenue.quantite | number:'1.0-3' }} titre(s), PRU {{ positionDetenue.prixRevientUnitaire | montantEuro:4 }}
+            </p>
+            <p class="form-control-static text-danger" *ngIf="!positionDetenue">Vous ne détenez pas cette valeur.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="quantite" class="col-sm-2 control-label">Quantité</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="quantite" name="quantite" [(ngModel)]="ordre.quantite"
+                   min="1" step="1" [disabled]="ordre.totalite" [required]="!ordre.totalite">
+          </div>
           <div class="col-sm-5" *ngIf="ordre.sens === 'VENTE' && positionDetenue">
             <div class="checkbox">
               <label><input type="checkbox" name="totalite" [(ngModel)]="ordre.totalite"> Vendre la totalité de la ligne</label>
@@ -95,8 +131,45 @@
           <button type="button" class="btn btn-default" (click)="reinitialiser()">Annuler</button>
         </div>
       </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ ETAPE 2 : CONFIRMATION ============ -->
+<div *ngIf="plan && etape === 'confirmation'" class="panel panel-warning">
+  <div class="panel-heading">Confirmation de l'ordre</div>
+  <div class="panel-body">
+    <p>Vous êtes sur le point de passer l'ordre suivant sur le plan <strong>{{ plan.numeroPlan }}</strong> :</p>
+    <dl class="dl-horizontal">
+      <dt>Sens</dt><dd>{{ ordre.sens }}</dd>
+      <dt>Valeur</dt><dd>{{ valeur.libelle }} ({{ valeur.codeIsin }})</dd>
+      <dt>Quantité</dt>
+      <dd *ngIf="!ordre.totalite">{{ ordre.quantite | number:'1.0-3' }}</dd>
+      <dd *ngIf="ordre.totalite">Totalité de la ligne ({{ positionDetenue?.quantite | number:'1.0-3' }})</dd>
+      <dt>Montant estimé</dt><dd>{{ montantEstime() !== null ? (montantEstime() | montantEuro) : 'n.d.' }}</dd>
+    </dl>
+    <p class="text-muted small">L'ordre est exécuté au dernier cours connu, frais de courtage en sus selon la grille tarifaire BAS.</p>
+    <button type="button" class="btn btn-success" (click)="envoyer()" [disabled]="envoiEnCours">
+      <span class="glyphicon glyphicon-ok"></span> Confirmer
+    </button>
     <button type="button" class="btn btn-default" (click)="retourSaisie()" [disabled]="envoiEnCours">Retour</button>
   </div>
 </div>
 
+<!-- ============ ETAPE 3 : TERMINE ============ -->
+<div *ngIf="etape === 'termine' && mouvement" class="panel panel-success">
+  <div class="panel-heading">Ordre enregistré</div>
+  <div class="panel-body">
+    <p><span class="glyphicon glyphicon-ok-circle"></span> Votre ordre a été enregistré sous la référence <code>{{ mouvement.reference }}</code>.</p>
+    <dl class="dl-horizontal">
+      <dt>Statut</dt><dd>{{ mouvement.statut }}</dd>
+      <dt>Cours d'exécution</dt><dd>{{ mouvement.coursExecution | montantEuro:4 }}</dd>
+      <dt>Montant brut</dt><dd>{{ mouvement.montantBrut | montantEuro }}</dd>
+      <dt>Frais</dt><dd>{{ mouvement.frais | montantEuro }}</dd>
+      <dt>Montant net</dt><dd>{{ mouvement.montantNet | montantEuro }}</dd>
+      <dt>Règlement</dt><dd>{{ mouvement.dateReglement | dateFr }}</dd>
+    </dl>
+    <button type="button" class="btn btn-primary" (click)="reinitialiser()">Nouvel ordre</button>
+    <a routerLink="/mouvements" class="btn btn-default">Voir les mouvements</a>
+  </div>
 </div>
