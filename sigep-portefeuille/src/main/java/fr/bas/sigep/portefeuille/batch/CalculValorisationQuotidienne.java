@@ -34,6 +34,10 @@ public class CalculValorisationQuotidienne {
 
     @Autowired
     private PlanRepository planRepository;
+                ValorisationDTO valo = valorisationService.valoriser(plan);
+                if (valo.isPartielle()) {
+                    partielles++;
+                }
                     histo.setIdPlan(plan.getId());
                     histo.setDateValorisation(jour);
                 }

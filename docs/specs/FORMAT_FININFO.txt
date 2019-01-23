@@ -41,12 +41,28 @@ Taille      : environ 6 000 lignes / 650 Ko par jour.
  /appli/sigep/fininfo/archive apres integration sans rejet. Import a 18h30, rattrapage 19h30.]
 
 
+3. STRUCTURE GENERALE
+
+Fichier texte a LARGEUR FIXE. Chaque enregistrement fait exactement 109 caracteres (hors fin
+de ligne). Les enregistrements plus courts (fichiers produits avant 2012, sans l'indicateur
+de suspension en position 109) faisaient 108 caracteres.
 
 Trois types d'enregistrement, identifies par le caractere en position 1 :
 
    E   entete       1 par fichier, premiere ligne
    D   detail       1 par valeur et par place, 0 a n
    F   fin          1 par fichier, derniere ligne
+
+Regles de cadrage :
+ - champs alphanumeriques : cadres a gauche, completes par des blancs (0x20) ;
+ - champs numeriques : cadres a droite, completes par des zeros a gauche, sans signe, sans
+   separateur decimal (decimales implicites, voir chaque champ) ;
+ - champ numerique absent : rempli de blancs (et non de zeros). [SIGEP : un champ rempli de
+   zeros est aussi traite comme absent]
+ - dates : AAAAMMJJ.
+
+
+4. ENREGISTREMENT D'ENTETE (type E)
 
  Pos   Long  Type  Champ                          Contenu
  ----  ----  ----  -----------------------------  -------------------------------------------
