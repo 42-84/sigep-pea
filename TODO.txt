@@ -38,3 +38,12 @@ TODO SIGEP
 - Externaliser les mots de passe des application-prod.properties (SIGEP-301). Coffre-fort DSI ?
 - Retirer le CORS "*" (ConfigurationWeb + @CrossOrigin sur CompteEspecesControleur), ajoute pour le
   debug du front en ng serve.
+- Tests d'integration (*IT) exclus du build Jenkins depuis 2018 (base H2 non initialisee sur
+  l'agent) : a reactiver.
+- Verifier que le pare-feu bloque bien les appels directs sur POST /api/comptes-especes/{n}/operations
+  depuis le reseau agences (endpoint interne sans controle de profil).
+
+2019
+----
+- Monter Spring Boot 2.x -> bloque : les serveurs sont en Java 8 et Boot 2.x impose des changements
+  sur actuator (/health devient /actuator/health, deploy.sh et la supervision a adapter) et sur

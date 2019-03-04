@@ -25,6 +25,16 @@ ESPECES_INSUFFISANTS       comptes /      422   Solde especes insuffisant. Vende
 CLOTURE_NON_ACCEPTEE       comptes        422   Ce retrait entraine la cloture de votre plan (moins
                                                 de 5 ans). Merci de confirmer.
 TITRES_EN_PORTEFEUILLE     comptes        422   Cloture impossible : le plan detient encore des titres.
+RETRAIT_TOTAL_REQUIS       comptes        422   En cas de cloture, le retrait doit porter sur la
+                                                totalite du solde especes.
+SOLDE_NON_NUL              comptes        422   Le compte especes doit etre a zero avant cloture.
+MONTANT_INVALIDE           comptes        422   Le montant saisi est invalide.
+NUM_CLIENT_INVALIDE        comptes        422   Le numero client doit comporter 8 chiffres.
+VERSEMENT_INTERDIT         comptes        422   Apres un retrait sur un plan de plus de 8 ans, aucun
+                                                nouveau versement n'est possible.
+VALEUR_NON_ELIGIBLE        portefeuille   422   Cette valeur n'est pas eligible au PEA / PEA-PME.
+QUANTITE_INVALIDE          portefeuille   422   La quantite doit etre un nombre positif.
+QUANTITE_INSUFFISANTE      portefeuille   422   Quantite en portefeuille insuffisante pour cette vente.
 LIGNE_INEXISTANTE          portefeuille   422   Vous ne detenez pas cette valeur sur ce plan.
 ORDRE_HORS_SEANCE          portefeuille   422   Les ordres sont acceptes de 9h00 a 17h30 les jours
                                                 de bourse.
