@@ -60,6 +60,21 @@ public class CompteEspecesService {
         CompteEspeces compte = charger(numeroCompte);
         if (debut == null && fin == null) {
             return operationEspecesRepository.findByCompteOrderByDateOperationDesc(compte);
+        }
+        if (debut == null) {
+            debut = DateUtils.construire(1992, 9, 14); // entree en vigueur du PEA : rien avant
+        }
+        if (fin == null) {
+            fin = new Date();
+        }
+        return operationEspecesRepository.findByCompteAndDateOperationBetweenOrderByDateOperationDesc(compte, debut, fin);
+    }
+
+    /**
+     * Enregistre une operation et met a jour le solde. Un debit ne peut pas rendre le solde negatif
+     * (pas de decouvert sur un compte PEA), sauf REGULARISATION back-office.
+     */
+    @Transactional
     public OperationEspeces enregistrer(CompteEspeces compte, TypeOperationEspeces type, BigDecimal montantAbsolu,
             Date dateValeur, String libelle, String reference) {
         if (montantAbsolu == null || montantAbsolu.signum() == 0) {

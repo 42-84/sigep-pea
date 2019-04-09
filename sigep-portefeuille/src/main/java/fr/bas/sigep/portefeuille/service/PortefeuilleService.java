@@ -107,6 +107,15 @@ public class PortefeuilleService {
         SensMouvement sens = parserSens(ordre.getSens());
         Valeur valeur = valeurRepository.findByCodeIsin(StringUtils.upperCase(StringUtils.trim(ordre.getCodeIsin())));
         if (valeur == null) {
+            throw new RessourceInconnueException("Valeur", ordre.getCodeIsin());
+        }
+
+        Position position = positionRepository.findByPlanAndValeur(plan, valeur);
+        BigDecimal quantite = ordre.getQuantite();
+        if (sens == SensMouvement.VENTE && ordre.isTotalite()) {
+            if (position == null) {
+                throw new RegleMetierException("LIGNE_INEXISTANTE", "Aucune ligne " + valeur.getCodeIsin() + " sur le plan");
+            }
             quantite = position.getQuantite();
         }
         verifierQuantite(valeur, quantite);
@@ -187,6 +196,14 @@ public class PortefeuilleService {
     public Mouvement annuler(String numeroPlan, String reference, String motif) {
         ControleAcces.exigerProfil(Profil.BACK_OFFICE);
         Plan plan = chargerPlan(numeroPlan);
+        Mouvement mvt = mouvementRepository.findByReference(reference);
+        if (mvt == null || !mvt.getPlan().getId().equals(plan.getId())) {
+            throw new RessourceInconnueException("Mouvement", reference);
+        }
+        if (mvt.getStatut() == StatutMouvement.ANNULE) {
+            throw new RegleMetierException("DEJA_ANNULE", "Mouvement deja annule");
+        }
+        if (!DateUtils.memeJour(mvt.getDateMouvement(), new Date())) {
             throw new RegleMetierException("ANNULATION_HORS_DELAI", "Seuls les mouvements du jour peuvent etre annules");
         }
         Position position = positionRepository.findByPlanAndValeur(plan, mvt.getValeur());

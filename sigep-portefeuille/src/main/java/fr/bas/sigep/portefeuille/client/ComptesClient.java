@@ -17,6 +17,9 @@ import fr.bas.sigep.commun.dto.SoldeDTO;
  *
  * Depuis 2019 seule la lecture du solde passe par ici : les ecritures (debit/credit) se font
  * directement en base par PortefeuilleService, voir le commentaire dans passerOrdre().
+ * enregistrerOperation() est conserve pour le batch coupons... qui ne l'utilise plus non plus.
+ */
+@Component
 public class ComptesClient extends ClientRestAbstrait {
 
     @Autowired
