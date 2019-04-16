@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 /**
  * Compte especes adosse a un plan. Ne porte pas d'interets (regle PEA).
@@ -35,6 +36,10 @@ public class CompteEspeces extends EntiteAuditable {
     @Column(name = "DEVISE", nullable = false, length = 3)
     private String devise = "EUR";
 
+    // Ajoute en 2019 apres doubles debits constates (deux services ecrivent sur cette table)
+    @Version
+    @Column(name = "VERSION")
+    private Long version;
 
     public Long getId() {
         return id;
@@ -66,6 +71,14 @@ public class CompteEspeces extends EntiteAuditable {
 
     public void setDevise(String devise) {
         this.devise = devise;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public void crediter(BigDecimal montant) {

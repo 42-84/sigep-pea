@@ -29,6 +29,10 @@ public class GestionnaireErreurs {
     }
 
     @ExceptionHandler(RessourceInconnueException.class)
+    public ResponseEntity<ErreurDTO> inconnue(RessourceInconnueException e, HttpServletRequest req) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErreurDTO("INCONNU", e.getMessage(), req.getRequestURI()));
+    }
 
     @ExceptionHandler(AccesRefuseException.class)
     public ResponseEntity<ErreurDTO> refuse(AccesRefuseException e, HttpServletRequest req) {
@@ -49,4 +53,21 @@ public class GestionnaireErreurs {
     public ResponseEntity<ErreurDTO> servicePartenaire(HttpStatusCodeException e, HttpServletRequest req) {
         LOG.error("Erreur service partenaire {} : {}", e.getStatusCode(), e.getResponseBodyAsString());
         // on relaie le corps tel quel : c'est deja un ErreurDTO dans 99% des cas
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(new ErreurDTO("PARTENAIRE", e.getResponseBodyAsString(), req.getRequestURI()));
+    }
+
+    @ExceptionHandler(ResourceAccessException.class)
+    public ResponseEntity<ErreurDTO> serviceInjoignable(ResourceAccessException e, HttpServletRequest req) {
+        LOG.error("Service partenaire injoignable : {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(new ErreurDTO("INDISPONIBLE", "Service temporairement indisponible", req.getRequestURI()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErreurDTO> autre(Exception e, HttpServletRequest req) {
+        LOG.error("Erreur non geree sur " + req.getRequestURI(), e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErreurDTO("TECHNIQUE", e.getMessage(), req.getRequestURI()));
+    }
 }
