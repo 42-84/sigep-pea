@@ -42,6 +42,12 @@ public class RegleAncienneteService {
         return DateUtils.ajouterAnnees(dateDepart(plan), SEUIL_CLOTURE_PACTE);
     }
 
+    public boolean retraitEntraineCloture(Plan plan, Date dateRetrait) {
+        int seuil = pacteActif ? SEUIL_CLOTURE_PACTE : SEUIL_CLOTURE_AVANT_PACTE;
+        return anciennete(plan, dateRetrait) < seuil;
+    }
+
+    public boolean versementsAutorisesApresRetrait(Plan plan, Date dateRetrait) {
         if (pacteActif) {
             return true;
         }

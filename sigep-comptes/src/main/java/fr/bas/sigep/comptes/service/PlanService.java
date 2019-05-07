@@ -244,6 +244,18 @@ public class PlanService {
         planRepository.save(plan);
         return sim;
     }
+
+    // ------------------------------------------------------------------ cloture / synthese
+
+    @Transactional
+    public Plan cloturer(String numeroPlan, String motif) {
+        ControleAcces.exigerProfil(Profil.BACK_OFFICE);
+        Plan plan = charger(numeroPlan);
+        if (!plan.estOuvert() && plan.getStatut() != StatutPlan.SUSPENDU) {
+            throw new RegleMetierException("PLAN_NON_OUVERT", "Le plan est deja " + plan.getStatut());
+        }
+        if (plan.getCompteEspeces().getSolde().signum() != 0) {
+            throw new RegleMetierException("SOLDE_NON_NUL", "Le compte especes doit etre a zero avant cloture");
         }
         try {
             if (portefeuilleClient.detientDesTitres(numeroPlan)) {
@@ -274,6 +286,18 @@ public class PlanService {
         s.setDateCinqAns(regleAnciennete.dateCinqAns(plan));
         s.setPlafondVersements(plan.getType().getPlafondVersements());
         s.setTotalVersements(plan.getTotalVersements());
+        s.setVersementsRestants(plan.getVersementsRestants());
+        s.setNumeroCompteEspeces(plan.getCompteEspeces().getNumeroCompte());
+        s.setSoldeEspeces(plan.getCompteEspeces().getSolde());
+        try {
+            s.setValorisation(portefeuilleClient.valorisation(numeroPlan));
+        } catch (RestClientException e) {
+            LOG.warn("Valorisation indisponible pour {} : {}", numeroPlan, e.getMessage());
+            s.setValorisationIndisponible(true);
+        }
+        return s;
+    }
+
     private TypePlan parserType(String type) {
         if (StringUtils.isBlank(type)) {
             return TypePlan.PEA;
