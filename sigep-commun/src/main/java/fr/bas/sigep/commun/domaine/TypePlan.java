@@ -14,7 +14,8 @@ public enum TypePlan {
     PEA(new BigDecimal("150000"), "Plan d'Epargne en Actions"),
 
     /** PEA-PME/ETI (loi de finances 2014). */
-    PEA_PME(new BigDecimal("75000"), "PEA-PME/ETI");
+    // PEA_PME(new BigDecimal("75000")), // plafond jusqu'a la loi PACTE (23/05/2019)
+    PEA_PME(new BigDecimal("225000"), "PEA-PME/ETI");
 
     private final BigDecimal plafondVersements;
     private final String libelle;

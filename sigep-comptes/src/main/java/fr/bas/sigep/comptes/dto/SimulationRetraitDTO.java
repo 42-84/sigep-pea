@@ -13,6 +13,18 @@ public class SimulationRetraitDTO {
     private BigDecimal gainProportionnel;
     private BigDecimal tauxPrelevementsSociaux;
     private BigDecimal prelevementsSociaux;
+    private BigDecimal montantNetVerse;
+    private String avertissement;
+
+    public String getNumeroPlan() {
+        return numeroPlan;
+    }
+
+    public void setNumeroPlan(String numeroPlan) {
+        this.numeroPlan = numeroPlan;
+    }
+
+    public BigDecimal getMontantDemande() {
         return montantDemande;
     }
 
@@ -43,6 +55,15 @@ public class SimulationRetraitDTO {
     }
 
     public BigDecimal getGainProportionnel() {
+        return gainProportionnel;
+    }
+
+    public void setGainProportionnel(BigDecimal gainProportionnel) {
+        this.gainProportionnel = gainProportionnel;
+    }
+
+    public BigDecimal getTauxPrelevementsSociaux() {
+        return tauxPrelevementsSociaux;
     public void setPrelevementsSociaux(BigDecimal prelevementsSociaux) {
         this.prelevementsSociaux = prelevementsSociaux;
     }

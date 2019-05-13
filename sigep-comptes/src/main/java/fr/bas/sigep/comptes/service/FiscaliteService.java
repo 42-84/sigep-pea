@@ -47,6 +47,14 @@ public class FiscaliteService {
         int annee = DateUtils.annee(dateRetrait);
         Integer cle = TAUX_PS.floorKey(annee);
         if (cle == null) {
+            throw new IllegalArgumentException("Aucun taux de prelevements sociaux connu pour " + annee);
+        }
+        if (annee > TAUX_PS.lastKey() + 1) {
+            LOG.warn("Taux PS de {} applique pour {} : verifier la table TAUX_PS (FiscaliteService)", cle, annee);
+        }
+        return TAUX_PS.get(cle);
+    }
+
     /**
      * Part de gain comprise dans un retrait partiel : montant x (valorisation - versements) / valorisation.
      */
@@ -75,6 +83,9 @@ public class FiscaliteService {
      */
     @Deprecated
     public BigDecimal tauxImpositionAvantPacte(int ancienneteAnnees) {
+        if (ancienneteAnnees < 2) {
+            return new BigDecimal("22.5");
+        }
         if (ancienneteAnnees < 5) {
             return new BigDecimal("19.0");
         }
