@@ -58,4 +58,14 @@ subprojects {
             events 'failed'
             exceptionFormat 'full'
         }
+    }
+}
+
+// Driver Oracle : ojdbc6.jar n'est pas sur Maven Central, il est depose dans lib/ (non versionne).
+// Voir lib/LISEZMOI.txt
+ext.driverOracle = fileTree(dir: "${rootDir}/lib", include: 'ojdbc*.jar')
+
+task versionSigep {
+    doLast {
+        println "SIGEP ${version}"
 }
