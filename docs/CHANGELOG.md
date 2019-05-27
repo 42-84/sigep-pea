@@ -3,6 +3,23 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.6.0 - 27/05/2019
+
+- **Loi PACTE** (retraits à compter du 24/05/2019) : seuil de clôture ramené de 8 à 5 ans, les
+  versements restent possibles après un retrait au-delà de 5 ans. Ancienne règle conservée derrière
+  `sigep.regles.pacte.actif=false`. (SIGEP-441)
+- **Plafond PEA-PME porté de 75 000 à 225 000 EUR** (`TypePlan`). (SIGEP-441)
+- Impôt sur le revenu avant 5 ans : SIGEP ne le prélève plus (PFU 12,8 % déclaré via IFU) ;
+  `tauxImpositionAvantPacte` conservé en `@Deprecated` pour les régularisations. (SIGEP-441)
+- **Verrou optimiste sur le compte espèces** : colonne `VERSION` sur `SGP_COMPTE_ESPECES`
+  (`@Version`), réponse HTTP 409 `CONFLIT` en cas d'écriture concurrente. Corrige les doubles
+  débits constatés entre sigep-comptes et sigep-portefeuille. Script
+  `2019-05_V2.6.0_version_compte_especes.sql`. (SIGEP-438)
+- sigep-portefeuille écrit désormais les opérations espèces directement en base dans la
+  transaction de l'ordre (au lieu de `POST /api/comptes-especes/{n}/operations`) : supprime les
+  mouvements sans débit lors des timeouts du soir. La lecture du solde reste par API. (SIGEP-438)
+- Nexus interne déclaré après Maven Central dans le build (indisponible hors réseau BAS).
+
 ## 2.5.0 - 12/11/2018
 
 - Endpoint `GET /api/portefeuilles/{n}/historique` (photos quotidiennes de valorisation) pour le
