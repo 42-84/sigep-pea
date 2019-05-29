@@ -27,6 +27,10 @@ HISTORIQUE DES VERSIONS
  v1.3     25/01/2016  JM       Referentiel et fichier fournisseur (§9)
  v1.4     02/02/2016  CL       Corrections Juridique, coupons (§8), gel
 
+
+
+SOMMAIRE
+
  1.  Objet du document
  2.  Perimetre et acteurs
  3.  Le Plan d'Epargne en Actions - rappel reglementaire
@@ -71,6 +75,17 @@ Les regles sont numerotees RG-xx-nn pour reference dans les cahiers de recette.
   - referentiel des valeurs eligibles et cours de cloture quotidiens
   - calcul des prelevements sociaux a la sortie
 
+ Exclus :
+  - la passation d'ordres au marche (STRATE, table de negociation)
+  - le calcul et l'edition de l'IFU (outil fiscal groupe)
+  - le referentiel client (RCC) : SIGEP recopie le numero client et l'etat
+    civil, il n'y a pas de synchronisation
+  - les transferts entrants depuis un autre etablissement (traitement manuel
+    BO, saisie d'un plan avec date d'ouverture d'origine)
+  - le PEA "assurance" (contrat de capitalisation) : hors offre BAS
+
+2.2 Acteurs
+
  Client         : titulaire du plan. Consulte, verse, passe des ordres,
                   demande un retrait (portail BAS en ligne).
  Conseiller     : agent en agence. Ouvre les plans, saisit pour le compte
@@ -110,6 +125,23 @@ Caracteristiques au 01/01/2016 :
  Titres eligibles           actions de societes ayant leur siege dans l'UE
                             ou l'EEE, OPCVM investis a 75 % au moins en
                             titres eligibles ; pour le PEA-PME : PME/ETI
+                            (moins de 5 000 salaries, CA < 1,5 Md EUR ou
+                            bilan < 2 Md EUR)
+ Retrait avant 8 ans        entraine la CLOTURE du plan
+ Retrait apres 8 ans        le plan reste ouvert mais AUCUN nouveau
+                            versement n'est possible
+ Prelevements sociaux       15,5 % sur le gain net, a la sortie (taux 2016)
+ Imposition du gain         avant 2 ans : 22,5 % ; de 2 a 5 ans : 19 % ;
+                            apres 5 ans : exonere (hors PS) - declare par le
+                            client, non preleve par la banque
+
+L'anciennete du plan court a compter de la date du PREMIER VERSEMENT
+(BOI-RPPM-RCM-40-50-20-20), et non de la date de signature du contrat.
+
+
+
+4. OUVERTURE D'UN PLAN
+
 4.1 Conditions
 
  RG-OUV-01  Le titulaire est une personne physique majeure (18 ans revolus a
@@ -141,6 +173,16 @@ Caracteristiques au 01/01/2016 :
  RG-OUV-09  Le versement initial ne peut pas depasser le plafond du plan.
  RG-OUV-10  La date du premier versement est enregistree : elle fait courir
             l'anciennete fiscale.
+
+4.4 Identifiants
+
+ RG-OUV-11  Numero de plan : "PEA" suivi de 9 chiffres, sequentiel, format
+            herite de SIGEP v1 (ex. PEA000045127). Le prefixe est PEA pour
+            les deux types de plan.
+ RG-OUV-12  Numero du compte especes : code banque BAS 17515 + code agence
+            (5 chiffres) + les 9 chiffres du plan + cle "00" (cle non
+            calculee : compte interne, non utilisable pour un virement).
+ RG-OUV-13  Le plan porte le code de l'agence gestionnaire (celle du
             conseiller a l'ouverture, modifiable par le BO).
 
 4.5 Statuts
@@ -160,6 +202,12 @@ Caracteristiques au 01/01/2016 :
  RG-VER-03  Le cumul des versements depuis l'ouverture (hors retraits) ne
             peut pas depasser le plafond du type de plan. Les gains,
             dividendes et plus-values ne sont pas des versements et ne
+            comptent pas dans le plafond.
+ RG-VER-04  Un versement n'est possible que sur un plan OUVERT.
+ RG-VER-05  Apres un retrait sur un plan de plus de 8 ans, plus aucun
+            versement n'est possible (§6).
+ RG-VER-06  Le versement est credite au compte especes en date du jour, avec
+            le libelle "Versement" ou celui saisi.
  RG-VER-07  Le cumul des versements est tenu sur le plan (champ dedie) et
             non recalcule depuis les operations : les plans repris de v1
             n'ont pas leur historique detaille (§11).
@@ -206,6 +254,21 @@ Caracteristiques au 01/01/2016 :
             plus de 5 ans ; simplification acceptee, regularisations
             manuelles par le BO sur reclamation - decision comite 09/02/2016]
  RG-RET-10  Historique des taux a conserver pour les regularisations :
+              2004 : 10,3 %   2005 : 11,0 %   2009 : 12,1 %
+              2011 : 12,3 %   2012 : 13,5 % puis 15,5 % au 01/07
+              2013 : 15,5 %
+ RG-RET-11  Les PS sont preleves sur le compte especes en plus du montant
+            retire. Si le solde ne couvre pas retrait + PS, les PS sont
+            retenus sur le retrait (le client recoit le net).
+ RG-RET-12  L'impot sur le revenu du (22,5 % avant 2 ans, 19 % de 2 a 5 ans)
+            n'est PAS preleve par SIGEP : il est declare par le client via
+            l'IFU. SIGEP calcule le taux applicable pour information dans
+            la simulation.
+
+6.4 Simulation
+
+ RG-RET-13  Avant tout retrait, le client ou le conseiller dispose d'une
+            simulation : anciennete, cloture entrainee ou non, gain
             proportionnel, taux et montant des PS, montant net verse,
             avertissements (solde insuffisant, cloture, cours indisponibles).
 
@@ -221,6 +284,12 @@ Caracteristiques au 01/01/2016 :
             apres virement des titres et des especes (traitement manuel BO).
 
 
+
+7. ORDRES DE BOURSE ET POSITIONS
+
+7.1 Ordres
+
+ RG-ORD-01  Un ordre porte sur une valeur eligible au type du plan (§9.3),
             dans un sens ACHAT ou VENTE, pour une quantite.
  RG-ORD-02  Quantite : entiere pour les actions, ETF et droits ; jusqu'a 3
             decimales (milliemes de part) pour les OPCVM.
@@ -266,12 +335,28 @@ Caracteristiques au 01/01/2016 :
             arrondi a 4 decimales.
  RG-POS-03  Le PRU ne change pas a la vente.
  RG-POS-04  Une ligne entierement vendue est soldee ; un rachat ulterieur
+            repart d'un PRU neuf.
+ RG-POS-05  Plus ou moins-value realisee sur une vente :
+              (Q vendue x cours - frais) - Q vendue x PRU
+ RG-POS-06  Plus-value latente d'une ligne :
+              Q x dernier cours - Q x PRU
+
+7.4 Valorisation
+
+ RG-VAL-01  Valorisation d'un plan = somme (Q x dernier cours de cloture
+            connu) sur les lignes + solde especes.
  RG-VAL-02  Si le cours d'une valeur est indisponible, la ligne est
             valorisee au PRU et la valorisation est signalee "partielle".
  RG-VAL-03  Une valorisation quotidienne de tous les plans ouverts est
             historisee chaque soir apres l'integration des cours, pour le
             graphique d'evolution et le releve annuel. [phase 1b]
 
+
+
+8. COUPONS ET DIVIDENDES
+
+ RG-CPN-01  Les coupons (dividendes, acomptes) sont saisis par le BO Titres
+            sur la valeur : date de detachement, date de paiement, montant
             unitaire (4 decimales), libelle.
  RG-CPN-02  A la date de paiement, chaque plan detenteur de la valeur est
             credite de Q x montant unitaire, arrondi au centime par plan,
@@ -317,6 +402,15 @@ Caracteristiques au 01/01/2016 :
  RG-REF-06  Les valeurs du fichier non connues de SIGEP sont ignorees (le
             fichier contient toute la place, SIGEP ne suit que les valeurs
             detenues ou eligibles).
+ RG-REF-07  Les valeurs suspendues de cotation (indicateur du fichier) ou
+            sans cours de cloture ne mettent pas a jour le dernier cours.
+ RG-REF-08  Saisie manuelle par le BO pour les valeurs non couvertes (OPCVM
+            maison : valeur liquidative). Un cours saisi manuellement n'est
+            jamais ecrase par le fichier.
+ RG-REF-09  Un cours ne peut pas etre saisi dans le futur ni a zero.
+ RG-REF-10  Le fichier doit pouvoir etre rejoue sans doublon (une ligne par
+            valeur et par date).
+
 9.3 Eligibilite
 
  RG-ELI-01  L'eligibilite effective est l'indicateur porte par la valeur,
@@ -344,6 +438,18 @@ Caracteristiques au 01/01/2016 :
  RG-HAB-01  L'authentification est assuree par le SSO groupe (SiteMinder) :
             SIGEP recoit l'identifiant de l'utilisateur connecte et ne gere
             pas de mot de passe.
+ RG-HAB-02  Pour un client, l'identifiant est son numero client (8 chiffres,
+            portail BAS en ligne). Pour un agent, son matricule (ex.
+            U045123).
+ RG-HAB-03  Tout utilisateur doit avoir une habilitation ACTIVE dans SIGEP,
+            sinon acces refuse.
+ RG-HAB-04  Profils, du moins au plus etendu :
+
+            CLIENT       consulte ses plans, verse, passe des ordres, simule
+                         et demande un retrait. Ne voit QUE ses propres
+                         plans et son propre dossier.
+            CONSEILLER   tout ce que fait le client, pour les clients de
+                         son AGENCE ; ouvre les plans, cree et modifie les
                          clients, recherche par nom.
             BACK_OFFICE  tout ce que fait le conseiller, pour TOUS les
                          clients ; referentiel valeurs et cours, coupons,

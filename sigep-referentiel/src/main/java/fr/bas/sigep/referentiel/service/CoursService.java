@@ -33,6 +33,12 @@ import fr.bas.sigep.commun.util.MontantUtils;
      * ecrite pour remplacer ca mais renvoyait une erreur de mapping sous H2 en dev, donc jamais
      * activee. Avec 10 ans d'historique (2 500 cours / valeur) ca reste "acceptable".
      */
+    public CoursDTO dernierCours(String codeIsin) {
+        Valeur valeur = valeurService.charger(codeIsin);
+        List<Cours> historique = coursRepository.findByValeur(valeur);
+        if (historique.isEmpty()) {
+            throw new RessourceInconnueException("Cours", codeIsin);
+        }
         Collections.sort(historique, new Comparator<Cours>() {
             @Override
             public int compare(Cours a, Cours b) {

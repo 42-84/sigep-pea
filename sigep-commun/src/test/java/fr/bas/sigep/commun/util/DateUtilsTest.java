@@ -23,6 +23,15 @@ public class DateUtilsTest {
     public void doitCompterLesAnneesEntieresLeJourAnniversaire() {
         Date debut = DateUtils.construire(2010, 3, 15);
         Date fin = DateUtils.construire(2020, 3, 15);
+        assertEquals(10, DateUtils.anneesEntre(debut, fin));
+    }
+
+    @Test
+    public void doitRetirerUneAnneeSiLAnniversaireNEstPasEncorePasse() {
+        Date debut = DateUtils.construire(2010, 3, 15);
+        Date fin = DateUtils.construire(2020, 3, 14);
+        assertEquals(9, DateUtils.anneesEntre(debut, fin));
+    }
 
     @Test
     public void doitSauterLeWeekEndEnAjoutantDesJoursOuvres() {
@@ -51,6 +60,17 @@ public class DateUtilsTest {
     @Test
     public void doitReconnaitreLeMemeJourMalgreDesHeuresDifferentes() {
         Calendar matin = Calendar.getInstance();
+        matin.clear();
+        matin.set(2021, Calendar.NOVEMBER, 8, 8, 0, 0);
+        Calendar soir = Calendar.getInstance();
+        soir.clear();
+        soir.set(2021, Calendar.NOVEMBER, 8, 23, 59, 59);
+
+        assertTrue(DateUtils.memeJour(matin.getTime(), soir.getTime()));
+        assertFalse(DateUtils.memeJour(matin.getTime(), DateUtils.construire(2021, 11, 9)));
+    }
+
+    @Test
     public void doitFormaterEtParserUneDateFichier() {
         Date date = DateUtils.construire(2024, 3, 15);
         assertEquals("20240315", DateUtils.formaterFichier(date));
