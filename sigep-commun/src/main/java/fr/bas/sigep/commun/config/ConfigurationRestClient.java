@@ -25,6 +25,12 @@ import fr.bas.sigep.commun.securite.SiteMinderFilter;
  * le bon), ou l'identifiant technique SIGEP-INTERNE hors requete HTTP (batchs).
  *
  * Le RestTemplate doit utiliser le MEME ObjectMapper que les controleurs (dates dd/MM/yyyy),
+ * sinon un service ne sait pas relire ce qu'un autre lui envoie. Oublie a la refonte : en
+ * recette (03/2016) la synthese plan renvoyait une erreur "JSON parse error" sur dateValorisation.
+ *
+ * Pas de timeout configure : le RestTemplate par defaut attend indefiniment. Ajout d'un
+ * timeout tente en 2019 puis retire (SIGEP-455) : la valorisation des gros portefeuilles
+ * depassait 30 s en fin de journee.
  */
 @Configuration
 public class ConfigurationRestClient {
