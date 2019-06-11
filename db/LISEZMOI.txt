@@ -1,0 +1,77 @@
+db/scripts - SCRIPTS ORACLE SIGEP
+=================================
+
+Ce repertoire contient les scripts SQL appliques A LA MAIN par les DBA sur les schemas
+SIGEP_APP de recette (ora-sigep-rec / SIGEPREC) et de production (ora-sigep-prd / SIGEPPRD).
+Il n'y a pas d'outil de migration (ni Flyway ni Liquibase) : le suivi de ce qui a ete
+applique et ou est dans HISTORIQUE.txt.
+
+Nommage : AAAA-MM_Vx.y.z_objet.sql, un script par version qui touche la base.
+
+Convention : les scripts sont ecrits pour SQL*Plus (sqlplus SIGEP_APP@SIGEPPRD @script.sql).
+Les objets appartiennent au compte applicatif SIGEP_APP (c'est aussi lui que les services
+utilisent en JDBC). Le script de creation 2016 s'execute en SYSDBA : il cree SIGEP_APP et lui
+donne les privileges systeme CREATE TABLE / CREATE SEQUENCE - ce sont ces memes privileges qui
+permettent a Hibernate d'ajouter des objets a chaud (voir ci-dessous). Le compte SIGEP_LECTURE
+(decisionnel, extractions BO) recoit un GRANT SELECT a chaque nouvelle table.
+
+
+IMPORTANT - CE QUE CES SCRIPTS NE SONT PLUS (depuis 2019)
+----------------------------------------------------------
+
+Les trois services tournent avec spring.jpa.hibernate.ddl-auto=update, EN PRODUCTION AUSSI.
+Au demarrage, Hibernate compare les entites JPA (sigep-commun/.../domaine) au schema et
+AJOUTE "a chaud" ce qui manque : tables, colonnes, sequences, contraintes uniques (avec des
+noms generes UK_xxxxxxxx quand l'entite n'en donne pas).
+
+Il ne supprime rien, ne modifie pas le type d'une colonne existante, ne cree pas les index
+non uniques ni les CHECK.
+
+Consequences :
+- Depuis 2019, plusieurs colonnes/objets existent en prod SANS script correspondant ici
+  (ajoutes par Hibernate au premier demarrage d'une version). Exemples connus :
+  SGP_PLAN.COMMENTAIRE (livre en 2.4.0 sans script), les contraintes uniques UK_* a nom
+  genere sur NUM_CLIENT, NUM_COMPTE, NUM_PLAN, CODE_ISIN, UTILISATEUR, REFERENCE (le script
+  2016 les nomme, Hibernate en a recree certaines en doublon sous un autre nom en recette).
+- Le passage a ddl-auto=validate a ete refuse par la MOE en 2019 : trop d'ecarts entre les
+  scripts et la base reelle pour que la validation passe.
+- CES SCRIPTS NE SONT DONC PLUS LA VERITE DU SCHEMA. La reference, c'est :
+    1. les entites JPA (ce que le code attend),
+    2. le dictionnaire Oracle de la prod (ce qui existe vraiment),
+    3. ces scripts, pour l'historique et les types Oracle voulus par les DBA.
+
+Pour connaitre le schema reel : sur ora-sigep-prd,
+  SELECT table_name, column_name, data_type, data_length, data_precision, data_scale, nullable
+  FROM all_tab_columns WHERE owner = 'SIGEP_APP' AND table_name LIKE 'SGP_%' ORDER BY 1, column_id;
+
+Un export DDL complet de la prod (dbms_metadata) a ete fait le 03/10/2019 par les DBA :
+\\srv-fichiers\DSI\SIGEP\schema\SIGEPPRD_20191003.sql (non versionne, 4 Mo).
+
+
+CE QUI RESTE VRAI
+-----------------
+
+- Le script de creation 2016 donne les types Oracle voulus : NUMBER(19) pour les identifiants,
+  VARCHAR2(n CHAR), DATE pour les dates sans heure, TIMESTAMP pour les horodatages,
+  NUMBER(15,2) pour les montants en euros, NUMBER(15,4) pour les cours et le PRU,
+  NUMBER(18,3) pour les quantites, NUMBER(1) pour les booleens (0/1) ET pour SGP_PLAN.STATUT
+  (enumeration stockee en ORDINAL : 0 OUVERT, 1 CLOTURE, 2 TRANSFERE, 3 SUSPENDU - ne jamais
+  reordonner, incident SIGEP-231 du 12/09/2017).
+- Les sequences SEQ_SGP_* sont a INCREMENT BY 1, sauf SEQ_SGP_VALORISATION_HISTO
+  (INCREMENT BY 50, allocationSize=50 cote JPA : les deux doivent rester alignes).
+- Les scripts de donnees (2021-07 radiation Natixis) sont bien appliques par script : Hibernate
+  ne fait pas de DML.
+
+
+SCRIPTS
+-------
+
+  2016-03_V2.0.0_creation_schema.sql                      schema initial (reprise v1 vers v2)
+  2017-06_V2.2.0_valorisation_histo.sql                   table SGP_VALORISATION_HISTO
+  2018-02_V2.4.0_plan_suspendu_habilitation_agence.sql    AGENCE sur plan et habilitation, statut 3
+  2019-05_V2.6.0_version_compte_especes.sql               colonne VERSION (verrou optimiste)
+  2021-07_V2.7.3_radiation_natixis.sql                    donnees : radiation FR0000120685
+
+  HISTORIQUE.txt                                          qui a applique quoi, ou, quand
+
+Contact : dba@bas.intra (astreinte poste 4050) - TMA : sigep-tma@bas.intra
