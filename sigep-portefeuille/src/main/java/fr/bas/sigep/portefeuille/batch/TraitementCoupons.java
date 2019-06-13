@@ -46,6 +46,13 @@ public class TraitementCoupons {
     public void traiter() {
         Date aujourdhui = DateUtils.aujourdhui();
         List<Coupon> coupons = couponRepository.findByDatePaiementLessThanEqualAndTraiteFalse(aujourdhui);
+        LOG.info("Traitement coupons : {} coupon(s) a payer", coupons.size());
+        for (Coupon coupon : coupons) {
+            try {
+                traiterCoupon(coupon);
+            } catch (RuntimeException e) {
+                LOG.error("Echec du coupon " + coupon.getId() + " (" + coupon.getValeur().getCodeIsin() + ")", e);
+            }
         }
     }
 

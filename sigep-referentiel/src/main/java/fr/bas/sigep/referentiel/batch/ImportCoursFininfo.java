@@ -118,6 +118,16 @@ import fr.bas.sigep.referentiel.service.CoursService;
     }
 
     private void traiterLigne(LigneFininfo ligne, ResultatImport resultat) {
+        // rapprochement par code fournisseur d'abord (certaines valeurs ont change d'ISIN), puis par ISIN
+        Valeur valeur = valeurRepository.findByCodeFininfo(ligne.getCodeFournisseur());
+        if (valeur == null) {
+            valeur = valeurRepository.findByCodeIsin(ligne.getCodeIsin());
+        }
+        if (valeur == null) {
+            resultat.incrementerValeursInconnues();
+            return; // le fichier contient toute la place, on ne suit qu'une partie des valeurs
+        }
+        if (ligne.isSuspendue() || ligne.getCloture() == null) {
             resultat.incrementerCoursIgnores();
             return;
         }
