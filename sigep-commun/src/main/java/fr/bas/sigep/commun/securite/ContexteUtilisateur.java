@@ -24,6 +24,15 @@ public final class ContexteUtilisateur {
         COURANT.remove();
     }
 
+    public static Habilitation getHabilitation() {
+        return COURANT.get();
+    }
+
+    public static String getUtilisateur() {
+        Habilitation h = COURANT.get();
+        return h == null ? null : h.getUtilisateur();
+    }
+
     public static Profil getProfil() {
         Habilitation h = COURANT.get();
         return h == null ? null : h.getProfil();

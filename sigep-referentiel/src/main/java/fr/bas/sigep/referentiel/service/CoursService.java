@@ -67,6 +67,18 @@ import fr.bas.sigep.commun.util.MontantUtils;
     /**
      * Saisie manuelle d'un cours (valeur non couverte par Fininfo : OPCVM maison, valeurs radiees).
      */
+    @Transactional
+    public CoursDTO saisir(CoursDTO saisie) {
+        ControleAcces.exigerProfil(Profil.BACK_OFFICE);
+        if (saisie.getCloture() == null || saisie.getCloture().signum() <= 0) {
+            throw new RegleMetierException("COURS_INVALIDE", "Le cours de cloture doit etre strictement positif");
+        }
+        Valeur valeur = valeurService.charger(saisie.getCodeIsin());
+        Date date = saisie.getDateCours() == null ? DateUtils.aujourdhui() : DateUtils.tronquer(saisie.getDateCours());
+        if (date.after(new Date())) {
+            throw new RegleMetierException("COURS_FUTUR", "Impossible de saisir un cours dans le futur");
+        }
+        Cours cours = coursRepository.findByValeurAndDateCours(valeur, date);
         if (cours == null) {
             cours = new Cours();
             cours.setValeur(valeur);
