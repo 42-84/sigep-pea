@@ -40,4 +40,15 @@ public class FraisService {
         if (valeur.getTypeValeur() == TypeValeur.OPCVM) {
             if (valeur.getLibelle() != null && valeur.getLibelle().toUpperCase().startsWith("BAS ")) {
                 return BigDecimal.ZERO;
+            }
+            return MontantUtils.pourcentage(montantBrut, TAUX_OPCVM_EXTERNE);
+        }
+        BigDecimal frais = MontantUtils.pourcentage(montantBrut, tauxActions);
+        if (frais.compareTo(minimum) < 0) {
+            frais = minimum;
+        }
+        if (frais.compareTo(maximum) > 0) {
+            frais = maximum;
+        }
+        return MontantUtils.arrondirMontant(frais);
 }

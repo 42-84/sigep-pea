@@ -19,6 +19,9 @@ public class CoursDTO {
     }
 
     public void setCodeIsin(String codeIsin) {
+        this.codeIsin = codeIsin;
+    }
+
     public Date getDateCours() {
         return dateCours;
     }
