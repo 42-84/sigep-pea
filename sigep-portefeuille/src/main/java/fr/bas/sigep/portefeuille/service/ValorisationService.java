@@ -89,6 +89,10 @@ public class ValorisationService {
             cours = referentielClient.dernierCours(position.getValeur().getCodeIsin());
         } catch (RessourceInconnueException e) {
             LOG.debug("Pas de cours pour {}", position.getValeur().getCodeIsin());
+        } catch (RestClientException e) {
+            LOG.warn("Referentiel indisponible pour {} : {}", position.getValeur().getCodeIsin(), e.getMessage());
+        }
+        if (cours == null) {
             dto.setCoursIndisponible(true);
             // on valorise au PRU pour ne pas afficher 0 : le front affiche un pictogramme "cours indisponible"
             dto.setValorisation(dto.getPrixRevientTotal());

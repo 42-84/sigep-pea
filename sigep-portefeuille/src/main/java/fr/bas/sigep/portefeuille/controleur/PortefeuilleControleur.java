@@ -69,10 +69,25 @@ public class PortefeuilleControleur {
     }
 
     @PostMapping("/{numero}/ordres")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mouvement passerOrdre(@PathVariable("numero") String numero, @RequestBody OrdreDTO ordre) {
+        return portefeuilleService.passerOrdre(numero, ordre);
+    }
+
+    @PostMapping("/{numero}/mouvements/{reference}/annulation")
+    public Mouvement annuler(@PathVariable("numero") String numero, @PathVariable("reference") String reference,
+            @RequestParam(value = "motif", required = false) String motif) {
         return portefeuilleService.annuler(numero, reference, motif);
     }
 
     /** Historique de valorisation (photos quotidiennes du batch) pour le graphique du front. */
+    @GetMapping("/{numero}/historique")
+    public List<HistoriqueValorisationDTO> historique(@PathVariable("numero") String numero,
+            @RequestParam(value = "depuis", required = false) String depuis) {
+        Plan plan = portefeuilleService.chargerPlan(numero);
+        Date dateDepuis = depuis == null ? DateUtils.ajouterAnnees(new Date(), -1) : DateUtils.parserJour(depuis);
+        List<ValorisationHisto> histo = valorisationHistoRepository
+                .findByIdPlanAndDateValorisationAfterOrderByDateValorisationAsc(plan.getId(), dateDepuis);
         List<HistoriqueValorisationDTO> dtos = new ArrayList<HistoriqueValorisationDTO>();
         for (ValorisationHisto h : histo) {
             dtos.add(new HistoriqueValorisationDTO(h.getDateValorisation(), h.getValorisationTitres(), h.getSoldeEspeces(), h.getTotalVersements()));
