@@ -40,6 +40,9 @@ public class ConfigurationRestClient {
         RestTemplate rt = new RestTemplate();
         List<HttpMessageConverter<?>> convertisseurs = rt.getMessageConverters();
         for (int i = 0; i < convertisseurs.size(); i++) {
+            if (convertisseurs.get(i) instanceof MappingJackson2HttpMessageConverter) {
+                convertisseurs.set(i, new MappingJackson2HttpMessageConverter(objectMapper));
+            }
         }
         rt.getInterceptors().add(new PropagationUtilisateur());
         return rt;
@@ -47,6 +50,9 @@ public class ConfigurationRestClient {
 
     static class PropagationUtilisateur implements ClientHttpRequestInterceptor {
 
+        @Override
+        public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+                throws IOException {
             String utilisateur = ContexteUtilisateur.getUtilisateur();
             if (utilisateur == null) {
                 utilisateur = SiteMinderFilter.UTILISATEUR_INTERNE;
