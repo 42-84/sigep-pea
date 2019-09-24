@@ -3,6 +3,15 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.6.1 - 24/09/2019
+
+- Pool de connexions de sigep-portefeuille porté de 20 à 40 (`spring.datasource.tomcat.max-active`)
+  suite aux saturations du soir. (SIGEP-455)
+- Timeout de 30 s sur le `RestTemplate` ajouté en 2.6.0 **retiré** : la valorisation des gros
+  portefeuilles dépassait 30 s en fin de journée et faisait échouer les retraits. (SIGEP-455)
+- Loggers `org.hibernate.SQL` en DEBUG sur les trois services pour analyse de performance
+  (temporaire).
+
 ## 2.6.0 - 27/05/2019
 
 - **Loi PACTE** (retraits à compter du 24/05/2019) : seuil de clôture ramené de 8 à 5 ans, les
