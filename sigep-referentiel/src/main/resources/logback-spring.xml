@@ -17,5 +17,7 @@
     </springProfile>
 
     <logger name="fr.bas.sigep" level="DEBUG"/>
+    <!-- temporaire pour analyse perf import Fininfo (11/2019) - a retirer -->
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
     <logger name="org.springframework.web.client.RestTemplate" level="DEBUG"/>
 </configuration>

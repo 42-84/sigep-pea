@@ -17,5 +17,7 @@
     </springProfile>
 
     <logger name="fr.bas.sigep" level="DEBUG"/>
+    <!-- temporaire pour analyse perf synthese plan (03/2020) - a retirer -->
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
     <logger name="org.springframework.web.client.RestTemplate" level="DEBUG"/>
 </configuration>
