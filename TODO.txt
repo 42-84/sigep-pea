@@ -47,3 +47,12 @@ TODO SIGEP
 ----
 - Monter Spring Boot 2.x -> bloque : les serveurs sont en Java 8 et Boot 2.x impose des changements
   sur actuator (/health devient /actuator/health, deploy.sh et la supervision a adapter) et sur
+  spring.datasource.tomcat.* (HikariCP). Pas de fenetre.
+- ojdbc8 / Oracle 12c ou 19c (SIGEP-498) - depend de la migration de ora-sigep-prd par les DBA.
+- Cache des cours dans sigep-portefeuille pour la valorisation quotidienne (240 000 appels HTTP par
+  soir, 40 min). SIGEP-471. Probleme : savoir quand le referentiel a fini d'importer Fininfo.
+- Endpoint de cours en lot (GET /api/cours?isins=...) : meme sujet.
+- Retirer les loggers org.hibernate.SQL en DEBUG des trois logback-spring.xml (mis pour analyse perf).
+- Reunifier l'ecriture especes : PortefeuilleService.ecrireEspeces duplique CompteEspecesService.enregistrer
+  (sans le controle REGULARISATION, sans troncature de la date valeur).
+- Marqueur "partielle" sur SGP_VALORISATION_HISTO (valorisations avec cours manquants enregistrees
