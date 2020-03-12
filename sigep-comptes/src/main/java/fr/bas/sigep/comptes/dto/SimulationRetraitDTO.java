@@ -37,6 +37,16 @@ public class SimulationRetraitDTO {
     }
 
     public void setAncienneteAnnees(int ancienneteAnnees) {
+        this.ancienneteAnnees = ancienneteAnnees;
+    }
+
+    public boolean isEntraineCloture() {
+        return entraineCloture;
+    }
+
+    public void setEntraineCloture(boolean entraineCloture) {
+        this.entraineCloture = entraineCloture;
+    }
 
     public BigDecimal getValorisationTotale() {
         return valorisationTotale;
@@ -64,6 +74,16 @@ public class SimulationRetraitDTO {
 
     public BigDecimal getTauxPrelevementsSociaux() {
         return tauxPrelevementsSociaux;
+    }
+
+    public void setTauxPrelevementsSociaux(BigDecimal tauxPrelevementsSociaux) {
+        this.tauxPrelevementsSociaux = tauxPrelevementsSociaux;
+    }
+
+    public BigDecimal getPrelevementsSociaux() {
+        return prelevementsSociaux;
+    }
+
     public void setPrelevementsSociaux(BigDecimal prelevementsSociaux) {
         this.prelevementsSociaux = prelevementsSociaux;
     }
