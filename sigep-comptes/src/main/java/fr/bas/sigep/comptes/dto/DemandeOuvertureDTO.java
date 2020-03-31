@@ -13,6 +13,14 @@ public class DemandeOuvertureDTO {
         return numeroClient;
     }
 
+    public void setNumeroClient(String numeroClient) {
+        this.numeroClient = numeroClient;
+    }
+
+    public String getTypePlan() {
+        return typePlan;
+    }
+
     public void setTypePlan(String typePlan) {
         this.typePlan = typePlan;
     }

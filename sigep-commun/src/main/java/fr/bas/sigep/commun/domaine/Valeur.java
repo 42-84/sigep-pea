@@ -27,6 +27,14 @@ public class Valeur extends EntiteAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SGP_VALEUR")
     @SequenceGenerator(name = "SEQ_SGP_VALEUR", sequenceName = "SEQ_SGP_VALEUR", allocationSize = 1)
+    @Column(name = "ID_VALEUR")
+    private Long id;
+
+    @Column(name = "CODE_ISIN", nullable = false, unique = true, length = 12)
+    private String codeIsin;
+
+    @Column(name = "MNEMO", length = 10)
+    private String mnemonique;
 
     @Column(name = "LIBELLE", nullable = false, length = 80)
     private String libelle;
@@ -69,6 +77,18 @@ public class Valeur extends EntiteAuditable {
         this.id = id;
     }
 
+    public String getCodeIsin() {
+        return codeIsin;
+    }
+
+    public void setCodeIsin(String codeIsin) {
+        this.codeIsin = codeIsin;
+    }
+
+    public String getMnemonique() {
+        return mnemonique;
+    }
+
     public void setMnemonique(String mnemonique) {
         this.mnemonique = mnemonique;
     }
@@ -98,6 +118,12 @@ public class Valeur extends EntiteAuditable {
     }
 
     public String getCodePaysSiege() {
+        return codePaysSiege;
+    }
+
+    public void setCodePaysSiege(String codePaysSiege) {
+        this.codePaysSiege = codePaysSiege;
+    }
 
     public String getDevise() {
         return devise;
@@ -120,6 +146,9 @@ public class Valeur extends EntiteAuditable {
     }
 
     public void setEligiblePeaPme(boolean eligiblePeaPme) {
+        this.eligiblePeaPme = eligiblePeaPme;
+    }
+
     public String getCodeFininfo() {
         return codeFininfo;
     }
