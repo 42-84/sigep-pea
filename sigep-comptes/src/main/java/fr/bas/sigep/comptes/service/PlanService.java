@@ -154,6 +154,13 @@ public class PlanService {
     @Transactional
     public Plan verser(String numeroPlan, DemandeMontantDTO demande) {
         Plan plan = charger(numeroPlan);
+        verser(plan, demande.getMontant(), demande.getLibelle());
+        return plan;
+    }
+
+    private void verser(Plan plan, BigDecimal montant, String libelle) {
+        if (!plan.estOuvert()) {
+            throw new RegleMetierException("PLAN_NON_OUVERT", "Le plan " + plan.getNumeroPlan() + " est " + plan.getStatut());
         }
         if (montant == null || montant.compareTo(VERSEMENT_MINIMUM) < 0) {
             throw new RegleMetierException("VERSEMENT_MINIMUM", "Versement minimum : " + VERSEMENT_MINIMUM + " EUR");
@@ -196,6 +203,16 @@ public class PlanService {
         return sim;
     }
 
+    /**
+     * Retrait d'especes. Les titres ne sortent pas du plan : le client vend d'abord.
+     * Le montant preleve sur le compte = retrait + prelevements sociaux ; le client recoit le retrait
+     * net des PS. Si le retrait entraine la cloture, la totalite des especes doit etre retiree.
+     */
+    @Transactional
+    public SimulationRetraitDTO retirer(String numeroPlan, DemandeMontantDTO demande) {
+        SimulationRetraitDTO sim = simulerRetrait(numeroPlan, demande.getMontant());
+        Plan plan = charger(numeroPlan);
+        if (!plan.estOuvert()) {
             throw new RegleMetierException("PLAN_NON_OUVERT", "Le plan " + numeroPlan + " est " + plan.getStatut());
         }
         CompteEspeces compte = plan.getCompteEspeces();

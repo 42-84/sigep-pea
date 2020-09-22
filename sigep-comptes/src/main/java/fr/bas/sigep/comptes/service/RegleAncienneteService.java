@@ -13,6 +13,10 @@ import fr.bas.sigep.commun.util.DateUtils;
  *
  * Regle depuis la loi PACTE (retraits a compter du 24/05/2019) :
  *  - retrait avant 5 ans : cloture du plan (sauf cas de force majeure non geres ici)
+ *  - retrait apres 5 ans : le plan reste ouvert, les versements restent possibles
+ *
+ * Regle anterieure (conservee derriere le flag sigep.regles.pacte.actif=false, jamais reactive) :
+ *  - retrait avant 8 ans : cloture
  *  - retrait apres 8 ans : plan ouvert mais plus aucun versement possible
  */
 @Service
