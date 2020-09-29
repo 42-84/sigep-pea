@@ -42,6 +42,11 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
 
     dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        }
+    }
+
     dependencies {
         compile 'org.apache.commons:commons-lang3:3.5'
         compile 'commons-io:commons-io:2.5'
@@ -68,4 +73,5 @@ ext.driverOracle = fileTree(dir: "${rootDir}/lib", include: 'ojdbc*.jar')
 task versionSigep {
     doLast {
         println "SIGEP ${version}"
+    }
 }

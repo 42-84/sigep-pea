@@ -51,6 +51,9 @@
 2. BASE DE DONNEES DE DEVELOPPEMENT (H2)
 -----------------------------------------
 
+Les trois services partagent UN SEUL fichier H2 : ~/sigep-dev/sigep.mv.db
+(URL jdbc:h2:file:~/sigep-dev/sigep;AUTO_SERVER=TRUE;MODE=Oracle).
+Le repertoire est cree automatiquement au premier demarrage.
 
 - ddl-auto=update : le schema est cree/complete par Hibernate.
 - data.sql : chaque service charge son jeu de donnees (MERGE INTO,
@@ -87,6 +90,12 @@ Profil : sans -Dspring.profiles.active, c'est le profil par defaut (H2).
 Pour tester sur la base de recette : -Dspring.profiles.active=recette
 (uniquement sigep-referentiel a un application-recette.properties pour
 l'instant ; pour les deux autres, copier celui de prod et adapter).
+
+
+4. UTILISATEURS DE DEVELOPPEMENT
+--------------------------------
+
+Le filtre SiteMinderFilter lit l'en-tete SM_USER. En dev il n'y a pas de
 reverse proxy : la propriete sigep.securite.utilisateur-dev=U030001 est
 appliquee quand l'en-tete est absent. Pour tester un autre profil, passer
 l'en-tete a la main (curl -H "SM_USER: 00012345" ...) ou X-SM-User.
@@ -120,6 +129,10 @@ des trois services demarres. Les lancer depuis Eclipse.
 
 Le batch d'import lit ~/sigep-dev/fininfo/entree/COT_AAAAMMJJ.txt a 18h30.
 Pour tester sans attendre, poster le fichier :
+    curl -H "SM_USER: U030001" -F fichier=@COT_20160222.txt \
+         http://localhost:8081/api/cours/import
+Un exemple de fichier est dans docs/specs/FORMAT_FININFO.txt.
+
 
 =====================================================================
  AJOUT 09/2018 (FD) - FRONT ANGULAR
@@ -127,6 +140,20 @@ Pour tester sans attendre, poster le fichier :
 
 Le front (prestataire Aubelio, livre en 07/2018) est dans frontend/sigep-web.
 Il n'est pas builde par Gradle.
+
+    Node 8.9.x (LTS Carbon) + npm 5.  Installateur sur \\srv-fichiers\DSI\logiciels\nodejs\
+    Proxy npm :  npm config set proxy http://proxy.bas.intra:3128
+                 npm config set registry http://nexus.bas.intra/repository/npm-public/
+
+    cd frontend/sigep-web
+    npm install
+    ng serve --proxy-config proxy.conf.json
+
+    -> http://localhost:4200
+
+proxy.conf.json redirige /api/valeurs et /api/cours vers 8081, /api/clients
+/api/plans /api/comptes-especes vers 8082, /api/portefeuilles vers 8083, et
+pose l'en-tete X-SM-User (voir environment.ts pour changer d'utilisateur).
 
 Angular CLI 1.7 / Angular 5.2. Ne pas faire "ng update" : le prestataire n'a
 pas livre les tests e2e et la montee en Angular 6 casse le module de graphique.
