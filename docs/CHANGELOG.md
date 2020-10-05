@@ -3,6 +3,12 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.6.2 - 05/10/2020
+
+- Correctif : `NullPointerException` sur la synthèse d'un plan repris de v1 sans date de premier
+  versement (repli sur la date d'ouverture, `RegleAncienneteService.dateDepart`). (SIGEP-501)
+- Tentative de montée en ojdbc8 abandonnée, la prod reste en Oracle 11g / ojdbc6. (SIGEP-498)
+
 ## 2.6.1 - 24/09/2019
 
 - Pool de connexions de sigep-portefeuille porté de 20 à 40 (`spring.datasource.tomcat.max-active`)
