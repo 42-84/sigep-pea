@@ -51,4 +51,5 @@ public class FraisService {
             frais = maximum;
         }
         return MontantUtils.arrondirMontant(frais);
+    }
 }
