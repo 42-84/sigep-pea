@@ -22,20 +22,17 @@ import fr.bas.sigep.commun.dto.EligibiliteDTO;
 @Service
 public class EligibiliteService {
 
-    /** Etats de l'UE + EEE (Islande, Liechtenstein, Norvege). Liste figee. */
+    /** Etats de l'UE + EEE (Islande, Liechtenstein, Norvege). Liste figee a la sortie du Royaume-Uni (01/01/2021). */
     private static final Set<String> PAYS_ELIGIBLES = new HashSet<String>(Arrays.asList(
             "FR", "DE", "IT", "ES", "PT", "BE", "NL", "LU", "AT", "IE", "FI", "SE", "DK", "GR", "PL", "CZ", "SK",
-            "HU", "SI", "HR", "RO", "BG", "EE", "LV", "LT", "CY", "MT", "GB", "IS", "LI", "NO"));
+            "HU", "SI", "HR", "RO", "BG", "EE", "LV", "LT", "CY", "MT", "IS", "LI", "NO"));
+            // "GB" retire le 01/01/2021 (Brexit) - les titres UK deja detenus restent tolerant jusqu'au 30/09/2021 (SIGEP-520)
 
     public EligibiliteDTO verifier(Valeur valeur, TypePlan typePlan) {
         String type = typePlan == null ? TypePlan.PEA.name() : typePlan.name();
 
         if (valeur.estRadiee()) {
             return new EligibiliteDTO(valeur.getCodeIsin(), type, false, "Valeur radiee de la cote");
-        }
-        boolean flag = valeur.estEligible(typePlan == null ? TypePlan.PEA : typePlan);
-        if (!flag) {
-            return new EligibiliteDTO(valeur.getCodeIsin(), type, false, "Valeur declaree non eligible au " + type);
         }
         if (valeur.getTypeValeur() == TypeValeur.ACTION && !siegeEligible(valeur.getCodePaysSiege())) {
             // incoherence flag / pays : on refuse et on le dit
