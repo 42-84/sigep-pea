@@ -3,6 +3,15 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.7.0 - 04/01/2021
+
+- **Brexit** : retrait de `GB` de la liste des pays UE/EEE éligibles (`EligibiliteService`), effet
+  au 01/01/2021. Les achats de titres britanniques sont refusés (`VALEUR_NON_ELIGIBLE`). (SIGEP-515)
+- Barème de frais surchargeable par configuration (`sigep.frais.taux-actions`, `minimum`,
+  `maximum`) pour l'offre commerciale « 0 frais » de novembre 2020 - livré après l'offre, la
+  surcharge a été appliquée à la main sur la 2.6.2. (SIGEP-509)
+- Recherche de valeurs : filtre `eligibles=true` (en mémoire).
+
 ## 2.6.2 - 05/10/2020
 
 - Correctif : `NullPointerException` sur la synthèse d'un plan repris de v1 sans date de premier
