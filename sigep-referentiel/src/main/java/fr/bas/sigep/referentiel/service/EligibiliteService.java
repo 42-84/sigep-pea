@@ -34,6 +34,10 @@ public class EligibiliteService {
         if (valeur.estRadiee()) {
             return new EligibiliteDTO(valeur.getCodeIsin(), type, false, "Valeur radiee de la cote");
         }
+        boolean flag = valeur.estEligible(typePlan == null ? TypePlan.PEA : typePlan);
+        if (!flag) {
+            return new EligibiliteDTO(valeur.getCodeIsin(), type, false, "Valeur declaree non eligible au " + type);
+        }
         if (valeur.getTypeValeur() == TypeValeur.ACTION && !siegeEligible(valeur.getCodePaysSiege())) {
             // incoherence flag / pays : on refuse et on le dit
             return new EligibiliteDTO(valeur.getCodeIsin(), type, false,
