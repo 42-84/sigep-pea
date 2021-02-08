@@ -3,6 +3,12 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.7.1 - 08/02/2021
+
+- Titres UK : période de tolérance jusqu'au 30/09/2021 pour les positions existantes, message
+  d'éligibilité explicite « Siège social hors UE/EEE (GB) ». (SIGEP-520)
+- Désactivation de l'habilitation U038842 (départ). Pas de changement de code.
+
 ## 2.7.0 - 04/01/2021
 
 - **Brexit** : retrait de `GB` de la liste des pays UE/EEE éligibles (`EligibiliteService`), effet
