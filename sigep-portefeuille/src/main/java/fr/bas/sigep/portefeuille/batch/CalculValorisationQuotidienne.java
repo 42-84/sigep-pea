@@ -34,10 +34,22 @@ public class CalculValorisationQuotidienne {
 
     @Autowired
     private PlanRepository planRepository;
+    public void calculer() {
+        Date jour = DateUtils.aujourdhui();
+        List<Plan> plans = planRepository.findByStatut(StatutPlan.OUVERT);
+        LOG.info("Valorisation quotidienne : {} plans ouverts", plans.size());
+        int erreurs = 0;
+        int partielles = 0;
+        long debut = System.currentTimeMillis();
+        for (Plan plan : plans) {
+            try {
                 ValorisationDTO valo = valorisationService.valoriser(plan);
                 if (valo.isPartielle()) {
                     partielles++;
                 }
+                ValorisationHisto histo = valorisationHistoRepository.findByIdPlanAndDateValorisation(plan.getId(), jour);
+                if (histo == null) {
+                    histo = new ValorisationHisto();
                     histo.setIdPlan(plan.getId());
                     histo.setDateValorisation(jour);
                 }

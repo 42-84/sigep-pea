@@ -28,6 +28,14 @@ import fr.bas.sigep.commun.securite.ContexteUtilisateur;
 import fr.bas.sigep.commun.securite.ControleAcces;
 import fr.bas.sigep.commun.util.DateUtils;
 import fr.bas.sigep.commun.util.MontantUtils;
+import fr.bas.sigep.comptes.client.PortefeuilleClient;
+import fr.bas.sigep.comptes.dto.DemandeMontantDTO;
+import fr.bas.sigep.comptes.dto.DemandeOuvertureDTO;
+import fr.bas.sigep.comptes.dto.SimulationRetraitDTO;
+import fr.bas.sigep.comptes.dto.SynthesePlanDTO;
+
+/**
+ * Cycle de vie des plans : ouverture, versements, retraits, cloture.
  */
 @Service
 public class PlanService {
@@ -164,6 +172,17 @@ public class PlanService {
         }
         if (montant == null || montant.compareTo(VERSEMENT_MINIMUM) < 0) {
             throw new RegleMetierException("VERSEMENT_MINIMUM", "Versement minimum : " + VERSEMENT_MINIMUM + " EUR");
+        }
+        BigDecimal montantArrondi = MontantUtils.arrondirMontant(montant);
+        if (plan.getTotalVersements().add(montantArrondi).compareTo(plan.getType().getPlafondVersements()) > 0) {
+            throw new RegleMetierException("PLAFOND_DEPASSE", "Plafond de versements atteint : il reste "
+                    + plan.getVersementsRestants() + " EUR sur " + plan.getType().getPlafondVersements());
+        }
+        compteEspecesService.enregistrer(plan.getCompteEspeces(), TypeOperationEspeces.VERSEMENT, montantArrondi, null,
+                StringUtils.defaultIfBlank(libelle, "Versement"), null);
+        plan.setTotalVersements(plan.getTotalVersements().add(montantArrondi));
+        if (plan.getDatePremierVersement() == null) {
+            plan.setDatePremierVersement(DateUtils.aujourdhui());
         }
         planRepository.save(plan);
     }
