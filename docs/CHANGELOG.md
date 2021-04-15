@@ -3,6 +3,12 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.7.2 - 15/04/2021
+
+- Correction : la simulation de retrait renvoyait un avertissement « valorisation partielle » même
+  quand tous les cours étaient disponibles, pour les plans sans titres. (SIGEP-524)
+- Log : durée de la valorisation quotidienne en secondes dans la ligne de fin.
+
 ## 2.7.1 - 08/02/2021
 
 - Titres UK : période de tolérance jusqu'au 30/09/2021 pour les positions existantes, message
