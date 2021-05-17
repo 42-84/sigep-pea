@@ -24,4 +24,8 @@ public class ReferentielClient extends ClientRestAbstrait {
     public CoursDTO dernierCours(String codeIsin) {
         return get("/api/cours/{isin}/dernier", CoursDTO.class, codeIsin);
     }
+
+    public EligibiliteDTO eligibilite(String codeIsin, String typePlan) {
+        return get("/api/valeurs/{isin}/eligibilite?typePlan={type}", EligibiliteDTO.class, codeIsin, typePlan);
+    }
 }
