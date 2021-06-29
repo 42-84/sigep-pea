@@ -64,8 +64,36 @@ public class LigneFininfoTest {
     }
 
     @Test
+    public void uneLigneSansIndicateurNEstPasSuspendue() {
+        String ligne = ligneDetail("AI", "FR0000120073", "20240315", "000000001234500", "0", "0", "0", "152340", "EUR", " ");
+        assertEquals(109, ligne.length());
+
+        LigneFininfo l = LigneFininfo.parser(ligne);
+
+        assertFalse(l.isSuspendue());
+        // ouverture / plus haut / plus bas a zero : pas de valeur
+        assertNull(l.getOuverture());
+        assertNull(l.getPlusHaut());
+        assertNull(l.getPlusBas());
+    }
+
+    @Test
+    public void uneLigneDEnteteNEstPasUneLigneDeDetail() {
+        String entete = "E" + StringUtils.rightPad("COTATIONS V2 20240315", 108);
+        assertFalse(LigneFininfo.estDetail(entete));
+        assertFalse(LigneFininfo.estDetail(null));
+        assertFalse(LigneFininfo.estDetail("D trop court"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void parserRefuseUneLigneDEntete() {
         LigneFininfo.parser("E" + StringUtils.rightPad("COTATIONS V2", 108));
     }
 
     @Test
+    public void unMontantToutAZeroVautNull() {
+        assertNull(LigneFininfo.montant("000000000000000"));
+        assertNull(LigneFininfo.montant("               "));
+        assertEquals(0, new BigDecimal("123.45").compareTo(LigneFininfo.montant("000000001234500")));
+    }
 }

@@ -26,6 +26,9 @@ import fr.bas.sigep.portefeuille.service.PortefeuilleService;
  *
  * Detention appreciee a la date de traitement et non a la date de detachement : un client qui
  * achete entre detachement et paiement touche le coupon a tort, celui qui vend le perd. Ecarts
+ * regularises a la main par le BO sur reclamation. Ouvert depuis 2016 (SIGEP-058).
+ *
+ * Une transaction par coupon : si un plan echoue, tout le coupon est rejoue le lendemain
  * (les plans deja credites le sont une seconde fois -> voir ControleSoldes cote comptes).
  */
 @Component

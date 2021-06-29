@@ -34,6 +34,14 @@ public class CalculValorisationQuotidienne {
 
     @Autowired
     private PlanRepository planRepository;
+
+    @Autowired
+    private ValorisationService valorisationService;
+
+    @Autowired
+    private ValorisationHistoRepository valorisationHistoRepository;
+
+    @Scheduled(cron = "${sigep.valorisation.cron:0 0 20 * * MON-FRI}")
     public void calculer() {
         Date jour = DateUtils.aujourdhui();
         List<Plan> plans = planRepository.findByStatut(StatutPlan.OUVERT);

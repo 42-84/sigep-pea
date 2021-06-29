@@ -32,6 +32,18 @@ import fr.bas.sigep.referentiel.service.CoursService;
  * qui rejoue via POST /api/cours/import (docs/EXPLOITATION.md §3.2).
  *
  * Le fichier est en ISO-8859-1 (libelles accentues dans l'entete).
+ */
+@Component
+public class ImportCoursFininfo {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ImportCoursFininfo.class);
+    private static final Charset ENCODAGE = Charset.forName("ISO-8859-1");
+
+    @Autowired
+    private ValeurRepository valeurRepository;
+
+    @Autowired
+    private CoursService coursService;
 
     @Value("${sigep.fininfo.repertoire:/appli/sigep/fininfo/entree}")
     private String repertoire;
@@ -99,6 +111,9 @@ import fr.bas.sigep.referentiel.service.CoursService;
         int numero = 0;
         while ((ligne = lecteur.readLine()) != null) {
             numero++;
+            if (ligne.isEmpty() || ligne.charAt(0) == 'E' || ligne.charAt(0) == 'F') {
+                continue;
+            }
             resultat.incrementerLignesLues();
             try {
                 traiterLigne(LigneFininfo.parser(ligne), resultat);

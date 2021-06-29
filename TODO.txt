@@ -56,3 +56,12 @@ TODO SIGEP
 - Reunifier l'ecriture especes : PortefeuilleService.ecrireEspeces duplique CompteEspecesService.enregistrer
   (sans le controle REGULARISATION, sans troncature de la date valeur).
 - Marqueur "partielle" sur SGP_VALORISATION_HISTO (valorisations avec cours manquants enregistrees
+  sans distinction).
+
+2020
+----
+- Taux historiques de prelevements sociaux pour les plans > 5 ans ouverts avant 2018 (SIGEP-388).
+  Le BO corrige a la main.
+- ControleSoldes : la tolerance 10 000 EUR sur les comptes REPRISE masque les vrais ecarts (SIGEP-267).
+  Passer une operation d'ouverture de reprise sur les ~28 000 comptes concernes ?
+- Endpoint de relance de la valorisation quotidienne (aujourd'hui : modifier le cron et redemarrer).

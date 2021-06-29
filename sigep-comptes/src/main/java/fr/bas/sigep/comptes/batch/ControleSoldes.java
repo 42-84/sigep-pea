@@ -13,6 +13,17 @@ import fr.bas.sigep.commun.domaine.CompteEspeces;
 import fr.bas.sigep.commun.repository.CompteEspecesRepository;
 import fr.bas.sigep.comptes.service.CompteEspecesService;
 
+/**
+ * Controle nocturne : solde tenu vs somme des operations, pour chaque compte especes.
+ *
+ * Ne corrige rien : ecrit les ecarts dans le log, l'exploitation les remonte au back-office
+ * qui passe une REGULARISATION. Historiquement les ecarts venaient des doubles ecritures
+ * entre sigep-comptes et sigep-portefeuille (avant l'ajout de @Version, 2019).
+ *
+ * Les comptes repris de SIGEP v1 ont un ecart structurel = solde au 14/03/2016 (pas d'operation
+ * d'ouverture de reprise) : ils sont ignores en dessous de 10 000 EUR... ce qui masque aussi les
+ * vrais ecarts sur ces comptes. Connu (SIGEP-267).
+ */
 @Component
 public class ControleSoldes {
 

@@ -51,6 +51,13 @@ public class PortefeuilleService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PortefeuilleService.class);
 
+    /** Delai de reglement-livraison en jours ouvres (J+2 depuis T2S, 06/10/2014). */
+    public static final int DELAI_REGLEMENT = 2;
+    // public static final int DELAI_REGLEMENT = 3;  // avant T2S
+
+    @Autowired
+    private PlanRepository planRepository;
+
     @Autowired
     private MouvementRepository mouvementRepository;
 
@@ -61,6 +68,18 @@ public class PortefeuilleService {
     private OperationEspecesRepository operationEspecesRepository;
 
     @Autowired
+    private ReferentielClient referentielClient;
+
+    @Autowired
+    private ComptesClient comptesClient;
+
+    @Autowired
+    private FraisService fraisService;
+
+    @Autowired
+    private CalculPruService calculPruService;
+
+    @Value("${sigep.ordres.quantite-max:100000}")
     private BigDecimal quantiteMax;
 
     public Plan chargerPlan(String numeroPlan) {
@@ -273,5 +292,14 @@ public class PortefeuilleService {
         }
     }
 
+    private SensMouvement parserSens(String sens) {
+        if (sens == null) {
+            throw new RegleMetierException("SENS_INVALIDE", "Sens de l'ordre obligatoire (ACHAT/VENTE)");
+        }
+        try {
+            return SensMouvement.valueOf(sens.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new RegleMetierException("SENS_INVALIDE", "Sens inconnu : " + sens);
+        }
     }
 }

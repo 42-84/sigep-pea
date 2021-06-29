@@ -56,6 +56,14 @@ public class ResultatImport {
         this.coursEnregistres++;
     }
 
+    public int getCoursIgnores() {
+        return coursIgnores;
+    }
+
+    public void incrementerCoursIgnores() {
+        this.coursIgnores++;
+    }
+
     public int getValeursInconnues() {
         return valeursInconnues;
     }

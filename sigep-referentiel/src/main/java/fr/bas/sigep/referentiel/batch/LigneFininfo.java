@@ -17,12 +17,22 @@ import fr.bas.sigep.commun.util.DateUtils;
  *  2     12    code valeur fournisseur
  *  14    12    code ISIN
  *  26    8     date de cotation AAAAMMJJ
+ *  34    15    cours de cloture, 4 decimales implicites, cadre a droite avec des zeros
+ *  49    15    cours d'ouverture (idem)
+ *  64    15    plus haut (idem)
+ *  79    15    plus bas (idem)
  *  94    12    volume
  *  106   3     devise
  *  109   1     indicateur de suspension ('S') ou blanc
  * </pre>
  * Total : 109 caracteres. Les lignes plus courtes (fichiers d'avant 2012, sans l'indicateur) sont acceptees.
  */
+public class LigneFininfo {
+
+    public static final int LONGUEUR_MINIMALE = 108;
+
+    private final String codeFournisseur;
+    private final String codeIsin;
     private final Date dateCotation;
     private final BigDecimal cloture;
     private final BigDecimal ouverture;
@@ -49,6 +59,14 @@ import fr.bas.sigep.commun.util.DateUtils;
     public static boolean estDetail(String ligne) {
         return ligne != null && ligne.length() >= LONGUEUR_MINIMALE && ligne.charAt(0) == 'D';
     }
+
+    public static LigneFininfo parser(String ligne) {
+        if (!estDetail(ligne)) {
+            throw new IllegalArgumentException("Ligne de detail attendue : " + StringUtils.abbreviate(ligne, 40));
+        }
+        return new LigneFininfo(ligne);
+    }
+
     /** "000000001234500" -> 123.4500 */
     static BigDecimal montant(String champ) {
         String t = champ.trim();
