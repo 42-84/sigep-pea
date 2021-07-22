@@ -3,6 +3,13 @@
 Format : version - date de mise en production - tickets Jira (jira.bas.intra/browse/SIGEP-nnn).
 Les versions de correctif (x.y.z) sont listées quand elles ont été déployées en production.
 
+## 2.7.3 - 22/07/2021
+
+- Radiation de la valeur NATIXIS (FR0000120685) suite au retrait de la cote du 21/07/2021 (OPR BPCE).
+  Éligibilité PEA retirée, cours figé au 20/07. Script `db/scripts/2021-07_V2.7.3_radiation_natixis.sql`.
+  Les positions résiduelles (12 plans) sont traitées par le BO. (SIGEP-528)
+- Radiation d'une valeur : trace en WARN du nombre de plans détenteurs au lieu du refus (SIGEP-528).
+
 ## 2.7.2 - 15/04/2021
 
 - Correction : la simulation de retrait renvoyait un avertissement « valorisation partielle » même
