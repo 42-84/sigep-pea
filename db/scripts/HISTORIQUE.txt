@@ -15,3 +15,14 @@ Date appl.  Script                                                  Applique par
 14/05/2019  2019-05_V2.6.0_version_compte_especes.sql               ?                   recette   non applique ? a verifier - la colonne existe
                                                                                                   (creee par Hibernate au demarrage de la 2.6.0-RC ?)
 27/05/2019  2019-05_V2.6.0_version_compte_especes.sql               S. Nguyen (DBA)     prod      MEP 2.6.0 ; DEFAULT 0 sur 41 003 lignes, 4 min
+22/07/2021  2021-07_V2.7.3_radiation_natixis.sql                    S. Nguyen (DBA)     recette
+22/07/2021  2021-07_V2.7.3_radiation_natixis.sql                    S. Nguyen (DBA)     prod      12 plans detenteurs, liste envoyee au BO
+
+Notes
+-----
+- 2.5.0 (11/2018) et 2.7.0/2.7.1/2.7.2 : pas de script, pas de changement de schema (ou fait
+  par Hibernate sans qu'on s'en apercoive - cf. db/LISEZMOI.txt).
+- Le script d'urgence du 13/09/2017 (SIGEP-231) a remis STATUT = 1 sur les plans clotures a
+  partir de DT_CLOTURE IS NOT NULL, et STATUT = 2 sur 214 plans identifies a la main. Il est
+  joint au ticket Jira, pas ici.
+- Depuis 2020 M. Aubert est parti, S. Nguyen est le seul DBA connaissant SIGEP.
