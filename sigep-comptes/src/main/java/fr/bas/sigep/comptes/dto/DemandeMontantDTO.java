@@ -19,6 +19,17 @@ public class DemandeMontantDTO {
     }
 
     public String getLibelle() {
+        return libelle;
+    }
+
+    public void setLibelle(String libelle) {
+        this.libelle = libelle;
+    }
+
+    public boolean isAccepterCloture() {
+        return accepterCloture;
+    }
+
     public void setAccepterCloture(boolean accepterCloture) {
         this.accepterCloture = accepterCloture;
     }
