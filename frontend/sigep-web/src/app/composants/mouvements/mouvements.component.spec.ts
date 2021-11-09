@@ -7,6 +7,14 @@ describe('MouvementsComponent', () => {
   let component: MouvementsComponent;
   let fixture: ComponentFixture<MouvementsComponent>;
 
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule ],
+      declarations: [ MouvementsComponent ]
+    })
+    .compileComponents();
+  }));
+
   beforeEach(() => {
     fixture = TestBed.createComponent(MouvementsComponent);
     component = fixture.componentInstance;

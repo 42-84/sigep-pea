@@ -17,6 +17,9 @@ describe('SelecteurUtilisateurComponent', () => {
     .compileComponents();
   }));
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SelecteurUtilisateurComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 

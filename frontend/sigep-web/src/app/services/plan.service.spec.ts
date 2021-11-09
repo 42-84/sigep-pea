@@ -26,6 +26,14 @@ describe('PlanService', () => {
         { numeroPlan: 'PEA000045127', type: 'PEA', statut: 'OUVERT', totalVersements: 87500, dateOuverture: '12/03/2009' }
       ];
       let resultat: Plan[];
+
+      service.plansDuClient('00012345').subscribe(plans => resultat = plans);
+
+      const req = httpMock.expectOne('/api/clients/00012345/plans');
+      expect(req.request.method).toBe('GET');
+      req.flush(plansAttendus);
+
+      expect(resultat.length).toBe(1);
       expect(resultat[0].numeroPlan).toBe('PEA000045127');
       expect(resultat[0].dateOuverture).toBe('12/03/2009'); // string : pas de conversion cote service
     }));

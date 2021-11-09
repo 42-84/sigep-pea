@@ -16,4 +16,10 @@ describe('RechercheValeurComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RechercheValeurComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

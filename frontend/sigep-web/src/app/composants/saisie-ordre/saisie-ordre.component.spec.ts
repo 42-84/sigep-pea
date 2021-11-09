@@ -7,6 +7,13 @@ describe('SaisieOrdreComponent', () => {
   let component: SaisieOrdreComponent;
   let fixture: ComponentFixture<SaisieOrdreComponent>;
 
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule ],
+      declarations: [ SaisieOrdreComponent ]
+    })
+    .compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SaisieOrdreComponent);

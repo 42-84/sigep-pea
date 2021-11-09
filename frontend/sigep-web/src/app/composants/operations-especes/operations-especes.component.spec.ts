@@ -6,6 +6,15 @@ describe('OperationsEspecesComponent', () => {
   let component: OperationsEspecesComponent;
   let fixture: ComponentFixture<OperationsEspecesComponent>;
 
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ OperationsEspecesComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(OperationsEspecesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

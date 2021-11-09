@@ -17,4 +17,9 @@ describe('VersementRetraitComponent', () => {
     fixture = TestBed.createComponent(VersementRetraitComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

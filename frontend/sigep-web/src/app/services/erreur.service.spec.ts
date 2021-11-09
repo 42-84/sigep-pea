@@ -27,4 +27,8 @@ describe('ErreurService', () => {
   it('lit l ErreurDTO dans une HttpErrorResponse 422', inject([ErreurService], (service: ErreurService) => {
     const err = new HttpErrorResponse({
       status: 422,
+      error: { code: 'PLAFOND_DEPASSE', message: 'Plafond 150000 depasse', horodatage: '12/06/2018', chemin: '/api/plans/PEA000045127/versements' }
+    });
+    expect(service.libelle(err)).toBe('Ce versement dépasse le plafond légal de versements du plan.');
+  }));
 });

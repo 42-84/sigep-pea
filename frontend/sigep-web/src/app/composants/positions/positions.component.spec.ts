@@ -6,6 +6,11 @@ describe('PositionsComponent', () => {
   let component: PositionsComponent;
   let fixture: ComponentFixture<PositionsComponent>;
 
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ PositionsComponent ]
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {
