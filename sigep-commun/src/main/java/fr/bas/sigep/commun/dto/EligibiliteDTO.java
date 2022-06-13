@@ -20,6 +20,12 @@ public class EligibiliteDTO {
     public String getCodeIsin() {
         return codeIsin;
     }
+
+    public void setCodeIsin(String codeIsin) {
+        this.codeIsin = codeIsin;
+    }
+
+    public String getTypePlan() {
         return typePlan;
     }
 

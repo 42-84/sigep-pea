@@ -23,6 +23,15 @@ import fr.bas.sigep.commun.repository.CoursRepository;
 import fr.bas.sigep.commun.securite.ControleAcces;
 import fr.bas.sigep.commun.util.DateUtils;
 import fr.bas.sigep.commun.util.MontantUtils;
+
+@Service
+public class CoursService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CoursService.class);
+
+    @Autowired
+    private CoursRepository coursRepository;
+
     @Autowired
     private ValeurService valeurService;
 
