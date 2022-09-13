@@ -65,3 +65,11 @@ TODO SIGEP
 - ControleSoldes : la tolerance 10 000 EUR sur les comptes REPRISE masque les vrais ecarts (SIGEP-267).
   Passer une operation d'ouverture de reprise sur les ~28 000 comptes concernes ?
 - Endpoint de relance de la valorisation quotidienne (aujourd'hui : modifier le cron et redemarrer).
+
+2021
+----
+- Titres UK apres le 30/09/2021 : les positions restantes doivent etre traitees (SIGEP-520). Extraction
+  a fournir au BO.
+- PRU non recalcule a l'annulation d'un achat (SIGEP-333).
+- Table TAUX_PS de FiscaliteService en dur : externaliser en base ou en properties.
+- Mettre a jour la doc (docs/API.md, docs/CODES_ERREUR.txt, CHANGELOG) - plus tenue depuis 2019.
