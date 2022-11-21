@@ -30,6 +30,14 @@ public class ComptesClient extends ClientRestAbstrait {
     public SoldeDTO solde(String numeroCompte) {
         return get("/api/comptes-especes/{numero}/solde", SoldeDTO.class, numeroCompte);
     }
+
+    public void enregistrerOperation(String numeroCompte, String type, BigDecimal montant, Date dateValeur, String libelle, String reference) {
+        OperationEspecesDTO demande = new OperationEspecesDTO();
+        demande.setTypeOperation(type);
+        demande.setMontant(montant);
+        demande.setDateValeur(dateValeur);
+        demande.setLibelle(libelle);
+        demande.setReference(reference);
         post("/api/comptes-especes/{numero}/operations", demande, Object.class, numeroCompte);
     }
 }
