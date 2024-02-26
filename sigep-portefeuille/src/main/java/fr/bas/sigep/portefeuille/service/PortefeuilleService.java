@@ -59,6 +59,12 @@ public class PortefeuilleService {
     private PlanRepository planRepository;
 
     @Autowired
+    private ValeurRepository valeurRepository;
+
+    @Autowired
+    private PositionRepository positionRepository;
+
+    @Autowired
     private MouvementRepository mouvementRepository;
 
     @Autowired
@@ -248,6 +254,13 @@ public class PortefeuilleService {
             }
             position.setQuantite(position.getQuantite().add(mvt.getQuantite()));
             positionRepository.save(position);
+            ecrireEspeces(plan.getCompteEspeces(), TypeOperationEspeces.REGULARISATION, mvt.getMontantNet().negate(), null,
+                    "Annulation " + reference, reference);
+        }
+        mvt.setStatut(StatutMouvement.ANNULE);
+        mvt.setMotifAnnulation(motif);
+        return mouvementRepository.save(mvt);
+    }
 
     /**
      * Ecriture especes directe (voir passerOrdre). Duplique la logique de
