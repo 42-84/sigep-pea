@@ -21,6 +21,15 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
 
     List<Plan> findByStatut(StatutPlan statut);
 
+    // Non utilise : "ne marchait pas sous Oracle" (2017), PlanService fait un findAll() + filtre.
+    // A re-tester, le probleme venait probablement de l'ORDINAL du statut. -- JM
+    List<Plan> findByClientAndTypeAndStatut(Client client, TypePlan type, StatutPlan statut);
+
+    @Query("select count(p) from Plan p where p.statut = 0")
+    long compterPlansOuverts();
+
+    // CAST plutot que TO_NUMBER : H2 (dev) ne connait pas TO_NUMBER meme en MODE=Oracle. Oracle accepte les deux.
+    @Query(value = "select max(cast(substr(NUM_PLAN, 4) as decimal(9))) from SGP_PLAN", nativeQuery = true)
     Long dernierNumeroSequentiel();
 
     @Query("select p from Plan p where p.codeAgence = :agence and p.statut = :statut")
